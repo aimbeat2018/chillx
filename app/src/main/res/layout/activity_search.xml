@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="ott.primeplay.SearchActivity">
+    tools:context="ott.bigshots.SearchActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -65,12 +65,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:text="Type"
+                android:visibility="gone"
                 android:textSize="16sp" />
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_medium"
+                android:visibility="gone"
                 app:flexWrap="wrap"
                 app:justifyContent="flex_start">
 
@@ -126,6 +128,7 @@
                     android:layout_width="160dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
+                    android:visibility="gone"
                     android:background="@drawable/edit_text_round_bg_overlay_light"
                     android:drawableEnd="@drawable/ic_arrow_drop_down_white_24dp"
                     android:focusable="false"
@@ -167,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/countrytv"
@@ -230,6 +233,7 @@
                 android:id="@+id/yearRangeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <TextView
@@ -252,7 +256,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ott.primeplay.widget.RangeSeekBar
+                <ott.bigshots.widget.RangeSeekBar
                     android:id="@+id/range_seek_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -326,8 +330,14 @@
 
             </LinearLayout>
 
-
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTrending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/movieTitleLayout"
+                android:scrollbars="vertical"
+                android:scrollingCache="true" />
 
             <LinearLayout
                 android:layout_width="match_parent"

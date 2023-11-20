@@ -19,12 +19,12 @@
     <string name="startapp_app_id" translatable="false">209411604</string>
 
 
-    <string name="app_name">Prime Play</string>
+    <string name="app_name">BigShots</string>
     <!--app_title for main navigation & home title-->
-    <string name="app_title">Primeplay - Live TV &amp; Movie</string>
+    <string name="app_title">BigShots - Live TV &amp; Movie</string>
     <string name="app_version">1.3.1</string>
-    <string name="contact_email">customercare@primeplay.co.in</string>
-    <string name="copyright_text">Copyright @ Primeplay, All right reserved</string>
+    <string name="contact_email">customercare@BigShots.co.in</string>
+    <string name="copyright_text">Copyright @ BigShots, All right reserved</string>
 
     <!-- App -->
     <string name="featured_tv_channels">Featured Tv Channel</string>
@@ -210,7 +210,7 @@
     <string name="live">Live</string>
     <string name="watching_on">Watching live on</string>
     <string name="all_tv_channel">All TV Channels</string>
-    <string name="you_may_also_like">You may also like</string>
+    <string name="you_may_also_like">More like this</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="tv_channels">Tv Channels</string>
     <string name="watching_catch_up_tv">Watching Catch-up TV</string>

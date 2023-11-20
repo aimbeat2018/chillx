@@ -609,6 +609,10 @@
                         android:textSize="14sp"
                         android:textStyle="normal" />
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
                 </LinearLayout>
 
 
@@ -770,9 +774,8 @@
                                 android:id="@+id/rec_season_spinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:nestedScrollingEnabled="false">
+                                android:nestedScrollingEnabled="false"/>
 
-                            </androidx.recyclerview.widget.RecyclerView>
 
 
                         </LinearLayout>

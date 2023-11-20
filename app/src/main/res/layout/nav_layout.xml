@@ -13,15 +13,14 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardfamilyzone"
-
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:cardCornerRadius="16dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
         android:layout_marginBottom="15dp"
-        >
+        android:visibility="gone"
+        app:cardCornerRadius="16dp">
 
         <LinearLayout
             android:id="@+id/lnrChildContent"
@@ -38,9 +37,9 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginLeft="5dp"
-                android:visibility="gone"
                 android:src="@drawable/outline_person_24"
-                app:tint="@color/default_text" />
+                android:visibility="gone"
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/txtChildcontent"
@@ -61,8 +60,8 @@
                     android:id="@+id/simpleSwitch"
                     android:layout_width="70dp"
                     android:layout_height="60dp"
-                    android:theme="@style/BrandedSwitch"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true"
+                    android:theme="@style/BrandedSwitch" />
 
             </RelativeLayout>
 
@@ -71,17 +70,13 @@
     </androidx.cardview.widget.CardView>
 
 
-
-
-
-
     <LinearLayout
         android:id="@+id/lnrProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="20dp"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:onClick="onProfileClick"
         android:orientation="horizontal"
         android:padding="8dp">
@@ -92,17 +87,28 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/outline_person_24"
-            app:tint="@color/default_text" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/txtProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Profile"
-            android:textColor="@color/default_text"
+            android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -124,17 +130,27 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/outline_favorite_border_24"
-            app:tint="@color/default_text" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/txtWatchLater"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Watch Later"
-            android:textColor="@color/default_text"
+            android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -156,18 +172,27 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/ic_subscriptions_black_24dp"
-            app:tint="@color/default_text" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/txtSubscription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Subscription"
-            android:textColor="@color/default_text"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -195,10 +220,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Support / Helpline"
             android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -227,10 +262,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Settings"
             android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -252,17 +297,27 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/ic_help"
-            app:tint="@color/default_text" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/txtHelp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Help"
-            android:textColor="@color/default_text"
+            android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -291,11 +346,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Rate Us"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -323,11 +387,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Privacy Policy"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -355,11 +428,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Terms &amp; Condition"
             android:textColor="@color/white"
             android:textSize="14sp" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -387,10 +469,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Refund Policy"
             android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 
@@ -412,17 +504,27 @@
             android:layout_height="25dp"
             android:layout_marginLeft="5dp"
             android:src="@drawable/outline_lock_24"
-            app:tint="@color/default_text" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/txtSignout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:gravity="start"
             android:text="Signout"
-            android:textColor="@color/default_text"
+            android:textColor="@color/white"
             android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:padding="3dp"
+            android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+            app:tint="@color/white" />
 
     </LinearLayout>
 

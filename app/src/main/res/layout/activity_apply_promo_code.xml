@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ott.primeplay.more.ApplyPromoCodeActivity">
+    tools:context="ott.bigshots.more.ApplyPromoCodeActivity">
 
     <include
         android:id="@+id/subscription_toolbar"

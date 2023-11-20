@@ -314,7 +314,7 @@
             <intent-filter>
                 <data
                     android:host="open"
-                    android:scheme="ott.primeplay" />
+                    android:scheme="ott.bigshots" />
 
                 <action android:name="android.intent.action.VIEW" />
 

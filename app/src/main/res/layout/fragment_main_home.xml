@@ -4,11 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <com.ismaeldivita.chipnavigation.ChipNavigationBar
+            android:id="@+id/bottomNav"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:background="@color/black"
+            android:gravity="center"
+            android:visibility="visible"
+            app:cnb_iconSize="20dp"
+            app:cnb_menuResource="@menu/menu_bottom_navigation"
+            app:cnb_orientationMode="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/menu_bottom_navigation" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.infideap.drawerbehavior.AdvanceDrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -17,7 +47,7 @@
 
 
             <FrameLayout
-                android:id="@+id/fragment_container"
+                android:id="@+id/fragment_container1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="50dp" />
@@ -58,10 +88,7 @@
                 app:scale_percent="5" />
 
 
-
-            <com.google.android.gms.ads.AdView
-                android:visibility="gone"
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"
                 android:layout_width="@dimen/_320sdp"
                 android:layout_height="@dimen/_50sdp"
@@ -69,9 +96,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center|bottom"
                 android:layout_marginBottom="@dimen/_50sdp"
+                android:visibility="gone"
                 ads:adSize="BANNER"
-                ads:adUnitId="@string/admob_banner_unit_id">
-            </com.google.android.gms.ads.AdView>
+                ads:adUnitId="@string/admob_banner_unit_id"></com.google.android.gms.ads.AdView>
 
 
             <com.google.android.material.bottomappbar.BottomAppBar
@@ -79,6 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_gravity="bottom"
+                android:visibility="gone"
                 app:fabCradleMargin="5dp">
 
                 <LinearLayout
@@ -306,13 +334,29 @@
                 android:layout_margin="10dp"
                 android:contentDescription="Floating"
                 android:src="@drawable/reels"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:backgroundTint="@color/red"
                 app:backgroundTintMode="src_in"
                 app:elevation="5dp"
                 app:fabSize="normal"
                 app:layout_anchor="@id/bottom_app_bar"
                 app:tint="@color/white" />
+
+            <com.ismaeldivita.chipnavigation.ChipNavigationBar
+                android:id="@+id/menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cnb_addBottomInset="false"
+                app:cnb_addLeftInset="false"
+                app:cnb_addRightInset="false"
+                app:cnb_addTopInset="false"
+                app:cnb_animationDuration="175"
+                app:cnb_iconSize="24dp"
+                app:cnb_menuResource="@menu/menu_bottom_navigation"
+                app:cnb_orientationMode="horizontal"
+                app:cnb_radius="8dp"
+                app:cnb_unselectedColor="@color/white" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
