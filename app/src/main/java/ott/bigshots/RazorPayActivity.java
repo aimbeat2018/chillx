@@ -79,6 +79,10 @@ import java.util.Random;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
+import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener;
+import dev.shreyaspatil.easyupipayment.model.PaymentApp;
+import dev.shreyaspatil.easyupipayment.model.TransactionDetails;
 import okhttp3.ResponseBody;
 import ott.bigshots.constant.AppEnvironment;
 import ott.bigshots.database.DatabaseHelper;
@@ -103,7 +107,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class RazorPayActivity extends AppCompatActivity implements PaymentResultListener {
+public class RazorPayActivity extends AppCompatActivity implements PaymentResultListener, PaymentStatusListener {
     private static final String TAG = "RazorPayActivity";
     private Package aPackage;
     private DatabaseHelper databaseHelper;
@@ -114,7 +118,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
     TextView package_name, package_validity, price, txt_txn_id, txt_falied_reason;
     CardView card_paytm, card_payuMoney, card_cashfree;
     LinearLayout lnr_success, lnr_failed;
-    String str_user_age="";
+    String str_user_age = "";
     private long mLastClickTime;
     User user;
     String hashServer = "";
@@ -130,6 +134,8 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
 
     private static final String GOOGLE_TEZ_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
 
+    private EasyUpiPayment easyUpiPayment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,8 +147,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
             SharedPreferences sharedPreferences = RazorPayActivity.this.getSharedPreferences(Constants.USER_AGE, MODE_PRIVATE);
             str_user_age = sharedPreferences.getString("user_age", "20");
 
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -169,6 +174,8 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
             startPayment();
         else if (from.equals("gpay"))
             startGPayPayment();
+        else if (from.equals("upi"))
+            startAutoUpiPayment();
 
     }
 
@@ -195,23 +202,50 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         card_payuMoney.setOnClickListener(view -> payUMoneyGateway());
     }
 
-    public void startGPayPayment(){
+    public void startGPayPayment() {
         Uri uri = new Uri.Builder()
-                        .scheme("upi")
-                        .authority("pay")
-                        .appendQueryParameter("pa", "webworld7.09@cmsidfc")
-                        .appendQueryParameter("pn", "WEBWORLD MULTIMEDIA LLP")
-                        .appendQueryParameter("tr", paytmOrderId)
-                        .appendQueryParameter("tn", aPackage.getName())
-                        .appendQueryParameter("am", aPackage.getPrice())
-                        .appendQueryParameter("cu", "INR")
-                        .appendQueryParameter("url", "https://primeplay.co.in")
-                        .build();
+                .scheme("upi")
+                .authority("pay")
+                .appendQueryParameter("pa", "webworld7.09@cmsidfc")
+                .appendQueryParameter("pn", "WEBWORLD MULTIMEDIA LLP")
+                .appendQueryParameter("tr", paytmOrderId)
+                .appendQueryParameter("tn", aPackage.getName())
+                .appendQueryParameter("am", aPackage.getPrice())
+                .appendQueryParameter("cu", "INR")
+                .appendQueryParameter("url", "https://primeplay.co.in")
+                .build();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.setPackage(GOOGLE_TEZ_PACKAGE_NAME);
         gPayActivityResultLauncher.launch(intent);
 //        startActivityForResult(intent, TEZ_REQUEST_CODE);
+    }
+
+    public void startAutoUpiPayment() {
+        EasyUpiPayment.Builder builder = new EasyUpiPayment.Builder(this)
+                .with(PaymentApp.ALL)
+                .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
+                .setPayeeName("Bigshots movies and web series")
+                .setTransactionId("39772315")
+                .setTransactionRefId("REF" + paytmOrderId)
+                .setPayeeMerchantCode("")
+                .setDescription("For subscription")
+//                .setAmount("1.0");
+                .setAmount(String.valueOf(Double.parseDouble(aPackage.getPrice())));
+        // END INITIALIZATION
+
+        try {
+            // Build instance
+            easyUpiPayment = builder.build();
+            easyUpiPayment.setPaymentStatusListener(this);
+
+            // Start payment / transaction
+            easyUpiPayment.startPayment();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+//            toast("Error: " + exception.getMessage());
+        }
+
     }
 
     // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
@@ -224,21 +258,21 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
                     /*failure*/
                     String status = data.getStringExtra("Status");
 
-                    if(status.equals("FAILURE")){
+                    if (status.equals("FAILURE")) {
                         lnr_failed.setVisibility(View.VISIBLE);
                         lnr_success.setVisibility(View.GONE);
                         txt_txn_id.setText(status);
 
-                        new Handler().postDelayed(this::finish,1000);
+                        new Handler().postDelayed(this::finish, 1000);
 
-                    }else if(status.equals("COMPLETED") || status.equals("SUCCESS")){
+                    } else if (status.equals("COMPLETED") || status.equals("SUCCESS")) {
                         lnr_success.setVisibility(View.VISIBLE);
                         lnr_failed.setVisibility(View.GONE);
 
                         txt_txn_id.setText("Transaction Id : " + paytmOrderId);
                         saveChargeData(paytmOrderId, "googlepay");
                     }
-                    Toast.makeText(RazorPayActivity.this, "payment status = "+status, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RazorPayActivity.this, "payment status = " + status, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -651,7 +685,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, aPackage.getPlanId(),
                 databaseHelper.getUserData().getUserId(),
                 aPackage.getPrice(),
-                token,str_user_age, from);
+                token, str_user_age, from);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -723,4 +757,63 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         amountPaidInRupee = convertedValue;
         return convertedValue;
     }
+
+
+    @Override
+    public void onTransactionCompleted(TransactionDetails transactionDetails) {
+        // Transaction Completed
+        Log.d("TransactionDetails", transactionDetails.toString());
+
+        Log.d("TransactionDetails", transactionDetails.toString());
+//        statusView.setText(transactionDetails.toString());
+
+        switch (transactionDetails.getTransactionStatus()) {
+            case SUCCESS:
+                onTransactionSuccess(transactionDetails.getTransactionId());
+                break;
+            case FAILURE:
+                onTransactionFailed();
+                break;
+            case SUBMITTED:
+                onTransactionSubmitted();
+                break;
+        }
+    }
+
+    @Override
+    public void onTransactionCancelled() {
+        // Payment Cancelled by User
+        Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
+    }
+
+    private void onTransactionSuccess(String transactionId) {
+        // Payment Success
+        lnr_success.setVisibility(View.VISIBLE);
+        lnr_failed.setVisibility(View.GONE);
+
+        txt_txn_id.setText("Transaction Id : " + transactionId);
+        saveChargeData(transactionId, "upi");
+//        imageView.setImageResource(R.drawable.ic_success);
+    }
+
+    private void onTransactionSubmitted() {
+        // Payment Pending
+        toast("Pending | Submitted");
+//        imageView.setImageResource(R.drawable.ic_success);
+    }
+
+    private void onTransactionFailed() {
+        // Payment Failed
+        lnr_failed.setVisibility(View.VISIBLE);
+        lnr_success.setVisibility(View.GONE);
+        txt_txn_id.setText("Failed");
+
+        new Handler().postDelayed(this::finish, 1000);
+//        imageView.setImageResource(R.drawable.ic_failed);
+    }
+
+    private void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
 }

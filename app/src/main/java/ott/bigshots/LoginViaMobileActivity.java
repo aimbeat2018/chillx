@@ -60,14 +60,14 @@ public class LoginViaMobileActivity extends AppCompatActivity {
 
     private EditText etEmail, etPass;
     private AppCompatButton btnReset;
-    TextView forgotPass,tv_password, txtcountryCode;
+    TextView forgotPass, tv_password, txtcountryCode;
     private ProgressDialog dialog;
     private View backgroundView;
-    TextView txt_login_with_otp,passLogin;
+    TextView txt_login_with_otp, passLogin;
     private String deviceId = "";
     private String firebaseToken = "", mobile = "", countryCode = "91";
 
-  CleverTapAPI clevertapDefaultInstance;
+    CleverTapAPI clevertapDefaultInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_via_mobile);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
-        backgroundView = findViewById(R.id.background_view);
+//        backgroundView = findViewById(R.id.background_view);
 
 /*
         setSupportActionBar(toolbar);
@@ -117,10 +117,10 @@ public class LoginViaMobileActivity extends AppCompatActivity {
         txtcountryCode.setText(String.format("+%s ", countryCode));
         etEmail.setText(mobile);
 
-        if (isDark) {
-            backgroundView.setBackgroundColor(getResources().getColor(R.color.nav_head_bg));
-            btnReset.setBackground(getResources().getDrawable(R.drawable.btn_rounded_dark));
-        }
+//        if (isDark) {
+//            backgroundView.setBackgroundColor(getResources().getColor(R.color.nav_head_bg));
+//            btnReset.setBackground(getResources().getDrawable(R.drawable.btn_rounded_dark));
+//        }
         deviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         dialog = new ProgressDialog(this);
@@ -352,7 +352,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
 //        profileUpdate.put("MyStuff", otherStuff);                   //String Array
 
         clevertapDefaultInstance.onUserLogin(profileUpdate);
-       // clevertapDefaultInstance.pushProfile(profileUpdate);
+        // clevertapDefaultInstance.pushProfile(profileUpdate);
     }
 
 
@@ -386,8 +386,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
                             if (user.getPhone().contains(ccode)) {
                                 addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), user.getPhone());
                                 addUserToAppsflyer(user.getName(), user.getUserId(), user.getEmail(), user.getPhone());
-                            }
-                            else {
+                            } else {
                                 addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), ccode + user.getPhone());
                                 addUserToAppsflyer(user.getName(), user.getUserId(), user.getEmail(), ccode + user.getPhone());
                             }
@@ -396,7 +395,6 @@ public class LoginViaMobileActivity extends AppCompatActivity {
                             addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), "+91" + user.getPhone());
                             addUserToAppsflyer(user.getName(), user.getUserId(), user.getEmail(), "+91" + user.getPhone());
                         }
-
 
 
                         //save user login time, expire time
@@ -463,7 +461,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
         HashMap<String, Object> loginUpdate = new HashMap<String, Object>();
         loginUpdate.put("Phone", phone);   // Phone (with the country code, starting with +)
         AppsFlyerLib.getInstance().logEvent(getApplicationContext(),
-                "Login" , loginUpdate);
+                "Login", loginUpdate);
 
     }
 

@@ -87,7 +87,8 @@ public class FinalPaymentActivity extends AppCompatActivity {
     String uid = "", uname = "", mobile = "", email = "", order_id = "", orderIdstr = "";
     private DatabaseHelper databaseHelper;
     MyListData[] myListData;
-Context context;
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,7 @@ Context context;
         databaseHelper = new DatabaseHelper(this);
         init();
         onClick();
-context=this;
+        context = this;
         clevertapPaymentStartedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
@@ -121,7 +122,6 @@ context=this;
         fetch_stripe_Payment_data(strip_plan_amount);
 
         paymentSheet = new PaymentSheet(this, this::onPaymentSheetResult);
-
 
 
         final Dialog dialog = new Dialog(FinalPaymentActivity.this);
@@ -245,8 +245,8 @@ context=this;
         };
 
 
-       // MyListAdapter MyListAdapter = new MyListAdapter(myListData,packageList.get(getAdapterPosition()));
-         MyListAdapter MyListAdapter = new MyListAdapter(myListData,context,dialog);
+        // MyListAdapter MyListAdapter = new MyListAdapter(myListData,packageList.get(getAdapterPosition()));
+        MyListAdapter MyListAdapter = new MyListAdapter(myListData, context, dialog);
         rec_age.setHasFixedSize(true);
         rec_age.setLayoutManager(new LinearLayoutManager(FinalPaymentActivity.this));
         rec_age.setAdapter(MyListAdapter);
@@ -289,8 +289,6 @@ context=this;
 
         dialog.show();
         dialog.getWindow().setAttributes(lp);
-
-
 
 
     }
@@ -383,26 +381,24 @@ context=this;
 
 
     public void onClick() {
-/*
 
         card_autoupi.setOnClickListener(view -> {
 
-            Intent intent = new Intent(FinalPaymentActivity.this, AutoPaymentUpi.class);
+            Intent intent = new Intent(FinalPaymentActivity.this, RazorPayActivity.class);
 
             intent.putExtra("package", aPackage);
             intent.putExtra("currency", "currency");
-            intent.putExtra("from", "cashfree");
+            intent.putExtra("from", "upi");
 
-            HashMap<String, Object> paymentstartedAction= new HashMap<String, Object>();
-            paymentstartedAction.put("payment mode","Cash Free");
-            paymentstartedAction.put("Selected Plan",aPackage.getName());
-            paymentstartedAction.put("Amount",aPackage.getPrice());
-            paymentstartedAction.put("Days",aPackage.getDay());
+//            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//            paymentstartedAction.put("payment mode", "Cash Free");
+//            paymentstartedAction.put("Selected Plan", aPackage.getName());
+//            paymentstartedAction.put("Amount", aPackage.getPrice());
+//            paymentstartedAction.put("Days", aPackage.getDay());
 
             startActivity(intent);
 
         });
-*/
 
 
         card_aggrepay.setOnClickListener(new View.OnClickListener() {
@@ -441,7 +437,7 @@ context=this;
 
                 Map<String, String> mapData = new HashMap<>();
 
-              //  mapData.put("dateTime", "2023-10-02 18:16:29");
+                //  mapData.put("dateTime", "2023-10-02 18:16:29");
                 mapData.put("custMail", email);
                 mapData.put("custMobile", mobile);
                 mapData.put("udf1", "NA");
@@ -460,7 +456,7 @@ context=this;
                 mapData.put("merchantId", Constants.merchantID);
                 mapData.put("apiKey", Constants.secretKey);
                 mapData.put("txnId", str_trn_id);
-                mapData.put("amount", aPackage.getPrice()+".00");
+                mapData.put("amount", aPackage.getPrice() + ".00");
 
                 LocalDateTime currentDateTime = null;
                 DateTimeFormatter formatter = null;
@@ -474,7 +470,7 @@ context=this;
                 if (formattedDateTime != null)
                     mapData.put("dateTime", formattedDateTime);
 
-               // Log.d("OnePay", "Debug message");
+                // Log.d("OnePay", "Debug message");
 
                 Gson gson = new GsonBuilder().serializeNulls().create();
 
@@ -495,7 +491,6 @@ context=this;
 
             }
         });
-
 
 
         card_stripe.setOnClickListener(new View.OnClickListener() {
@@ -527,8 +522,6 @@ context=this;
         });
 
 
-
-
         card_cashfree.setOnClickListener(view -> {
             Intent intent = new Intent(FinalPaymentActivity.this, CashFreePaymentActivity.class);
             intent.putExtra("package", aPackage);
@@ -540,8 +533,6 @@ context=this;
             paymentstartedAction.put("Selected Plan", aPackage.getName());
             paymentstartedAction.put("Amount", aPackage.getPrice());
             paymentstartedAction.put("Days", aPackage.getDay());
-
-
 
 
             clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
@@ -613,7 +604,7 @@ context=this;
     @Override
     protected void onResume() {
         super.onResume();
-        getPaymentGatewayStatus();
+//        getPaymentGatewayStatus();
     }
 
     private void getPaymentGatewayStatus() {
@@ -717,7 +708,6 @@ context=this;
     }
 
 
-
     public void saveChargeData(String token, String from) {
         //  progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
@@ -726,7 +716,7 @@ context=this;
                 databaseHelper.getUserData().getUserId(),
                 aPackage.getPrice(),
                 // "1",
-                token,"35", from);
+                token, "35", from);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
