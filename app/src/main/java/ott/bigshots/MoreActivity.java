@@ -506,7 +506,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onPrivacyClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "privacy");
-        intent.putExtra("url", "https://hunters.co.in/ppv1/rest-api/privacy-policy");
+        intent.putExtra("url", "https://bigshots.co.in/bigshots_backoffice/rest-api/privacy-policy");
         intent.putExtra("title", "Privacy Policy");
         startActivity(intent);
 
@@ -684,7 +684,7 @@ public class MoreActivity extends AppCompatActivity {
                     if (subscriptionHistory.getActiveSubscription().size() > 0) {
 
                         planstatus.setText("Subscribed");
-                        lnrPremium.setVisibility(View.GONE);
+                        lnrPremium.setVisibility(View.VISIBLE);
                         // planname.setText(subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
                         planstatus.setBackgroundColor(getResources().getColor(R.color.green));
 

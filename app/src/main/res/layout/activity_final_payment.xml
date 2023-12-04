@@ -235,12 +235,11 @@
 
 
                 <androidx.cardview.widget.CardView
-
                     android:id="@+id/card_autoupi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/black"
                     app:cardElevation="5dp">
 
@@ -568,6 +567,13 @@
 
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgUpi"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/upi_back"/>
 
 
         </LinearLayout>

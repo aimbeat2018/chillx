@@ -368,7 +368,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SignUpApi signUpApi = retrofit.create(SignUpApi.class);
         String countryCodeStr = "+" + countryCode;
-        Call<User> call = signUpApi.signUp(AppConfig.API_KEY, email, pass, name, mobile, countryCodeStr, deviceId, age, firebaseToken, str_user_age, userEnterPin);
+        Call<User> call = signUpApi.signUp(AppConfig.API_KEY, email, pass, name, mobile, countryCodeStr, deviceId, age, firebaseToken, str_user_age, "");
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -907,7 +907,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
             int age = Integer.parseInt(str_user_age);
 
             if (age > 18) {
-                ll_pin.setVisibility(View.VISIBLE);
+                ll_pin.setVisibility(View.GONE);
             } else {
                 ll_pin.setVisibility(View.GONE);
             }

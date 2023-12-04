@@ -68,12 +68,12 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
     String transactionId;
     private OneUPIPayment easyUpiPayment;
     Float float_plan_amount;
-    String str_user_age="";
+    String str_user_age = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one_upipayment);
-
 
 
         try {
@@ -81,8 +81,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
             SharedPreferences sharedPreferences = OneUPIPaymentActivity.this.getSharedPreferences(Constants.USER_AGE, MODE_PRIVATE);
             str_user_age = sharedPreferences.getString("user_age", "20");
 
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
@@ -127,7 +126,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
     }
 
 
-
     private void payWithUpi() {
 
         transactionId = "TID" + System.currentTimeMillis();
@@ -137,11 +135,12 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
         // START PAYMENT INITIALIZATION
         OneUPIPayment.Builder builder = new OneUPIPayment.Builder(this)
                 .with(paymentApp)
-                .setPayeeVpa("WEBWORLD7.09@cmsidfc")
-                .setPayeeName("Webworld Multimedia LLP")
-                .setTransactionId(transactionId)
+                .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
+                .setPayeeName("Bigshots movies and web series")
+//                .setTransactionId(transactionId)
+                .setTransactionId("39772315")
                 .setTransactionRefId(transactionId)
-                .setPayeeMerchantCode("c67e12f3-aaff-49ae-aecf-7a971a060e2d")//one upi marchant key
+                .setPayeeMerchantCode("c86f4fba-9285-42af-97f2-250681fe8c4d")//one upi marchant key
                 .setDescription(aPackage.getName())
                 //.setAmount("1.00");
                 .setAmount(String.valueOf(float_plan_amount));
@@ -162,9 +161,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
         }
     }
-
-
-
 
 
     @Override
@@ -250,7 +246,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
                 databaseHelper.getUserData().getUserId(),
                 aPackage.getPrice(),
                 // "1",
-                token,str_user_age, from);
+                token, str_user_age, from);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
@@ -311,8 +307,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
         });
 
     }
-
-
 
 
     private void getSubscriptionHistory(String plantamount) {

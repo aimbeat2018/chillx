@@ -15,9 +15,9 @@ public class ApiResources {
     String URL = AppConfig.API_SERVER_URL + RetrofitClient.API_URL_EXTENSION;
 
 
-    String searchUrl = URL+"search";
+    String searchUrl = URL + "search";
 
-    String getAllReply = URL+"all_replay";
+    String getAllReply = URL + "all_replay";
     String termsURL = AppConfig.TERMS_URL;
 
     public String getTermsURL() {
@@ -33,6 +33,6 @@ public class ApiResources {
     }
 
 
-    }
+}
 
 

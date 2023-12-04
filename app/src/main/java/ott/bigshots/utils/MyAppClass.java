@@ -85,7 +85,7 @@ public class MyAppClass extends Application implements DefaultLifecycleObserver 
 
     private DownloadManager downloadManager;
     private DownloadTracker downloadTracker;
-    private static final String TAG = "Primeplay";
+    private static final String TAG = "Bigshots";
     private DatabaseProvider databaseProvider;
     private File downloadDirectory;
     protected String userAgent;
@@ -160,7 +160,7 @@ public class MyAppClass extends Application implements DefaultLifecycleObserver 
         CleverTapAPI.setNotificationHandler((NotificationHandler) new PushTemplateNotificationHandler());
 
         mContext = this;
-        userAgent = Util.getUserAgent(this, "prime play");
+        userAgent = Util.getUserAgent(this, "bigshots");
         FacebookSdk.sdkInitialize(mContext);
 
         // Initialize the Branch objectfc

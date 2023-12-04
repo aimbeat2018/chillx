@@ -457,27 +457,27 @@ public class OtpActivity extends AppCompatActivity {
                         preferences.apply();
                         preferences.commit();
 
-                        if (response.body().getUser_age().equals("")) {
-
-                            SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_REGISTER_AGE, MODE_PRIVATE).edit();
-                            editor.putString("user_register_age", "19");
-                            editor.apply();
-                        } else {
-
-                            SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_REGISTER_AGE, MODE_PRIVATE).edit();
-                            editor.putString("user_register_age", response.body().getUser_age());
-                            editor.apply();
-
-                        }
-
-
-
-                        SharedPreferences.Editor editor1 = getSharedPreferences(Constants.USER_PIN, MODE_PRIVATE).edit();
-                        editor1.putString("user_pin", response.body().getPin());
-                        editor1.apply();
+//                        if (response.body().getUser_age().equals("")) {
+//
+//                            SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_REGISTER_AGE, MODE_PRIVATE).edit();
+//                            editor.putString("user_register_age", "19");
+//                            editor.apply();
+//                        } else {
+//
+//                            SharedPreferences.Editor editor = getSharedPreferences(Constants.USER_REGISTER_AGE, MODE_PRIVATE).edit();
+//                            editor.putString("user_register_age", response.body().getUser_age());
+//                            editor.apply();
+//
+//                        }
 
 
-                        addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), user.getPhone());
+
+//                        SharedPreferences.Editor editor1 = getSharedPreferences(Constants.USER_PIN, MODE_PRIVATE).edit();
+//                        editor1.putString("user_pin", response.body().getPin());
+//                        editor1.apply();
+
+
+//                        addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), user.getPhone());
 
 
 //                        String ccode = user.getCountry_code();

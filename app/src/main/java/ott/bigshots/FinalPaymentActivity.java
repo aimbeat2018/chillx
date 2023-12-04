@@ -70,6 +70,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
     TextView package_name,
             package_validity,
             price;
+    ImageView imgUpi;
     CardView card_paytm,
             card_payuMoney,
             card_cashfree, card_razorpay, card_gpay, card_autoupi, card_oneupi, card_stripe, card_aggrepay, card_onepay;
@@ -308,6 +309,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
         card_stripe = findViewById(R.id.card_stripe);
         card_aggrepay = findViewById(R.id.card_agrrepay);
         card_onepay = findViewById(R.id.card_onepay);
+        imgUpi = findViewById(R.id.imgUpi);
 
         package_name.setText(aPackage.getName());
         package_validity.setText(aPackage.getDay() + " Days");
@@ -317,32 +319,29 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
     public void fetch_stripe_Payment_data(String strip_plan_amount) {
         //   RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "https://hunters.co.in/ppv1/rest-api/v130/stripe_payment";
+        String url = "https://bigshots.co.in/bigshots_backoffice/rest_api/v130/stripe_payment";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 //  StringRequest stringRequest = new StringRequest(Request.Method.POST, url + "?amount=" + 100 + "&currency=" + "INR" + "&customer=" + 18,
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("striperesponse", response);
-                        try {
+                response -> {
+                    Log.e("striperesponse", response);
+                    try {
 
-                            final JSONObject result = new JSONObject(response);
+                        final JSONObject result = new JSONObject(response);
 
-                            customerConfig = new PaymentSheet.CustomerConfiguration(
-                                    result.getString("customer"),
-                                    result.getString("ephemeralKey")
-                            );
+                        customerConfig = new PaymentSheet.CustomerConfiguration(
+                                result.getString("customer"),
+                                result.getString("ephemeralKey")
+                        );
 
-                            order_id = result.getString("customer");
-                            paymentIntentClientSecret = result.getString("paymentIntent");
-                            PaymentConfiguration.init(getApplicationContext(), result.getString("publishableKey"));
+                        order_id = result.getString("customer");
+                        paymentIntentClientSecret = result.getString("paymentIntent");
+                        PaymentConfiguration.init(getApplicationContext(), result.getString("publishableKey"));
 
-                            /* used secret key of dahsbord in APi-    sk_live_.......fgHl*/
+                        /* used secret key of dahsbord in APi-    sk_live_.......fgHl*/
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }, new com.android.volley.Response.ErrorListener() {
             @Override
@@ -382,7 +381,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
     public void onClick() {
 
-        card_autoupi.setOnClickListener(view -> {
+        imgUpi.setOnClickListener(view -> {
 
             Intent intent = new Intent(FinalPaymentActivity.this, RazorPayActivity.class);
 
@@ -501,23 +500,23 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
                     try {
 
-                        paymentSheet.presentWithPaymentIntent(paymentIntentClientSecret, new PaymentSheet.Configuration("Primeplay",
+                        paymentSheet.presentWithPaymentIntent(paymentIntentClientSecret, new PaymentSheet.Configuration("BigShots",
                                 customerConfig));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
-                HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
-                paymentstartedAction.put("payment mode", "strip");
-                paymentstartedAction.put("Selected Plan", aPackage.getName());
-                paymentstartedAction.put("Amount", aPackage.getPrice());
-                paymentstartedAction.put("Days", aPackage.getDay());
-                clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
-
-                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-                screenViewedAction.put("Screen Name", "strippayment");
-                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//                HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//                paymentstartedAction.put("payment mode", "strip");
+//                paymentstartedAction.put("Selected Plan", aPackage.getName());
+//                paymentstartedAction.put("Amount", aPackage.getPrice());
+//                paymentstartedAction.put("Days", aPackage.getDay());
+//                clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
+//
+//                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//                screenViewedAction.put("Screen Name", "strippayment");
+//                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
             }
         });
 
@@ -604,7 +603,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        getPaymentGatewayStatus();
+        getPaymentGatewayStatus();
     }
 
     private void getPaymentGatewayStatus() {
@@ -625,7 +624,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
                         String gpay = jsonObject.getString("gap");
                         String oneupi = jsonObject.getString("oneupi");
                         String stripe = jsonObject.getString("stripe");
-                        String aggrepay = jsonObject.getString("aggrepay");
+//                        String aggrepay = jsonObject.getString("aggrepay");
 
 
                         if (payUMoney.equals("1")) {
@@ -666,11 +665,11 @@ public class FinalPaymentActivity extends AppCompatActivity {
                             card_stripe.setVisibility(View.GONE);
                         }
 
-                        if (aggrepay.equals("1")) {
-                            card_aggrepay.setVisibility(View.VISIBLE);
-                        } else {
-                            card_aggrepay.setVisibility(View.GONE);
-                        }
+//                        if (aggrepay.equals("1")) {
+//                            card_aggrepay.setVisibility(View.VISIBLE);
+//                        } else {
+//                            card_aggrepay.setVisibility(View.GONE);
+//                        }
 
                     } catch (JSONException | IOException e) {
                         e.printStackTrace();
