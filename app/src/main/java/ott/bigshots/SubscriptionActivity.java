@@ -90,7 +90,7 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
 
 
 
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
         intiView();
 
         // change toolbar color as theme color

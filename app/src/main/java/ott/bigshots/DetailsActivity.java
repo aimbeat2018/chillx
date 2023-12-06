@@ -3296,6 +3296,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         downloadBt.setVisibility(VISIBLE);
                     }
 
+
                     //----director---------------
                     for (int i = 0; i < singleDetails.getDirector().size(); i++) {
                         Director director = singleDetails.getDirector().get(i);
@@ -3306,6 +3307,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
                     tvDirector.setText(strDirector);
+
 
                     //----cast---------------
                     for (int i = 0; i < singleDetails.getCast().size(); i++) {

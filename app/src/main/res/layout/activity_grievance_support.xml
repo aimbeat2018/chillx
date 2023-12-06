@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Officer Email: \ngrievanceofficer@primeplay.co.in"
+                android:text="Officer Email: \ngrievanceofficer@bigshots.co.in"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textSize="18sp" />
 

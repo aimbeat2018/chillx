@@ -83,7 +83,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
     PaymentSheet.CustomerConfiguration customerConfig;
 
     String plantamount = "", strip_plan_amount = "";
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
 
     String uid = "", uname = "", mobile = "", email = "", order_id = "", orderIdstr = "";
     private DatabaseHelper databaseHelper;
@@ -94,22 +94,22 @@ public class FinalPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final_payment);
-        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
 
-        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
 
         aPackage = (Package) getIntent().getSerializableExtra("package");
         databaseHelper = new DatabaseHelper(this);
         init();
         onClick();
         context = this;
-        clevertapPaymentStartedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
-
-        clevertapPaymentStartedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapPaymentStartedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//
+//        clevertapPaymentStartedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         User user = databaseHelper.getUserData();
         uid = user.getUserId();
@@ -792,16 +792,16 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
                         if (subscriptionHistory.getActiveSubscription().size() > 0) {
 
-                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
-                            paymentAction.put("payment mode", "stripe");
-                            paymentAction.put("amount", plantamount);
-                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
-                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
-                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
-                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
-                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
-                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
-                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
+//                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
+//                            paymentAction.put("payment mode", "stripe");
+//                            paymentAction.put("amount", plantamount);
+//                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
+//                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
+//                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
+//                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
+//                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
+//                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
+//                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
 
                         }
                     } catch (Exception e) {

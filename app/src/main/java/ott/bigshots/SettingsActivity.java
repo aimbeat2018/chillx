@@ -85,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
         tvTerms = findViewById(R.id.tv_term);
         shareLayout = findViewById(R.id.share_layout);
         movieRequestLayout = findViewById(R.id.movieRequestLayout);
-        progressBar = findViewById(R.id.code_progress);
+//        progressBar = findViewById(R.id.code_progress);
         txt_appVersion = findViewById(R.id.txt_appVersion);
         txtGrievance = findViewById(R.id.txtGrievance);
 
@@ -102,7 +102,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         tvTerms.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsActivity.this, TermsActivity.class);
-            intent.putExtra("from", "setting");
+            intent.putExtra("from", "terms");
+            intent.putExtra("url", "https://bigshots.co.in//terms-condition.php");
+            intent.putExtra("title", "Terms & Condition");
             startActivity(intent);
         });
         txtGrievance.setOnClickListener(v -> {

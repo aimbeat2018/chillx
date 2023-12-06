@@ -78,7 +78,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
-                    android:background="@drawable/imgpackage"
                     android:paddingLeft="30dp">
 
 
@@ -614,7 +613,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:fontFamily="@font/amazon"
-            android:text="8447030345"
+            android:text="8976716053"
             android:textColor="@color/paypalColor"
             android:textSize="12sp"
             android:textStyle="bold" />

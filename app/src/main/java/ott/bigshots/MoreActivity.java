@@ -469,7 +469,7 @@ public class MoreActivity extends AppCompatActivity {
 
     public void onOnSupportClick(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + "8447030345"));
+        intent.setData(Uri.parse("tel:" + "8976716053"));
         startActivity(intent);
 
     }
@@ -506,7 +506,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onPrivacyClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "privacy");
-        intent.putExtra("url", "https://bigshots.co.in/bigshots_backoffice/rest-api/privacy-policy");
+        intent.putExtra("url", "https://bigshots.co.in/privacy-policy.php");
         intent.putExtra("title", "Privacy Policy");
         startActivity(intent);
 
@@ -515,7 +515,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onTermsClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "terms");
-        intent.putExtra("url", "https://primeplay.co.in/terms-condition");
+        intent.putExtra("url", "https://bigshots.co.in//terms-condition.php");
         intent.putExtra("title", "Terms & Condition");
         startActivity(intent);
 
@@ -524,7 +524,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onRefundClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "refund");
-        intent.putExtra("url", "https://primeplay.co.in/refund-policy");
+        intent.putExtra("url", "https://bigshots.co.in//refund-policy.php");
         intent.putExtra("title", "Refund Policy");
         startActivity(intent);
 

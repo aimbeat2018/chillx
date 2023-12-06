@@ -21,7 +21,7 @@ public class SampleAppConstants {
     public static final String PG_COUNTRY = "IND";
 
     public static  String PG_ORDER_ID = "";
-    public static final String PG_DESCRIPTION = "Primeplay Plan Charges";
+    public static final String PG_DESCRIPTION = "Bigshots Plan Charges";
     public static final String PG_CITY = "null";
     public static final String PG_STATE = "null";
     public static final String PG_ZIPCODE = "0";

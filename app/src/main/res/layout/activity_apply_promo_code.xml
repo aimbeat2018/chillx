@@ -46,7 +46,7 @@
                     android:layout_gravity="center"
                     android:gravity="start"
                     android:paddingVertical="5dp"
-                    android:text="Enter the Promo Code to get \nPrimePlay Subscription"
+                    android:text="Enter the Promo Code to get \nBigshots Subscription"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="normal" />

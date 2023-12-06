@@ -151,7 +151,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="120dp"
-                        android:background="@drawable/imgpackage"
+                        android:background="@drawable/border_back_primary_color"
                         android:baselineAligned="false"
                         android:orientation="horizontal"
                         android:padding="10dp">

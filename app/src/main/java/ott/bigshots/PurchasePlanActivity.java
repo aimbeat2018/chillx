@@ -63,6 +63,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,8 +107,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
 
     ProgressDialog dialog;
 
-    CleverTapAPI clevertapscreenviewd;
-
+//    CleverTapAPI clevertapscreenviewd;
 
 
     @Override
@@ -119,7 +119,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         isDark = sharedPreferences.getBoolean("dark", false);
 
 
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
 
         if (isDark) {
@@ -149,7 +149,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         currency = config.getCurrencySymbol();
         exchangeRate = config.getExchangeRate();
         packageRv.setHasFixedSize(true);
-        packageRv.setLayoutManager(new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
+        packageRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
 
         getPurchasePlanInfo();
 
@@ -169,11 +169,13 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
             public void onResponse(Call<AllPackage> call, Response<AllPackage> response) {
                 AllPackage allPackage = response.body();
                 packages = allPackage.getPackage();
+                Collections.reverse(packages);
                 if (allPackage.getPackage().size() > 0) {
                     noTv.setVisibility(View.GONE);
-                    PackageAdapter adapter = new PackageAdapter(PurchasePlanActivity.this, allPackage.getPackage(), currency);
+                    PackageAdapter adapter = new PackageAdapter(PurchasePlanActivity.this, packages, currency);
                     adapter.setItemClickListener(PurchasePlanActivity.this);
                     packageRv.setAdapter(adapter);
+
                 } else {
                     noTv.setVisibility(View.VISIBLE);
                 }
@@ -214,7 +216,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             PaymentApi paymentApi = retrofit.create(PaymentApi.class);
             Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, packageItem.getPlanId(), userId, packageItem.getPrice(),
-                    payId, "34","Paypal");
+                    payId, "34", "Paypal");
 
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
@@ -268,7 +270,6 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
     }
 
 
-
     private void saveActiveStatus(ActiveStatus activeStatus) {
         DatabaseHelper db = new DatabaseHelper(PurchasePlanActivity.this);
         if (db.getActiveStatusCount() > 1) {
@@ -317,9 +318,9 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         intent.putExtra("package", packageItem);
         intent.putExtra("currency", currency);
 
-        HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-        screenViewedAction.put("Screen Name", "FinalPaymentActivity");
-        clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//        HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//        screenViewedAction.put("Screen Name", "FinalPaymentActivity");
+//        clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
         startActivity(intent);
 
@@ -528,7 +529,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, packageItem.getPlanId(),
                 databaseHelper.getUserData().getUserId(),
                 packageItem.getPrice(),
-                token,"44", from);
+                token, "44", from);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {

@@ -24,8 +24,8 @@ android {
         applicationId "ott.bigshots"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
         /* versionCode 35
          versionName "1.35"*/
         multiDexEnabled true
