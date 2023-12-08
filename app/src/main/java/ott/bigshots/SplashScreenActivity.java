@@ -80,6 +80,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
 public class SplashScreenActivity extends AppCompatActivity {
     private static final String TAG = "SplashScreen";
     private final int PERMISSION_REQUEST_CODE = 100;
@@ -92,17 +93,18 @@ public class SplashScreenActivity extends AppCompatActivity {
     private boolean vpnStatus = false;
     private HelperUtils helperUtils;
     public boolean isDark;
-   // ImageView img_logo;
+    // ImageView img_logo;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private static final String VERSION_CODE_KEY = "version_code";
     private AlertDialog updateDailog;
 
     VideoView myvideoview;
+
     @Override
     protected void onStart() {
         super.onStart();
 
-       //check any restricted app is available or not
+        //check any restricted app is available or not
        /* ApplicationInfo restrictedApp = helperUtils.getRestrictApp();
         if (restrictedApp != null){
             boolean isOpenInBackground = helperUtils.isForeground(restrictedApp.packageName);
@@ -180,7 +182,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         //belo line test for firebase crashlist report
         //   throw new RuntimeException("Test Crash"); // Force a crash
 
-      //  printHashKey(this);
+        //  printHashKey(this);
 
     }
 
@@ -218,8 +220,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         db = new DatabaseHelper(SplashScreenActivity.this);
         helperUtils = new HelperUtils(SplashScreenActivity.this);
         vpnStatus = new HelperUtils(SplashScreenActivity.this).isVpnConnectionAvailable();
-       // img_logo = findViewById(R.id.img_logo);
-         myvideoview = findViewById(R.id.myvideoview);
+        // img_logo = findViewById(R.id.img_logo);
+        myvideoview = findViewById(R.id.myvideoview);
 
 
 /*
@@ -277,7 +279,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                     checkForUpdate(latestAppVersion));
                         }
                     });
-                }else{
+                } else {
 
                 }
             });
@@ -316,8 +318,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 if (!PreferenceUtils.getUserId(SplashScreenActivity.this).equals(""))
                     userPackageStatus(PreferenceUtils.getUserId(SplashScreenActivity.this));
 
-            }
-            else {
+            } else {
 
                 // Show the app open ad.rk15112023 app open ads
 //                ((MyAppClass) application)
@@ -358,7 +359,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                                });
 
 
-
                 Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                 //Intent intent = new Intent(SplashScreenActivity.this, PinActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -378,7 +378,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
 
 
-            }
+        }
 
     }
 
@@ -469,7 +469,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
 
 
-
             @Override
             public void onFailure(Call<ActiveStatus> call, Throwable t) {
                 t.printStackTrace();
@@ -507,6 +506,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName())));
         }
     }
+
     public boolean isLoginMandatory() {
         return db.getConfigurationData().getAppConfig().getMandatoryLogin();
     }

@@ -17,6 +17,7 @@ import ott.bigshots.ItemMovieActivity;
 import ott.bigshots.R;
 import ott.bigshots.models.CommonModels;
 import ott.bigshots.utils.ItemAnimation;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -44,7 +45,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v;
         if (layout.equals("home")) {
-          //  v = LayoutInflater.from(context).inflate(R.layout.layout_genre_item, parent,
+            //  v = LayoutInflater.from(context).inflate(R.layout.layout_genre_item, parent,
             v = LayoutInflater.from(context).inflate(R.layout.generw_item_layout, parent,
                     false);
         } else {
@@ -59,7 +60,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CommonModels commonModel = commonModels.get(position);
         if (commonModel != null) {
-//            holder.cardView.requestFocus();
             holder.nameTv.setText(commonModel.getTitle());
             Picasso.get()
                     .load(commonModel.getImageUrl())
@@ -68,20 +68,13 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
                     .placeholder(R.drawable.poster_placeholder)
                     .into(holder.icon);
 
-//            holder.cardView.setBackgroundResource(getColor());
+            holder.itemLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ItemMovieActivity.class);
+                intent.putExtra("id", commonModel.getId());
+                intent.putExtra("title", commonModel.getTitle());
+                intent.putExtra("type", type);
+                context.startActivity(intent);
 
-
-
-            holder.itemLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent=new Intent(context, ItemMovieActivity.class);
-                    intent.putExtra("id",commonModel.getId());
-                    intent.putExtra("title",commonModel.getTitle());
-                    intent.putExtra("type",type);
-                    context.startActivity(intent);
-
-                }
             });
 
         }
@@ -98,7 +91,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv;
         ImageView icon;
-//        CardView cardView;
+        //        CardView cardView;
         LinearLayout itemLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -113,15 +106,13 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     }
 
 
+    private int getColor() {
 
+        int colorList[] = {R.color.red_400, R.color.blue_400, R.color.indigo_400, R.color.orange_400, R.color.light_green_400, R.color.blue_grey_400};
+        // int colorList2[] = {R.drawable.gradient_1 ,R.drawable.gradient_2,R.drawable.gradient_3,R.drawable.gradient_4,R.drawable.gradient_5,R.drawable.gradient_6};
+        int colorList2[] = {R.drawable.gradient_1, R.drawable.gradient_2, R.drawable.gradient_3, R.drawable.gradient_4};
 
-    private int getColor(){
-
-        int colorList[] = {R.color.red_400,R.color.blue_400,R.color.indigo_400,R.color.orange_400,R.color.light_green_400,R.color.blue_grey_400};
-       // int colorList2[] = {R.drawable.gradient_1 ,R.drawable.gradient_2,R.drawable.gradient_3,R.drawable.gradient_4,R.drawable.gradient_5,R.drawable.gradient_6};
-        int colorList2[] = {R.drawable.gradient_1 ,R.drawable.gradient_2,R.drawable.gradient_3,R.drawable.gradient_4};
-
-        if (c >= 4){
+        if (c >= 4) {
             c = 0;
         }
 
@@ -131,7 +122,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
         return color;
 
     }
-
 
 
     @Override
@@ -145,7 +135,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
             }
 
         });
-
 
 
         super.onAttachedToRecyclerView(recyclerView);

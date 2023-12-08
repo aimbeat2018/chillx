@@ -21,6 +21,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.mukeshsolanki.OtpView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +49,8 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
     private ProgressDialog dialog;
     AppCompatButton submit;
     String firebaseToken = "";
+    OtpView otp_view, otp_viewIndia;
+    String userEnterOtp = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,18 +79,22 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
+        otp_view.setOtpCompletionListener(otp -> userEnterOtp = otp);
+
+        otp_viewIndia.setOtpCompletionListener(otp -> userEnterOtp = otp);
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String otp = otp_edit_box1.getText().toString() +
-                        otp_edit_box2.getText().toString()
-                        + otp_edit_box3.getText().toString()
-                        + otp_edit_box4.getText().toString();
+//                String otp = otp_edit_box1.getText().toString() +
+//                        otp_edit_box2.getText().toString()
+//                        + otp_edit_box3.getText().toString()
+//                        + otp_edit_box4.getText().toString();
 
 
                 if (from.equals("forgotactivity")) {
 
-                    if (!otp.equals(forgot_otp)) {
+                    if (!userEnterOtp.equals(forgot_otp)) {
 
                         Toast.makeText(OtpForgotPasswordActivity.this, "Enter Valid OTP", Toast.LENGTH_SHORT).show();
 
@@ -103,9 +110,9 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
 
                 } else {
 
-                    if (otp.equals("")) {
+                    if (userEnterOtp.equals("")) {
                         Toast.makeText(OtpForgotPasswordActivity.this, "Enter OTP", Toast.LENGTH_SHORT).show();
-                    } else if (!otp.equals(intentOtp)) {
+                    } else if (!userEnterOtp.equals(intentOtp)) {
                         Toast.makeText(OtpForgotPasswordActivity.this, "Enter Valid OTP", Toast.LENGTH_SHORT).show();
                     } else {
                         if (from.equals("device_change")) {
@@ -147,6 +154,9 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
         otp_edit_box2 = findViewById(R.id.otp_edit_box2);
         otp_edit_box3 = findViewById(R.id.otp_edit_box3);
         otp_edit_box4 = findViewById(R.id.otp_edit_box4);
+
+        otp_view = findViewById(R.id.otp_view);
+        otp_viewIndia = findViewById(R.id.otp_viewIndia);
     }
 
     private void otpView() {
@@ -261,7 +271,6 @@ public class OtpForgotPasswordActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor1 = getSharedPreferences(Constants.USER_PIN, MODE_PRIVATE).edit();
                         editor1.putString("user_pin", response.body().getPin());
                         editor1.apply();
-
 
 
                         //save user login time, expire time

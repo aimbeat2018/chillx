@@ -165,7 +165,6 @@
                                 android:textColor="@color/white"
                                 android:textSize="14sp" />
 
-
                             <TextView
                                 android:id="@+id/txtmobile"
                                 android:layout_width="match_parent"
@@ -181,13 +180,15 @@
 
                             <TextView
                                 android:id="@+id/planname"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtmobile"
                                 android:backgroundTint="@color/white"
                                 android:includeFontPadding="false"
                                 android:padding="2dp"
                                 android:text=""
+                                android:layout_gravity="center"
+                                android:gravity="center"
                                 android:textColor="@color/white"
                                 android:textSize="12sp" />
 

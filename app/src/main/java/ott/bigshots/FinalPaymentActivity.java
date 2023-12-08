@@ -17,6 +17,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,9 @@ public class FinalPaymentActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     MyListData[] myListData;
     Context context;
+    LinearLayout lnrGooglePay,
+            lnrPhonePay,
+            lnrPaytm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -310,6 +314,9 @@ public class FinalPaymentActivity extends AppCompatActivity {
         card_aggrepay = findViewById(R.id.card_agrrepay);
         card_onepay = findViewById(R.id.card_onepay);
         imgUpi = findViewById(R.id.imgUpi);
+        lnrGooglePay = findViewById(R.id.lnrGooglePay);
+        lnrPhonePay = findViewById(R.id.lnrPhonePay);
+        lnrPaytm = findViewById(R.id.lnrPaytm);
 
         package_name.setText(aPackage.getName());
         package_validity.setText(aPackage.getDay() + " Days");
@@ -381,13 +388,47 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
     public void onClick() {
 
-        imgUpi.setOnClickListener(view -> {
+        lnrGooglePay.setOnClickListener(view -> {
 
-            Intent intent = new Intent(FinalPaymentActivity.this, RazorPayActivity.class);
+            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
 
             intent.putExtra("package", aPackage);
             intent.putExtra("currency", "currency");
-            intent.putExtra("from", "upi");
+            intent.putExtra("from", "google");
+
+//            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//            paymentstartedAction.put("payment mode", "Cash Free");
+//            paymentstartedAction.put("Selected Plan", aPackage.getName());
+//            paymentstartedAction.put("Amount", aPackage.getPrice());
+//            paymentstartedAction.put("Days", aPackage.getDay());
+
+            startActivity(intent);
+
+        });
+        lnrPhonePay.setOnClickListener(view -> {
+
+            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+
+            intent.putExtra("package", aPackage);
+            intent.putExtra("currency", "currency");
+            intent.putExtra("from", "phonepe");
+
+//            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//            paymentstartedAction.put("payment mode", "Cash Free");
+//            paymentstartedAction.put("Selected Plan", aPackage.getName());
+//            paymentstartedAction.put("Amount", aPackage.getPrice());
+//            paymentstartedAction.put("Days", aPackage.getDay());
+
+            startActivity(intent);
+
+        });
+        lnrPaytm.setOnClickListener(view -> {
+
+            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+
+            intent.putExtra("package", aPackage);
+            intent.putExtra("currency", "currency");
+            intent.putExtra("from", "paytm");
 
 //            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
 //            paymentstartedAction.put("payment mode", "Cash Free");
@@ -572,16 +613,16 @@ public class FinalPaymentActivity extends AppCompatActivity {
             startActivity(intent);
 
 
-            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
-            paymentstartedAction.put("payment mode", "oneUPI");
-            paymentstartedAction.put("Selected Plan", aPackage.getName());
-            paymentstartedAction.put("Amount", aPackage.getPrice());
-            paymentstartedAction.put("Days", aPackage.getDay());
-            clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
-
-            HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-            screenViewedAction.put("Screen Name", "oneUPIPayment");
-            clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//            paymentstartedAction.put("payment mode", "oneUPI");
+//            paymentstartedAction.put("Selected Plan", aPackage.getName());
+//            paymentstartedAction.put("Amount", aPackage.getPrice());
+//            paymentstartedAction.put("Days", aPackage.getDay());
+//            clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
+//
+//            HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//            screenViewedAction.put("Screen Name", "oneUPIPayment");
+//            clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
 
         });

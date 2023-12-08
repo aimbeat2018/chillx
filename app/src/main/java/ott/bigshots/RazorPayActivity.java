@@ -40,6 +40,10 @@ import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
+import com.gpfreetech.IndiUpi.IndiUpi;
+import com.gpfreetech.IndiUpi.listener.PaymentStatusListener;
+import com.gpfreetech.IndiUpi.entity.TransactionResponse;
+import com.gpfreetech.IndiUpi.util.Validator;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.paytm.pgsdk.TransactionManager;
@@ -78,11 +82,11 @@ import java.util.Random;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-
-import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
-import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener;
-import dev.shreyaspatil.easyupipayment.model.PaymentApp;
-import dev.shreyaspatil.easyupipayment.model.TransactionDetails;
+//
+//import dev.shreyaspatil.easyupipayment.EasyUpiPayment;
+//import dev.shreyaspatil.easyupipayment.listener.PaymentStatusListener;
+//import dev.shreyaspatil.easyupipayment.model.PaymentApp;
+//import dev.shreyaspatil.easyupipayment.model.TransactionDetails;
 import okhttp3.ResponseBody;
 import ott.bigshots.constant.AppEnvironment;
 import ott.bigshots.database.DatabaseHelper;
@@ -134,7 +138,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
 
     private static final String GOOGLE_TEZ_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
 
-    private EasyUpiPayment easyUpiPayment;
+//    private EasyUpiPayment easyUpiPayment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,29 +226,45 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
     }
 
     public void startAutoUpiPayment() {
-        EasyUpiPayment.Builder builder = new EasyUpiPayment.Builder(this)
-                .with(PaymentApp.ALL)
+//        EasyUpiPayment.Builder builder = new EasyUpiPayment.Builder(this)
+//                .with(PaymentApp.GOOGLE_PAY)
+//                .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
+//                .setPayeeName("Bigshots movies and web series")
+//                .setTransactionId(paytmOrderId)
+//                .setTransactionRefId(paytmOrderId)
+//                .setPayeeMerchantCode("ea1abee8-c30e-4209-8ae5-0b2be55fc4c3")
+//                .setDescription("For subscription")
+////                .setAmount("1.0");
+//                .setAmount(String.valueOf(Double.parseDouble(aPackage.getPrice())));
+//        // END INITIALIZATION
+//
+//        try {
+//            // Build instance
+//            easyUpiPayment = builder.build();
+//            easyUpiPayment.setPaymentStatusListener(this);
+//
+//            // Start payment / transaction
+//            easyUpiPayment.startPayment();
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+////            toast("Error: " + exception.getMessage());
+//        }
+
+        IndiUpi indiUpi = new IndiUpi.Builder()
+                .with(this)
                 .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
+                .setAmount(String.valueOf(Double.parseDouble(aPackage.getPrice())))
                 .setPayeeName("Bigshots movies and web series")
-                .setTransactionId("39772315")
-                .setTransactionRefId("REF" + paytmOrderId)
-                .setPayeeMerchantCode("")
                 .setDescription("For subscription")
-//                .setAmount("1.0");
-                .setAmount(String.valueOf(Double.parseDouble(aPackage.getPrice())));
-        // END INITIALIZATION
+                .setTransactionId(paytmOrderId)
+                .setTransactionRefId(paytmOrderId)
+//                .setUrl("HTTP_OR_HTTPS", "WWW.EXAMPLE.COM", "API.php")
+                //internal parameter automatically add in URL same as above UPI request
+                .build();
 
-        try {
-            // Build instance
-            easyUpiPayment = builder.build();
-            easyUpiPayment.setPaymentStatusListener(this);
+        indiUpi.setPaymentStatusListener(this);
 
-            // Start payment / transaction
-            easyUpiPayment.startPayment();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-//            toast("Error: " + exception.getMessage());
-        }
+        indiUpi.pay();
 
     }
 
@@ -759,26 +779,26 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
     }
 
 
-    @Override
-    public void onTransactionCompleted(TransactionDetails transactionDetails) {
-        // Transaction Completed
-        Log.d("TransactionDetails", transactionDetails.toString());
-
-        Log.d("TransactionDetails", transactionDetails.toString());
-//        statusView.setText(transactionDetails.toString());
-
-        switch (transactionDetails.getTransactionStatus()) {
-            case SUCCESS:
-                onTransactionSuccess(transactionDetails.getTransactionId());
-                break;
-            case FAILURE:
-                onTransactionFailed();
-                break;
-            case SUBMITTED:
-                onTransactionSubmitted();
-                break;
-        }
-    }
+//    @Override
+//    public void onTransactionCompleted(TransactionDetails transactionDetails) {
+//        // Transaction Completed
+//        Log.d("TransactionDetails", transactionDetails.toString());
+//
+//        Log.d("TransactionDetails", transactionDetails.toString());
+////        statusView.setText(transactionDetails.toString());
+//
+//        switch (transactionDetails.getTransactionStatus()) {
+//            case SUCCESS:
+//                onTransactionSuccess(transactionDetails.getTransactionId());
+//                break;
+//            case FAILURE:
+//                onTransactionFailed();
+//                break;
+//            case SUBMITTED:
+//                onTransactionSubmitted();
+//                break;
+//        }
+//    }
 
     @Override
     public void onTransactionCancelled() {
@@ -786,31 +806,58 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show();
     }
 
-    private void onTransactionSuccess(String transactionId) {
-        // Payment Success
+    @Override
+    public void onTransactionCompleted(TransactionResponse transactionDetails) {
+//        switch (transactionDetails.getStatus()) {
+//            case SUCCESS:
+//                onTransactionSuccess(transactionDetails);
+//                break;
+//            case FAILURE:
+//                onTransactionFailed();
+//                break;
+//            case SUBMITTED:
+//                onTransactionSubmitted();
+//                break;
+//        }
+    }
+
+    @Override
+    public void onTransactionSuccess(TransactionResponse transactionDetails) {
         lnr_success.setVisibility(View.VISIBLE);
         lnr_failed.setVisibility(View.GONE);
 
-        txt_txn_id.setText("Transaction Id : " + transactionId);
-        saveChargeData(transactionId, "upi");
-//        imageView.setImageResource(R.drawable.ic_success);
+        txt_txn_id.setText("Transaction Id : " + transactionDetails.getTransactionId());
+        saveChargeData(transactionDetails.getTransactionId(), "upi");
     }
 
-    private void onTransactionSubmitted() {
-        // Payment Pending
-        toast("Pending | Submitted");
-//        imageView.setImageResource(R.drawable.ic_success);
+    @Override
+    public void onTransactionSubmitted() {
+
     }
 
-    private void onTransactionFailed() {
-        // Payment Failed
+    @Override
+    public void onTransactionFailed() {
         lnr_failed.setVisibility(View.VISIBLE);
         lnr_success.setVisibility(View.GONE);
         txt_txn_id.setText("Failed");
-
-        new Handler().postDelayed(this::finish, 1000);
-//        imageView.setImageResource(R.drawable.ic_failed);
+//
     }
+
+//    private void onTransactionSubmitted() {
+//        // Payment Pending
+//        toast("Pending | Submitted");
+////        imageView.setImageResource(R.drawable.ic_success);
+//    }
+//
+//    private void onTransactionFailed() {
+//        // Payment Failed
+//        lnr_failed.setVisibility(View.VISIBLE);
+//        lnr_success.setVisibility(View.GONE);
+//        txt_txn_id.setText("Failed");
+//
+//        new Handler().postDelayed(this::finish, 1000);
+////        imageView.setImageResource(R.drawable.ic_failed);
+//    }
 
     private void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

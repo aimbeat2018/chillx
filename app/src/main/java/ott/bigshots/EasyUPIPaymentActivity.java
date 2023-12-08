@@ -1,8 +1,5 @@
 package ott.bigshots;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,21 +12,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.HashMap;
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
+import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
+import com.shreyaspatil.EasyUpiPayment.model.PaymentApp;
+import com.shreyaspatil.EasyUpiPayment.model.TransactionDetails;
+
 import java.util.Random;
 
-import dev.android.oneupi.OneUPIPayment;
-import dev.android.oneupi.listener.PaymentStatusListener;
-import dev.android.oneupi.model.PaymentApp;
-import dev.android.oneupi.model.TransactionDetails;
-import ott.bigshots.network.model.Package;
 import okhttp3.ResponseBody;
 import ott.bigshots.network.RetrofitClient;
 import ott.bigshots.network.apis.PaymentApi;
 import ott.bigshots.network.apis.SubscriptionApi;
 import ott.bigshots.network.model.ActiveStatus;
+import ott.bigshots.network.model.Package;
 import ott.bigshots.network.model.SubscriptionHistory;
 import ott.bigshots.network.model.User;
 import ott.bigshots.utils.Constants;
@@ -39,7 +38,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentStatusListener {
+public class EasyUPIPaymentActivity extends AppCompatActivity implements PaymentStatusListener {
     String orderID = "ORDER_ID";
     String token = "TOKEN";
     String order_token = "order_token";
@@ -66,7 +65,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
     CleverTapAPI clevertapChergedInstance;
 
     String transactionId;
-    private OneUPIPayment easyUpiPayment;
     Float float_plan_amount;
     String str_user_age = "";
     String from = "";
@@ -79,20 +77,17 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
         try {
             //  Block of code to try
-            SharedPreferences sharedPreferences = OneUPIPaymentActivity.this.getSharedPreferences(Constants.USER_AGE, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = EasyUPIPaymentActivity.this.getSharedPreferences(Constants.USER_AGE, MODE_PRIVATE);
             str_user_age = sharedPreferences.getString("user_age", "20");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-//        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
 
-//        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+        from = getIntent().getStringExtra("from");
 
         if (getIntent() != null) {
             aPackage = (Package) getIntent().getSerializableExtra("package");
-            from = getIntent().getStringExtra("from");
             databaseHelper = new ott.bigshots.database.DatabaseHelper(this);
         }
 
@@ -132,42 +127,34 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
         transactionId = "TID" + System.currentTimeMillis();
 
-        PaymentApp paymentApp = PaymentApp.ALL;
-        switch (from) {
-            case "google":
-                paymentApp = PaymentApp.GOOGLE_PAY;
-                break;
-            case "phonepe":
-                paymentApp = PaymentApp.PHONE_PE;
-                break;
-            case "paytm":
-                paymentApp = PaymentApp.PAYTM;
-                break;
-        }
 
-        // START PAYMENT INITIALIZATION
-        OneUPIPayment.Builder builder = new OneUPIPayment.Builder(this)
-                .with(paymentApp)
+        final EasyUpiPayment easyUpiPayment = new EasyUpiPayment.Builder()
+                .with(this)
                 .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
                 .setPayeeName("Bigshots movies and web series")
                 .setTransactionId(transactionId)
-//                .setTransactionId("39772315")
                 .setTransactionRefId(transactionId)
-                .setPayeeMerchantCode("ea1abee8-c30e-4209-8ae5-0b2be55fc4c3")//one upi marchant key
-                .setDescription(aPackage.getName())
-                //.setAmount("1.00");
-                .setAmount(String.valueOf(float_plan_amount));
-        // END INITIALIZATION
+                .setDescription("For Subscription")
+                .setAmount(String.valueOf(float_plan_amount))
+                .build();
 
         try {
-            // Build instance
-            easyUpiPayment = builder.build();
 
-            // Register Listener for Events
+            switch (from) {
+                case "google":
+                    easyUpiPayment.setDefaultPaymentApp(PaymentApp.GOOGLE_PAY);
+                    break;
+                case "phonepe":
+                    easyUpiPayment.setDefaultPaymentApp(PaymentApp.PHONE_PE);
+                    break;
+                case "paytm":
+                    easyUpiPayment.setDefaultPaymentApp(PaymentApp.PAYTM);
+                    break;
+            }
+
             easyUpiPayment.setPaymentStatusListener(this);
-
-            // Start payment / transaction
             easyUpiPayment.startPayment();
+
         } catch (Exception exception) {
             exception.printStackTrace();
             toast("Error: " + exception.getMessage());
@@ -190,28 +177,33 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
     }
 
+    @Override
+    public void onAppNotFound() {
+
+    }
+
 
     @Override
     public void onTransactionCompleted(@NonNull TransactionDetails transactionDetails) {
         // Transaction Completed
         Log.d("TransactionDetails", transactionDetails.toString());
 
-        switch (transactionDetails.getTransactionStatus()) {
-            case SUCCESS:
-                onTransactionSuccess();
-                break;
-            case FAILURE:
-                onTransactionFailed();
-                break;
-            case SUBMITTED:
-                onTransactionSubmitted();
-                break;
-        }
+//        switch (transactionDetails.getStatus()) {
+//            case SUCCESS:
+//                onTransactionSuccess();
+//                break;
+//            case FAILURE:
+//                onTransactionFailed();
+//                break;
+//            case SUBMITTED:
+//                onTransactionSubmitted();
+//                break;
+//        }
 
     }
 
 
-    private void onTransactionSuccess() {
+    public void onTransactionSuccess() {
         // Payment Success
         lnr_failed.setVisibility(View.GONE);
         lnr_success.setVisibility(View.VISIBLE);
@@ -227,12 +219,12 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
     }
 
 
-    private void onTransactionSubmitted() {
+    public void onTransactionSubmitted() {
         // Payment Pending
         toast("Pending | Submitted");
     }
 
-    private void onTransactionFailed() {
+    public void onTransactionFailed() {
         // Payment Failed
         toast("Failed");
 
@@ -271,7 +263,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
                     getSubscriptionHistory(plantamount);
 
                 } else {
-                    new ToastMsg(OneUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                    new ToastMsg(EasyUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
                     finish();
                     progressBar.setVisibility(View.GONE);
                 }
@@ -281,7 +273,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-                new ToastMsg(OneUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                new ToastMsg(EasyUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
                 finish();
                 progressBar.setVisibility(View.GONE);
             }
@@ -293,7 +285,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, PreferenceUtils.getUserId(OneUPIPaymentActivity.this));
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, PreferenceUtils.getUserId(EasyUPIPaymentActivity.this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(Call<ActiveStatus> call, retrofit2.Response<ActiveStatus> response) {
@@ -302,9 +294,9 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
                     ott.bigshots.database.DatabaseHelper db = new ott.bigshots.database.DatabaseHelper(getApplicationContext());
                     db.deleteAllActiveStatusData();
                     db.insertActiveStatusData(activeStatus);
-                    new ToastMsg(OneUPIPaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
+                    new ToastMsg(EasyUPIPaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     progressBar.setVisibility(View.GONE);
-                    Intent intent = new Intent(OneUPIPaymentActivity.this, MainActivity.class);
+                    Intent intent = new Intent(EasyUPIPaymentActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -313,7 +305,7 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
             @Override
             public void onFailure(Call<ActiveStatus> call, Throwable t) {
                 t.printStackTrace();
-                new ToastMsg(OneUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                new ToastMsg(EasyUPIPaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
                 finish();
                 progressBar.setVisibility(View.GONE);
             }

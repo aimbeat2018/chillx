@@ -70,15 +70,15 @@ public class OtpActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken verificationToken;
     OtpView otp_view, otp_viewIndia;
     String userEnterOtp = "";
-    CleverTapAPI clevertapDefaultInstance, clevertapscreenviewd;
+//    CleverTapAPI clevertapDefaultInstance, clevertapscreenviewd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_otp);
 
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         init();
         otpView();
@@ -528,7 +528,7 @@ public class OtpActivity extends AppCompatActivity {
 //        String[] otherStuff = {"Jeans", "Perfume"};
 //        profileUpdate.put("MyStuff", otherStuff);                   //String Array
 
-        clevertapDefaultInstance.onUserLogin(profileUpdate);
+//        clevertapDefaultInstance.onUserLogin(profileUpdate);
         // clevertapDefaultInstance.pushProfile(profileUpdate);
     }
 
@@ -554,9 +554,9 @@ public class OtpActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-                        HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-                        screenViewedAction.put("Screen Name", "HomepageActivity");
-                        clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//                        HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//                        screenViewedAction.put("Screen Name", "HomepageActivity");
+//                        clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
                         startActivity(intent);
                         finish();

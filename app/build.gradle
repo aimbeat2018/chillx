@@ -24,8 +24,8 @@ android {
         applicationId "ott.bigshots"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         /* versionCode 35
          versionName "1.35"*/
         multiDexEnabled true
@@ -268,8 +268,10 @@ dependencies {
 
     implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
 
-//    implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
-    implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
+    implementation 'com.shreyaspatil:EasyUpiPayment:2.0'
+//    implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
+//
+    implementation 'com.gpfreetech:IndiUpi:1.1'
 
 
 }

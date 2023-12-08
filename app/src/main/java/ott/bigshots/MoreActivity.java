@@ -469,7 +469,7 @@ public class MoreActivity extends AppCompatActivity {
 
     public void onOnSupportClick(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + "8976716053"));
+        intent.setData(Uri.parse("tel:" + "8976395879"));
         startActivity(intent);
 
     }
@@ -684,7 +684,7 @@ public class MoreActivity extends AppCompatActivity {
                     if (subscriptionHistory.getActiveSubscription().size() > 0) {
 
                         planstatus.setText("Subscribed");
-                        lnrPremium.setVisibility(View.VISIBLE);
+                        lnrPremium.setVisibility(View.GONE);
                         // planname.setText(subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
                         planstatus.setBackgroundColor(getResources().getColor(R.color.green));
 

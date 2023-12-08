@@ -139,9 +139,9 @@ public class HelpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 // intent.setData(Uri.parse("tel:" + mobile.getText()));
-                intent.setData(Uri.parse("tel:" + "8976716053"));
+                intent.setData(Uri.parse("tel:" + "8976395879"));
                 //System.out.println("OnItemClickListener ==> listData ==> " + mobile.getText());
-                System.out.println("OnItemClickListener ==> listData ==> " + "8976716053");
+                System.out.println("OnItemClickListener ==> listData ==> " + "8976395879");
                 startActivity(intent);
             }
         });
