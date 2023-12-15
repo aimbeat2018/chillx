@@ -121,7 +121,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.Original
     ProgressDialog pDialog;
     List<String> optionsToDownload = new ArrayList<String>();
 
-    CleverTapAPI clevertapdownloaddevice;
+//    CleverTapAPI clevertapdownloaddevice;
 
     @Override
     public void onDownloadsChanged(Download download) {
@@ -916,8 +916,8 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.Original
 
     private void downloadDevicePushEvent() {
 
-        clevertapdownloaddevice= CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapdownloaddevice.pushEvent("Android");
+//        clevertapdownloaddevice= CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapdownloaddevice.pushEvent("Android");
 
     }
 

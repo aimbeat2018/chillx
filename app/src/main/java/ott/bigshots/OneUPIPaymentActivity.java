@@ -15,12 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 
 import java.util.HashMap;
 import java.util.Random;
 
 import dev.android.oneupi.OneUPIPayment;
+import dev.android.oneupi.exception.AppNotFoundException;
 import dev.android.oneupi.listener.PaymentStatusListener;
 import dev.android.oneupi.model.PaymentApp;
 import dev.android.oneupi.model.TransactionDetails;
@@ -63,7 +64,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
     LinearLayout lnr_success,
             lnr_failed;
     private ProgressBar progressBar;
-    CleverTapAPI clevertapChergedInstance;
 
     String transactionId;
     private OneUPIPayment easyUpiPayment;
@@ -168,12 +168,12 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
             // Start payment / transaction
             easyUpiPayment.startPayment();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            toast("Error: " + exception.getMessage());
-
+        } catch (AppNotFoundException exception) {
+//            exception.printStackTrace();
+            toast("No UPI app found for payment");
         }
     }
+
 
 
     @Override

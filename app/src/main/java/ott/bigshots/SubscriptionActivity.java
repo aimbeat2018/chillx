@@ -71,7 +71,7 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
 
     private List<ActiveSubscription> activeSubscriptions = new ArrayList<>();
     private boolean isDark;
-    CleverTapAPI clevertapscreenviewd;
+//    CleverTapAPI clevertapscreenviewd;
     
 
     @Override
@@ -266,9 +266,9 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
             public void onClick(View v) {
                 startActivity(new Intent(SubscriptionActivity.this, PurchasePlanActivity.class));
 
-                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-                screenViewedAction.put("Screen Name", "PurchasePlanActivity");
-                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//                screenViewedAction.put("Screen Name", "PurchasePlanActivity");
+//                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
             }
         });

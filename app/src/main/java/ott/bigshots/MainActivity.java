@@ -29,6 +29,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +51,7 @@ import com.appsflyer.AppsFlyerLib;
 import com.appsflyer.attribution.AppsFlyerRequestListener;
 import com.bumptech.glide.Glide;
 //import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.gms.cast.framework.CastContext;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String VERSION_CODE_KEY = "version_code";
     private AlertDialog updateDailog;
     AppsFlyerRequestListener appsFlyerRequestListener;
-    CleverTapAPI clevertapDefaultInstance;
+    //    CleverTapAPI clevertapDefaultInstance;
     String login_status = "";
     String str_register_age = "";
 
@@ -222,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 //to  get user  city location
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapDefaultInstance.enableDeviceNetworkInfoReporting(true);
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapDefaultInstance.enableDeviceNetworkInfoReporting(true);
 
         //check vpn connection
         helperUtils = new HelperUtils(MainActivity.this);
@@ -676,9 +677,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         });
+        if(dialog==null) {
 
-        dialog.show();
-        dialog.getWindow().setAttributes(lp);
+            dialog.show();
+            dialog.getWindow().setAttributes(lp);
+        }
     }
 
 
@@ -903,7 +906,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Glide.with(MainActivity.this).load(image).into(img_image);
 
             CardView card_cancel = dialog.findViewById(R.id.card_cancel);
+            RelativeLayout relDialog = dialog.findViewById(R.id.relDialog);
             card_cancel.setOnClickListener(v -> {
+                dialog.dismiss();
+
+                PreferenceUtils.okClicked = true;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+                String currentDate = sdf.format(new Date());
+                SharedPreferences sharedPref = getSharedPreferences("dialog", 0);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("LAST_LAUNCH_DATE", currentDate);
+                editor.commit();
+            });
+
+            relDialog.setOnClickListener(v -> {
                 dialog.dismiss();
 
                 PreferenceUtils.okClicked = true;

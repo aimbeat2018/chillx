@@ -41,7 +41,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 //import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -116,7 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String verificationId;
     private PhoneAuthProvider.ForceResendingToken verificationToken;
-    CleverTapAPI clevertapDefaultInstance;
+//    CleverTapAPI clevertapDefaultInstance;
 
 
     @Override
@@ -135,7 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         if (!isDark) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             //genderSpinner.setTextColor(getResources().getColor(android.R.color.black));
@@ -988,7 +988,7 @@ public class ProfileActivity extends AppCompatActivity {
         // profileUpdate.put("MyStuff", stuff);                        //ArrayList of Strings
         // String[] otherStuff = {"Jeans", "Perfume"};
         //  profileUpdate.put("MyStuff", otherStuff);                   //String Array
-        clevertapDefaultInstance.pushProfile(profileUpdate);
+//        clevertapDefaultInstance.pushProfile(profileUpdate);
 
     }
 

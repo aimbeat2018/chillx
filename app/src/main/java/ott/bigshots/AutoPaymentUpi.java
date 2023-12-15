@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.cashfree.pg.core.api.CFSession;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 
 import okhttp3.ResponseBody;
 import ott.bigshots.database.DatabaseHelper;
@@ -47,7 +47,7 @@ public class AutoPaymentUpi extends AppCompatActivity {
     LinearLayout lnr_success,
             lnr_failed;
     private ProgressBar progressBar;
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
 
 
     @Override

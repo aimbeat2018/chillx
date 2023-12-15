@@ -55,7 +55,7 @@ public class CommonGridWatchlistAdapter extends RecyclerView.Adapter<CommonGridW
     String userId = "";
     String id = "";
 
-    CleverTapAPI clevertapRemovedwatchlistInstance;
+//    CleverTapAPI clevertapRemovedwatchlistInstance;
 
     public CommonGridWatchlistAdapter(Context context, List<CommonModels> items) {
         this.items = items;
@@ -92,7 +92,7 @@ public class CommonGridWatchlistAdapter extends RecyclerView.Adapter<CommonGridW
         userId = PreferenceUtils.getUserId(ctx);
         id = obj.getId();
 
-        clevertapRemovedwatchlistInstance= CleverTapAPI.getDefaultInstance(ctx.getApplicationContext());
+//        clevertapRemovedwatchlistInstance= CleverTapAPI.getDefaultInstance(ctx.getApplicationContext());
 
 
         holder.option.setOnClickListener(new View.OnClickListener() {
@@ -201,11 +201,11 @@ public class CommonGridWatchlistAdapter extends RecyclerView.Adapter<CommonGridW
                         //  isFav = false;
                         new ToastMsg(ctx).toastIconSuccess(response.body().getMessage());
 
-                        HashMap<String, Object> removedFromWatchlistAction= new HashMap<String, Object>();
-                        removedFromWatchlistAction.put("video id",id );
-                        removedFromWatchlistAction.put("Title", title);
-                        removedFromWatchlistAction.put("Content Type", videoType);
-                        clevertapRemovedwatchlistInstance.pushEvent("Removed from watchlist", removedFromWatchlistAction);
+//                        HashMap<String, Object> removedFromWatchlistAction= new HashMap<String, Object>();
+//                        removedFromWatchlistAction.put("video id",id );
+//                        removedFromWatchlistAction.put("Title", title);
+//                        removedFromWatchlistAction.put("Content Type", videoType);
+//                        clevertapRemovedwatchlistInstance.pushEvent("Removed from watchlist", removedFromWatchlistAction);
 
                         //to refresh list after deleting item
                         items.remove(position);

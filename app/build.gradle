@@ -18,14 +18,14 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     buildToolsVersion "30.0.3"
     defaultConfig {
         applicationId "ott.bigshots"
         minSdkVersion 23
-        targetSdkVersion 33
-        versionCode 3
-        versionName "1.2"
+        targetSdkVersion 34
+        versionCode 4
+        versionName "1.3"
         /* versionCode 35
          versionName "1.35"*/
         multiDexEnabled true
@@ -93,7 +93,7 @@ dependencies {
 
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation project(path: ':nativetemplates')
-    def room_version = "2.5.1"
+    def room_version = "2.6.1"
     def lifecycle_version = "2.3.1"
     def arch_version = "2.1.0"
 
@@ -221,8 +221,8 @@ dependencies {
     implementation 'in.payu:payu-gpay:1.4.0'
     implementation 'in.payu:native-otp-assist:1.2.1'
 
-    implementation 'com.cashfree.pg:api:1.0.11'
-    implementation 'com.cashfree.pg:android-sdk:1.7.28'
+    implementation 'com.cashfree.pg:api:2.1.5'
+//    implementation 'com.cashfree.pg:android-sdk:1.7.28'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.dinuscxj:circleprogressbar:1.3.6'
 

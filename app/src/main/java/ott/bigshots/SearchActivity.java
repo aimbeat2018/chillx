@@ -28,7 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -107,7 +107,7 @@ public class SearchActivity extends AppCompatActivity {
     public TextView view_more;
     SearchGridAdapter mAdapter;
 
-    CleverTapAPI clevertapSearchdInstance;
+//    CleverTapAPI clevertapSearchdInstance;
     private AdView mAdView;
     private HomePageAdapter adapterMovie;
 
@@ -120,7 +120,7 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         RtlUtils.setScreenDirection(this);
 
-        clevertapSearchdInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapSearchdInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         SharedPreferences sharedPreferences = getSharedPreferences("push", MODE_PRIVATE);
         isDark = sharedPreferences.getBoolean("dark", false);
@@ -499,9 +499,9 @@ public class SearchActivity extends AppCompatActivity {
                 save_text_history();
 
 
-                HashMap<String, Object> SearchKeywordAction = new HashMap<String, Object>();
-                SearchKeywordAction.put("Keyword", search_edit_text.getText().toString());
-                clevertapSearchdInstance.pushEvent("Searched", SearchKeywordAction);
+//                HashMap<String, Object> SearchKeywordAction = new HashMap<String, Object>();
+//                SearchKeywordAction.put("Keyword", search_edit_text.getText().toString());
+//                clevertapSearchdInstance.pushEvent("Searched", SearchKeywordAction);
 
                 //  insertsqlite();
                 //  showdata();

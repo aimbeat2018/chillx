@@ -65,7 +65,7 @@ ProgressBar progressBar;
     private Package aPackage;
     private ott.bigshots.database.DatabaseHelper databaseHelper;
 
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
 
     TextView txt_txn_id,
             txt_falied_reason;
@@ -86,10 +86,10 @@ ProgressBar progressBar;
         progressBar = findViewById(R.id.progressBar);
 
 
-        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
-
-        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//
+//        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
 
         try {
             //  Block of code to try
@@ -316,16 +316,16 @@ ProgressBar progressBar;
 
                         if (subscriptionHistory.getActiveSubscription().size() > 0) {
 
-                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
-                            paymentAction.put("payment mode", "onepay");
-                            paymentAction.put("amount", plantamount);
-                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
-                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
-                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
-                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
-                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
-                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
-                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
+//                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
+//                            paymentAction.put("payment mode", "onepay");
+//                            paymentAction.put("amount", plantamount);
+//                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
+//                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
+//                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
+//                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
+//                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
+//                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
+//                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
 
                         }
                     } catch (Exception e) {

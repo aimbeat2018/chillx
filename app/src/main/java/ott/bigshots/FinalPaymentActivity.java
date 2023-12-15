@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +28,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.stripe.android.PaymentConfiguration;
@@ -40,6 +42,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -77,7 +80,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
             card_cashfree, card_razorpay, card_gpay, card_autoupi, card_oneupi, card_stripe, card_aggrepay, card_onepay;
     ImageView close_iv;
     private Package aPackage;
-    CleverTapAPI clevertapPaymentStartedInstance, clevertapscreenviewd;
+//    CleverTapAPI clevertapPaymentStartedInstance, clevertapscreenviewd;
 
     PaymentSheet paymentSheet;
     String paymentIntentClientSecret;
@@ -94,6 +97,10 @@ public class FinalPaymentActivity extends AppCompatActivity {
             lnrPhonePay,
             lnrPaytm;
 
+    PackageManager packageManager;
+    List pkgAppsList;
+    private static final String GOOGLE_TEZ_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
+    boolean isAppInstalled ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +109,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
 //        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
 
 //        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+        isAppInstalled = appInstalledOrNot(GOOGLE_TEZ_PACKAGE_NAME);
 
         aPackage = (Package) getIntent().getSerializableExtra("package");
         databaseHelper = new DatabaseHelper(this);
@@ -142,6 +150,19 @@ public class FinalPaymentActivity extends AppCompatActivity {
         //  Button btConfirm = dialog.findViewById(R.id.btConfirm);
         TextView txtCancel = dialog.findViewById(R.id.txtCancel);
         RecyclerView rec_age = dialog.findViewById(R.id.recyclerView);
+
+        packageManager = context.getPackageManager();
+
+        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+        mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        mainIntent.addCategory(Intent.CATEGORY_BROWSABLE);
+        mainIntent.setAction(Intent.ACTION_VIEW);
+        Uri uri1 = new Uri.Builder().scheme("upi").authority("pay").build();
+        mainIntent.setData(uri1);
+
+        pkgAppsList =
+                context.getPackageManager().queryIntentActivities(mainIntent, 0);
+
 
         myListData = new MyListData[]{
 
@@ -298,6 +319,19 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
     }
 
+    private boolean appInstalledOrNot(String googleTezPackageName) {
+
+        PackageManager pm = getPackageManager();
+        try {
+            pm.getPackageInfo(googleTezPackageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
+
+    }
+
     private void init() {
         package_name = findViewById(R.id.package_name);
         package_validity = findViewById(R.id.package_validity);
@@ -389,12 +423,17 @@ public class FinalPaymentActivity extends AppCompatActivity {
     public void onClick() {
 
         lnrGooglePay.setOnClickListener(view -> {
+            if (pkgAppsList.size() == 0) {
 
-            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+                Toast.makeText(this, "UPI App not installed on your device", Toast.LENGTH_SHORT).show();
 
-            intent.putExtra("package", aPackage);
-            intent.putExtra("currency", "currency");
-            intent.putExtra("from", "google");
+            } else {
+
+                Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+
+                intent.putExtra("package", aPackage);
+                intent.putExtra("currency", "currency");
+                intent.putExtra("from", "google");
 
 //            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
 //            paymentstartedAction.put("payment mode", "Cash Free");
@@ -402,16 +441,22 @@ public class FinalPaymentActivity extends AppCompatActivity {
 //            paymentstartedAction.put("Amount", aPackage.getPrice());
 //            paymentstartedAction.put("Days", aPackage.getDay());
 
-            startActivity(intent);
+                startActivity(intent);
+            }
 
         });
+
         lnrPhonePay.setOnClickListener(view -> {
+            if (pkgAppsList.size() == 0) {
 
-            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+                Toast.makeText(this, "UPI App not installed on your device", Toast.LENGTH_SHORT).show();
 
-            intent.putExtra("package", aPackage);
-            intent.putExtra("currency", "currency");
-            intent.putExtra("from", "phonepe");
+            } else {
+                Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+
+                intent.putExtra("package", aPackage);
+                intent.putExtra("currency", "currency");
+                intent.putExtra("from", "phonepe");
 
 //            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
 //            paymentstartedAction.put("payment mode", "Cash Free");
@@ -419,16 +464,22 @@ public class FinalPaymentActivity extends AppCompatActivity {
 //            paymentstartedAction.put("Amount", aPackage.getPrice());
 //            paymentstartedAction.put("Days", aPackage.getDay());
 
-            startActivity(intent);
+                startActivity(intent);
+            }
 
         });
         lnrPaytm.setOnClickListener(view -> {
 
-            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+            if (pkgAppsList.size() == 0) {
 
-            intent.putExtra("package", aPackage);
-            intent.putExtra("currency", "currency");
-            intent.putExtra("from", "paytm");
+                Toast.makeText(this, "UPI App not installed on your device", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+
+                intent.putExtra("package", aPackage);
+                intent.putExtra("currency", "currency");
+                intent.putExtra("from", "paytm");
 
 //            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
 //            paymentstartedAction.put("payment mode", "Cash Free");
@@ -436,7 +487,8 @@ public class FinalPaymentActivity extends AppCompatActivity {
 //            paymentstartedAction.put("Amount", aPackage.getPrice());
 //            paymentstartedAction.put("Days", aPackage.getDay());
 
-            startActivity(intent);
+                startActivity(intent);
+            }
 
         });
 
@@ -451,16 +503,16 @@ public class FinalPaymentActivity extends AppCompatActivity {
                 intent.putExtra("from", "aggrepay");
                 startActivity(intent);
 
-                HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
-                paymentstartedAction.put("payment mode", "aggrepay");
-                paymentstartedAction.put("Selected Plan", aPackage.getName());
-                paymentstartedAction.put("Amount", aPackage.getPrice());
-                paymentstartedAction.put("Days", aPackage.getDay());
-                clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
-
-                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-                screenViewedAction.put("Screen Name", "AgrrepayActivity");
-                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//                HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//                paymentstartedAction.put("payment mode", "aggrepay");
+//                paymentstartedAction.put("Selected Plan", aPackage.getName());
+//                paymentstartedAction.put("Amount", aPackage.getPrice());
+//                paymentstartedAction.put("Days", aPackage.getDay());
+//                clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
+//
+//                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//                screenViewedAction.put("Screen Name", "AgrrepayActivity");
+//                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
             }
         });
@@ -568,18 +620,18 @@ public class FinalPaymentActivity extends AppCompatActivity {
             intent.putExtra("currency", "currency");
             intent.putExtra("from", "cashfree");
 
-            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
-            paymentstartedAction.put("payment mode", "Cash Free");
-            paymentstartedAction.put("Selected Plan", aPackage.getName());
-            paymentstartedAction.put("Amount", aPackage.getPrice());
-            paymentstartedAction.put("Days", aPackage.getDay());
+//            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();
+//            paymentstartedAction.put("payment mode", "Cash Free");
+//            paymentstartedAction.put("Selected Plan", aPackage.getName());
+//            paymentstartedAction.put("Amount", aPackage.getPrice());
+//            paymentstartedAction.put("Days", aPackage.getDay());
 
 
-            clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
-
-            HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-            screenViewedAction.put("Screen Name", "cashFreePayment");
-            clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//            clevertapPaymentStartedInstance.pushEvent("Payment Started", paymentstartedAction);
+//
+//            HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//            screenViewedAction.put("Screen Name", "cashFreePayment");
+//            clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
             startActivity(intent);
 
@@ -587,6 +639,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
 
         card_payuMoney.setOnClickListener(view -> {
+
             Intent intent = new Intent(FinalPaymentActivity.this, RazorPayActivity.class);
             intent.putExtra("package", aPackage);
             intent.putExtra("currency", "currency");
@@ -606,11 +659,17 @@ public class FinalPaymentActivity extends AppCompatActivity {
         });
 
         card_oneupi.setOnClickListener(view -> {
-            Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
-            intent.putExtra("package", aPackage);
-            intent.putExtra("currency", "currency");
-            intent.putExtra("from", "oneupi");
-            startActivity(intent);
+            if (pkgAppsList.size() == 0) {
+
+                Toast.makeText(this, "UPI App not installed on your device", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Intent intent = new Intent(FinalPaymentActivity.this, OneUPIPaymentActivity.class);
+                intent.putExtra("package", aPackage);
+                intent.putExtra("currency", "currency");
+                intent.putExtra("from", "oneupi");
+                startActivity(intent);
+            }
 
 
 //            HashMap<String, Object> paymentstartedAction = new HashMap<String, Object>();

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
 import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
 import com.shreyaspatil.EasyUpiPayment.model.PaymentApp;
@@ -62,7 +62,7 @@ public class EasyUPIPaymentActivity extends AppCompatActivity implements Payment
     LinearLayout lnr_success,
             lnr_failed;
     private ProgressBar progressBar;
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
 
     String transactionId;
     Float float_plan_amount;

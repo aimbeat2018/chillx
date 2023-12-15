@@ -105,7 +105,7 @@ import ott.bigshots.network.apis.UserDataApi;
 import ott.bigshots.network.model.ActiveStatus;
 import ott.bigshots.network.model.FavoriteModel;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;

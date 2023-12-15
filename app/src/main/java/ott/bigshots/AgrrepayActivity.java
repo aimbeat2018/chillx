@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.test.pg.secure.pgsdkv4.PGConstants;
 import com.test.pg.secure.pgsdkv4.PaymentGatewayPaymentInitializer;
 import com.test.pg.secure.pgsdkv4.PaymentParams;
@@ -50,16 +50,16 @@ public class AgrrepayActivity extends AppCompatActivity {
     String uid = "", uname = "", mobile = "", email = "", order_id = "", orderIdstr = "";
     String plantamount = "";
 
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
     String str_user_age="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agrrepay);
 
-        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
-        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapChergedInstance.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
+//        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.VERBOSE);
         try {
             //  Block of code to try
             SharedPreferences sharedPreferences = AgrrepayActivity.this.getSharedPreferences(Constants.USER_AGE, MODE_PRIVATE);
@@ -273,16 +273,16 @@ public class AgrrepayActivity extends AppCompatActivity {
                     try {
                         if (subscriptionHistory.getActiveSubscription().size() > 0) {
 
-                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
-                            paymentAction.put("payment mode", "aggrepay");
-                            paymentAction.put("amount", plantamount);
-                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
-                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
-                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
-                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
-                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
-                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
-                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
+//                            HashMap<String, Object> paymentAction = new HashMap<String, Object>();
+//                            paymentAction.put("payment mode", "aggrepay");
+//                            paymentAction.put("amount", plantamount);
+//                            paymentAction.put("subscription plan", subscriptionHistory.getActiveSubscription().get(0).getPlanTitle());
+//                            paymentAction.put("Payment ID", subscriptionHistory.getActiveSubscription().get(0).getPaymentInfo());
+//                            paymentAction.put("Subscription ID", subscriptionHistory.getActiveSubscription().get(0).getSubscriptionId());
+//                            paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
+//                            paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
+//                            paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
+//                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
 
                         }
                     } catch (Exception e) {

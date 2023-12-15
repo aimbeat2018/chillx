@@ -67,7 +67,7 @@ public class MainHomeFragment extends Fragment {
     AppCompatImageView img_home, img_gold, img_watchlist, img_download, img_account, img_search;
     TextView txt_home, txt_gold, txt_watchlist, txt_download, txt_account, txt_search;
     FloatingActionButton fab_goals;
-    CleverTapAPI clevertapscreenviewd;
+//    CleverTapAPI clevertapscreenviewd;
     private AdView mAdView;
     ChipNavigationBar bottomNav;
 
@@ -94,7 +94,7 @@ public class MainHomeFragment extends Fragment {
         searchRootLayout = view.findViewById(R.id.search_root_layout);
         bottomNav = view.findViewById(R.id.bottomNav);
 
-        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getActivity());
+//        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getActivity());
 
 
         //admob banner ads

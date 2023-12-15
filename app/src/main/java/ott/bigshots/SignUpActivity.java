@@ -83,7 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
     String deviceId = "";
     String firebaseToken = "", mobileStr = "", countryCode = "91";
     TextView tv_login, txtcountryCode;
-    CleverTapAPI clevertapDefaultInstance, clevertapnewRegisterInstance;
+//    CleverTapAPI clevertapDefaultInstance, clevertapnewRegisterInstance;
     //    String mobile = "";
     LinearLayout ll_pin;
     OtpView otp_viewIndia;
@@ -102,10 +102,6 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         RtlUtils.setScreenDirection(this);
         SharedPreferences sharedPreferences = getSharedPreferences("push", MODE_PRIVATE);
         boolean isDark = sharedPreferences.getBoolean("dark", false);
-
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-        clevertapnewRegisterInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
-
 
         if (isDark) {
             setTheme(R.style.AppThemeDark);
@@ -131,20 +127,6 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
-       // spin.setPrompt("Select age1");
-
-
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//
-//        if (!isDark) {
-//            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-//        }else {
-//            toolbar.setBackgroundColor(getResources().getColor(R.color.black_window_light));
-//        }
-
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setTitle("SignUp");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //---analytics-----------
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -211,9 +193,9 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 new ToastMsg(SignUpActivity.this).toastIconError("please enter name");
             } else if (mobile.getText().toString().equals("")) {
                 new ToastMsg(SignUpActivity.this).toastIconError("please enter mobile number");
-            } else if (!isValidEmailAddress(etEmail.getText().toString())) {
+            }/* else if (!isValidEmailAddress(etEmail.getText().toString())) {
                 new ToastMsg(SignUpActivity.this).toastIconError("please enter valid email");
-            } /*else if (etPass.getText().toString().equals("")) {
+            }*/ /*else if (etPass.getText().toString().equals("")) {
                 new ToastMsg(SignUpActivity.this).toastIconError("please enter password");
             } else if (!confirmpassword.getText().toString().equals(etPass.getText().toString())) {
                 new ToastMsg(SignUpActivity.this).toastIconError("confirm password should match with password");
@@ -227,34 +209,32 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
                 new ToastMsg(SignUpActivity.this).toastIconError("please accept our terms and conditions");
             }*/ else {
 
-                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (task.isComplete()) {
-                            firebaseToken = task.getResult();
-                            Log.e("AppConstants", "onComplete: new Token got: " + firebaseToken);
+                FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                    if (task.isComplete()) {
+                        firebaseToken = task.getResult();
+                        Log.e("AppConstants", "onComplete: new Token got: " + firebaseToken);
 
-                            //clevertap
-                            clevertapDefaultInstance.pushFcmRegistrationId(firebaseToken, true);
-                            String email = etEmail.getText().toString();
-                            String pass = etPass.getText().toString();
-                            String name = etName.getText().toString();
-                            String mobilestr = mobile.getText().toString();
-                            if (mobilestr.contains("+91"))
-                                mobilestr = mobileStr.replace("+91", "");
+                        //clevertap
+//                            clevertapDefaultInstance.pushFcmRegistrationId(firebaseToken, true);
+//                            String email = etEmail.getText().toString();
+                        String email = "";
+                        String pass = etPass.getText().toString();
+                        String name = etName.getText().toString();
+                        String mobilestr = mobile.getText().toString();
+                        if (mobilestr.contains("+91"))
+                            mobilestr = mobileStr.replace("+91", "");
 
-                            if (checkbox_age.isChecked()) {
-                                strDob = "1";
-                            } else {
-                                strDob = "";
-                            }
-
-                           // signUp(email, pass, name, mobilestr, strDob);
-                            signUp(email, pass, name, mobilestr, "1");
-
-
-
+                        if (checkbox_age.isChecked()) {
+                            strDob = "1";
+                        } else {
+                            strDob = "";
                         }
+
+                       // signUp(email, pass, name, mobilestr, strDob);
+                        signUp(email, pass, name, mobilestr, "1");
+
+
+
                     }
                 });
 
@@ -275,33 +255,15 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        phoneAuthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phoneSignIn();
-            }
-        });
+        phoneAuthButton.setOnClickListener(v -> phoneSignIn());
 
-        facebookAuthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                facebookSignIn();
-            }
-        });
+        facebookAuthButton.setOnClickListener(v -> facebookSignIn());
 
-        googleAuthButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                googleSignIn();
-            }
-        });
+        googleAuthButton.setOnClickListener(v -> googleSignIn());
 
-        tvLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                finish();
-            }
+        tvLogin.setOnClickListener(v -> {
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            finish();
         });
 
 //        deviceId = getAndroidDeviceId();
@@ -349,15 +311,15 @@ public class SignUpActivity extends AppCompatActivity implements AdapterView.OnI
         //  profileUpdate.put("MyStuff", otherStuff);                   //String Array
 
 
-        clevertapDefaultInstance.onUserLogin(profileUpdate);
-
-        HashMap<String, Object> newregisteruseraction = new HashMap<String, Object>();
-        newregisteruseraction.put("Name", name);    // String
-        newregisteruseraction.put("Identity", id);      // String or number
-        newregisteruseraction.put("Email", email); // Email address of the user
-        newregisteruseraction.put("Phone", mobile);   // Phone (with the country code, starting with +)
-        newregisteruseraction.put("Device Type", "Android");
-        clevertapnewRegisterInstance.pushEvent("New Register user", newregisteruseraction);
+//        clevertapDefaultInstance.onUserLogin(profileUpdate);
+//
+//        HashMap<String, Object> newregisteruseraction = new HashMap<String, Object>();
+//        newregisteruseraction.put("Name", name);    // String
+//        newregisteruseraction.put("Identity", id);      // String or number
+//        newregisteruseraction.put("Email", email); // Email address of the user
+//        newregisteruseraction.put("Phone", mobile);   // Phone (with the country code, starting with +)
+//        newregisteruseraction.put("Device Type", "Android");
+//        clevertapnewRegisterInstance.pushEvent("New Register user", newregisteruseraction);
     }
 
 

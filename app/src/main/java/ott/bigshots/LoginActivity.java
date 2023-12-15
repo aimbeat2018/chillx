@@ -27,7 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.facebook.login.Login;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.Auth;
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvsignup;
     CountryCodePicker ccp;
     private FirebaseAuth mAuth;
-    CleverTapAPI clevertapDefaultInstance;
+//    CleverTapAPI clevertapDefaultInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         databaseHelper = new DatabaseHelper(LoginActivity.this);
 
@@ -1142,7 +1142,7 @@ public class LoginActivity extends AppCompatActivity {
 //        String[] otherStuff = {"Jeans", "Perfume"};
 //        profileUpdate.put("MyStuff", otherStuff);                   //String Array
 
-        clevertapDefaultInstance.onUserLogin(profileUpdate);
+//        clevertapDefaultInstance.onUserLogin(profileUpdate);
         // clevertapDefaultInstance.pushProfile(profileUpdate);
     }
 

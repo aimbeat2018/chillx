@@ -39,7 +39,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.Origin
     private boolean on_attach = true;
     private int animation_type = 2;
 
-    CleverTapAPI clevertapscreenviewd;
+//    CleverTapAPI clevertapscreenviewd;
 
 
     public HomePageAdapter(Context context, List<CommonModels> items) {
@@ -66,7 +66,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.Origin
         holder.qualityTv.setText(obj.getQuality());
         holder.releaseDateTv.setText(obj.getReleaseDate());
 
-        clevertapscreenviewd= CleverTapAPI.getDefaultInstance(ctx.getApplicationContext());
+//        clevertapscreenviewd= CleverTapAPI.getDefaultInstance(ctx.getApplicationContext());
 
 
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
@@ -88,9 +88,9 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.Origin
                 intent.putExtra("vType", obj.getVideoType());
                 intent.putExtra("id", obj.getId());
 
-                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
-                screenViewedAction.put("Screen Name", "DetailsActivity");
-                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
+//                HashMap<String, Object> screenViewedAction = new HashMap<String, Object>();
+//                screenViewedAction.put("Screen Name", "DetailsActivity");
+//                clevertapscreenviewd.pushEvent("Screen Viewed", screenViewedAction);
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 ctx.startActivity(intent);

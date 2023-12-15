@@ -64,11 +64,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 extras.putString(entry.getKey(), entry.getValue());
             }
 
-            NotificationInfo info = CleverTapAPI.getNotificationInfo(extras);
-            if (info.fromCleverTap) {
-                new CTFcmMessageHandler()
-                        .createNotification(getApplicationContext(), remoteMessage);
-            }
+//            NotificationInfo info = CleverTapAPI.getNotificationInfo(extras);
+//            if (info.fromCleverTap) {
+//                new CTFcmMessageHandler()
+//                        .createNotification(getApplicationContext(), remoteMessage);
+//            }
 
         }
         else {

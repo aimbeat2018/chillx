@@ -39,7 +39,7 @@ import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -95,7 +95,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
     LinearLayout lnr_success,
             lnr_failed;
     private ProgressBar progressBar;
-    CleverTapAPI clevertapChergedInstance;
+//    CleverTapAPI clevertapChergedInstance;
     String str_user_age = "";
 
     @Override
@@ -149,7 +149,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
       //  getToken(order_id, "1");
 
 
-        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
     }
 
 
@@ -186,7 +186,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
         try {
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(cfEnvironment)
-                    .setOrderToken(token)
+                    .setPaymentSessionID(token)
                     .setOrderId(order_id)
                     .build();
             CFPaymentComponent cfPaymentComponent = new CFPaymentComponent.CFPaymentComponentBuilder()
@@ -461,7 +461,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
                             paymentAction.put("subscription plan id", subscriptionHistory.getActiveSubscription().get(0).getPlanId());
                             paymentAction.put("subscription Start date", subscriptionHistory.getActiveSubscription().get(0).getStartDate());
                             paymentAction.put("subscription End date", subscriptionHistory.getActiveSubscription().get(0).getExpireDate());
-                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
+//                            clevertapChergedInstance.pushEvent("Charged", paymentAction);
 
                             //Appflayer
                             AppsFlyerLib.getInstance().logEvent(getApplicationContext(),

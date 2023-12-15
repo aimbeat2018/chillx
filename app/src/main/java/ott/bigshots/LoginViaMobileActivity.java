@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.appsflyer.AFInAppEventParameterName;
 import com.appsflyer.AFInAppEventType;
 import com.appsflyer.AppsFlyerLib;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -67,7 +67,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
     private String deviceId = "";
     private String firebaseToken = "", mobile = "", countryCode = "91";
 
-    CleverTapAPI clevertapDefaultInstance;
+//    CleverTapAPI clevertapDefaultInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("push", MODE_PRIVATE);
         boolean isDark = sharedPreferences.getBoolean("dark", false);
 
-        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+//        clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         mobile = getIntent().getStringExtra("mobile");
         countryCode = getIntent().getStringExtra("countryCode");
@@ -351,7 +351,7 @@ public class LoginViaMobileActivity extends AppCompatActivity {
 //        String[] otherStuff = {"Jeans", "Perfume"};
 //        profileUpdate.put("MyStuff", otherStuff);                   //String Array
 
-        clevertapDefaultInstance.onUserLogin(profileUpdate);
+//        clevertapDefaultInstance.onUserLogin(profileUpdate);
         // clevertapDefaultInstance.pushProfile(profileUpdate);
     }
 

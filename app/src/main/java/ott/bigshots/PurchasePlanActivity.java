@@ -46,7 +46,7 @@ import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
-import com.clevertap.android.sdk.CleverTapAPI;
+//import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import ott.bigshots.R;
@@ -481,7 +481,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         try {
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(cfEnvironment)
-                    .setOrderToken(token)
+                    .setPaymentSessionID(token)
                     .setOrderId(order_id)
                     .build();
             CFPaymentComponent cfPaymentComponent = new CFPaymentComponent.CFPaymentComponentBuilder()

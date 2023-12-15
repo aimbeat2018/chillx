@@ -157,7 +157,7 @@ public class MyAppClass extends Application implements DefaultLifecycleObserver 
 
 
 //used for different template  type push notification
-        CleverTapAPI.setNotificationHandler((NotificationHandler) new PushTemplateNotificationHandler());
+//        CleverTapAPI.setNotificationHandler((NotificationHandler) new PushTemplateNotificationHandler());
 
         mContext = this;
         userAgent = Util.getUserAgent(this, "bigshots");
