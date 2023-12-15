@@ -254,7 +254,7 @@ dependencies {
     //one upi
     implementation files('libs/OneUPI.aar')
 
-    //    // stripe
+    // stripe
     //  implementation 'com.stripe:stripe-android:16.0.0'
     implementation 'com.stripe:stripe-android:19.1.0'
     //  implementation 'com.stripe:stripe-android:20.30.0'
