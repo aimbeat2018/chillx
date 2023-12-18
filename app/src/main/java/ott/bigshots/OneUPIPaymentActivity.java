@@ -17,6 +17,10 @@ import android.widget.Toast;
 
 //import com.clevertap.android.sdk.CleverTapAPI;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -25,6 +29,7 @@ import dev.android.oneupi.exception.AppNotFoundException;
 import dev.android.oneupi.listener.PaymentStatusListener;
 import dev.android.oneupi.model.PaymentApp;
 import dev.android.oneupi.model.TransactionDetails;
+import ott.bigshots.network.apis.PaymentGatewayApi;
 import ott.bigshots.network.model.Package;
 import okhttp3.ResponseBody;
 import ott.bigshots.network.RetrofitClient;
@@ -38,6 +43,7 @@ import ott.bigshots.utils.PreferenceUtils;
 import ott.bigshots.utils.ToastMsg;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentStatusListener {
@@ -123,12 +129,46 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
 
         //getToken(order_id, "1");
 
-        payWithUpi();
+        getPaymentData();
+
 
     }
 
+    private void getPaymentData() {
+        // dialog.show();
 
-    private void payWithUpi() {
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentGatewayApi apiInterface = retrofit.create(PaymentGatewayApi.class);
+        Call<ResponseBody> call = apiInterface.googlePayData(AppConfig.API_KEY, "");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String pa = jsonObject.getString("oneupi_upi_id");
+                        String pn = jsonObject.getString("oneupi_merchant_name");
+                        String mc = jsonObject.getString("oneupi_merchant_code");
+                        payWithUpi(pa, pn, mc);
+
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                new ToastMsg(OneUPIPaymentActivity.this).toastIconError("Something went wrong." + t.getMessage());
+                // dialog.cancel();
+                t.printStackTrace();
+            }
+        });
+
+    }
+
+    private void payWithUpi(String pa, String pn, String mc) {
 
         transactionId = "TID" + System.currentTimeMillis();
 
@@ -148,14 +188,12 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
         // START PAYMENT INITIALIZATION
         OneUPIPayment.Builder builder = new OneUPIPayment.Builder(this)
                 .with(paymentApp)
-                .setPayeeVpa("bigshotsmoviesandweb.39772315@hdfcbank")
-                .setPayeeName("Bigshots movies and web series")
+                .setPayeeVpa(pa)
+                .setPayeeName(pn)
                 .setTransactionId(transactionId)
-//                .setTransactionId("39772315")
                 .setTransactionRefId(transactionId)
-                .setPayeeMerchantCode("ea1abee8-c30e-4209-8ae5-0b2be55fc4c3")//one upi marchant key
+                .setPayeeMerchantCode(mc)//one upi marchant key
                 .setDescription(aPackage.getName())
-                //.setAmount("1.00");
                 .setAmount(String.valueOf(float_plan_amount));
         // END INITIALIZATION
 
@@ -173,7 +211,6 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
             toast("No UPI app found for payment");
         }
     }
-
 
 
     @Override

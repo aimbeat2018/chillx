@@ -481,7 +481,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         try {
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(cfEnvironment)
-                    .setPaymentSessionID(token)
+                    .setOrderToken(token)
                     .setOrderId(order_id)
                     .build();
             CFPaymentComponent cfPaymentComponent = new CFPaymentComponent.CFPaymentComponentBuilder()

@@ -134,7 +134,6 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
     private final String prodSalt = "9GWyxoLr38w5H70K3mhqzDuy4xLdOFEr";
 
     /*Google pay*/
-    private static final int TEZ_REQUEST_CODE = 123;
 
     private static final String GOOGLE_TEZ_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
 
@@ -170,14 +169,14 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Random r = new Random();
         int random = r.nextInt(45 - 28) + 28;
 
-        paytmOrderId = "ORDERID_" + random;
+        paytmOrderId = "TID" + System.currentTimeMillis();
 
         if (from.equals("payu"))
             payUMoneyGateway();
         else if (from.equals("razor"))
             startPayment();
         else if (from.equals("gpay"))
-            startGPayPayment();
+            getGooglePayData();
         else if (from.equals("upi"))
             startAutoUpiPayment();
 
@@ -206,23 +205,23 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         card_payuMoney.setOnClickListener(view -> payUMoneyGateway());
     }
 
-    public void startGPayPayment() {
+    public void startGPayPayment(String pa, String pn, String mc) {
         Uri uri = new Uri.Builder()
                 .scheme("upi")
                 .authority("pay")
-                .appendQueryParameter("pa", "webworld7.09@cmsidfc")
-                .appendQueryParameter("pn", "WEBWORLD MULTIMEDIA LLP")
+                .appendQueryParameter("pa", pa)
+                .appendQueryParameter("pn", pn)
+                .appendQueryParameter("mc", mc)
                 .appendQueryParameter("tr", paytmOrderId)
                 .appendQueryParameter("tn", aPackage.getName())
                 .appendQueryParameter("am", aPackage.getPrice())
                 .appendQueryParameter("cu", "INR")
-                .appendQueryParameter("url", "https://bigshots.co.in")
+                .appendQueryParameter("url", "https://bigshots.co.in/")
                 .build();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);
         intent.setPackage(GOOGLE_TEZ_PACKAGE_NAME);
         gPayActivityResultLauncher.launch(intent);
-//        startActivityForResult(intent, TEZ_REQUEST_CODE);
     }
 
     public void startAutoUpiPayment() {
@@ -268,7 +267,6 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
 
     }
 
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
     ActivityResultLauncher<Intent> gPayActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -572,6 +570,39 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         return checkoutOrderList;
     }
 
+    private void getGooglePayData() {
+        // dialog.show();
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentGatewayApi apiInterface = retrofit.create(PaymentGatewayApi.class);
+        Call<ResponseBody> call = apiInterface.googlePayData(AppConfig.API_KEY, "");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String pa = jsonObject.getString("upi_id");
+                        String pn = jsonObject.getString("merchant_name");
+                        String mc = jsonObject.getString("merchant_code");
+                        startGPayPayment(pa, pn, mc);
+
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                new ToastMsg(RazorPayActivity.this).toastIconError("Something went wrong." + t.getMessage());
+                // dialog.cancel();
+                t.printStackTrace();
+            }
+        });
+
+    }
 
     private String getPayUMoneyHas(String hashName, PayUHashGenerationListener hashGenerationListener, String hashData) {
         // dialog.show();

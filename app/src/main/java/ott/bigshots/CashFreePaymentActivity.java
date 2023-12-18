@@ -95,7 +95,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
     LinearLayout lnr_success,
             lnr_failed;
     private ProgressBar progressBar;
-//    CleverTapAPI clevertapChergedInstance;
+    //    CleverTapAPI clevertapChergedInstance;
     String str_user_age = "";
 
     @Override
@@ -146,7 +146,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
         order_id = String.valueOf(create_otp);
         orderID = order_id;
         getToken(order_id, aPackage.getPrice());
-      //  getToken(order_id, "1");
+        //  getToken(order_id, "1");
 
 
 //        clevertapChergedInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
@@ -186,7 +186,7 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
         try {
             CFSession cfSession = new CFSession.CFSessionBuilder()
                     .setEnvironment(cfEnvironment)
-                    .setPaymentSessionID(token)
+                    .setOrderToken(token)
                     .setOrderId(order_id)
                     .build();
             CFPaymentComponent cfPaymentComponent = new CFPaymentComponent.CFPaymentComponentBuilder()

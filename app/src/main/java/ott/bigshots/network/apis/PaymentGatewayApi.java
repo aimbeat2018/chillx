@@ -16,10 +16,14 @@ import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 public interface PaymentGatewayApi {
-//    @FormUrlEncoded
+    //    @FormUrlEncoded
     @GET("payumoney")
     Call<ResponseBody> payumoney(@Header("API-KEY") String apiKey,
-                                   @Query("key") String key);
+                                 @Query("key") String key);
+
+    @FormUrlEncoded
+    @POST("merchant_details")
+    Call<ResponseBody> googlePayData(@Header("API-KEY") String apiKey, @Field("userId") String userId);
 
 
     @FormUrlEncoded
