@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ott.bigshots.more.MyTransactionActivity">
+    tools:context="ott.spices.more.MyTransactionActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

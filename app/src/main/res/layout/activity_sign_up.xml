@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_image"
+    android:background="@color/black"
     android:orientation="vertical"
     tools:ctx=".SignUpActivity">
 
@@ -34,7 +34,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="80dp"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             android:src="@drawable/ppapplogo" />
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -75,7 +75,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:orientation="vertical"
                         android:padding="@dimen/spacing_mlarge">
 
@@ -100,40 +99,38 @@
                             android:text="Full Name"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/blue_grey_300"
-                            android:textSize="16dp" />
+                            android:textSize="16sp" />
 
-                        <androidx.cardview.widget.CardView
+                        <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            app:cardBackgroundColor="#FF272928"
-                            app:cardCornerRadius="5dp">
+                            android:layout_height="45dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/border_back_primary_color"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/name"
                                 android:layout_width="match_parent"
-                                android:layout_height="45dp"
-
+                                android:layout_height="match_parent"
                                 android:background="@null"
                                 android:hint="@string/full_name"
                                 android:inputType="text"
                                 android:maxLines="1"
                                 android:paddingHorizontal="10dp"
                                 android:singleLine="true"
-                                android:textSize="16dp" />
-                        </androidx.cardview.widget.CardView>
+                                android:textSize="16sp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
                             android:text="Email Address"
-android:visibility="gone"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-
                             android:textColor="@color/blue_grey_300"
-                            android:textSize="16dp" />
+                            android:textSize="16dp"
+                            android:visibility="gone" />
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
@@ -160,54 +157,47 @@ android:visibility="gone"
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="15dp"
                             android:text="Phone Number "
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/blue_grey_300"
-                            android:textSize="16dp" />
+                            android:textSize="16sp" />
 
-
-                        <androidx.cardview.widget.CardView
+                        <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            app:cardBackgroundColor="#FF272928"
-                            app:cardCornerRadius="5dp">
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/border_back_primary_color"
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
+                            <!--                                app:ccp_countryPreference="us,in"-->
+                            <TextView
+                                android:id="@+id/txtcountryCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="5dp"
+                                android:text="+91"
+                                android:textColor="@color/white"
+                                android:textSize="15sp" />
 
-                            <androidx.appcompat.widget.LinearLayoutCompat
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/mobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:orientation="horizontal">
-                                <!--                                app:ccp_countryPreference="us,in"-->
-                                <TextView
-                                    android:id="@+id/txtcountryCode"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:paddingHorizontal="10dp"
-                                    android:paddingVertical="10dp"
-                                    android:text="+91"
-                                    android:textColor="@color/white"
-                                    android:textSize="15sp" />
+                                android:layout_gravity="center"
+                                android:background="@null"
+                                android:focusable="false"
+                                android:hint="@string/mobile_number"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:paddingVertical="5dp"
+                                android:singleLine="true"
+                                android:textSize="15sp" />
 
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/mobile"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="45dp"
-                                    android:layout_gravity="center"
-                                    android:background="@null"
-                                    android:focusable="false"
-                                    android:hint="@string/mobile_number"
-                                    android:inputType="number"
-                                    android:maxLines="1"
-                                    android:paddingVertical="10dp"
-                                    android:singleLine="true"
-                                    android:textSize="15dp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
 
-                            </androidx.appcompat.widget.LinearLayoutCompat>
-                        </androidx.cardview.widget.CardView>
 
                         <View
                             android:layout_width="match_parent"
@@ -226,48 +216,32 @@ android:visibility="gone"
                                 android:id="@+id/tv_selectage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="15dp"
                                 android:text="Age "
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/blue_grey_300"
                                 android:textSize="16dp"
                                 android:visibility="visible" />
 
-                            <androidx.cardview.widget.CardView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:layout_marginBottom="10dp"
-                                app:cardBackgroundColor="#FF272928"
-                                app:cardCornerRadius="5dp">
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/border_back_primary_color"
+                                android:orientation="horizontal"
+                                android:paddingVertical="8dp">
 
                                 <Spinner
                                     android:id="@+id/spinner"
                                     android:layout_width="match_parent"
                                     android:layout_height="35dp"
                                     android:layout_marginStart="8dp"
-                                    android:layout_marginTop="8dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.502"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.498" />
+                                    android:layout_marginEnd="8dp" />
 
-                            </androidx.cardview.widget.CardView>
+                            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/white"
-
-                            android:visibility="gone" />
-
 
                         <LinearLayout
                             android:id="@+id/ll_pin"
@@ -433,10 +407,8 @@ android:visibility="gone"
                             android:id="@+id/signup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="10dp"
-                            android:layout_marginTop="15dp"
-                            android:background="@drawable/semi_round_bg_button"
-                            android:backgroundTint="@color/colorPrimary"
+                            android:layout_marginTop="25dp"
+                            android:background="@drawable/semi_round_bg_button_gredient"
                             android:text="Continue"
                             android:textAllCaps="false"
                             android:textColor="@android:color/white" />

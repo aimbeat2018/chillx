@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ott.bigshots.MainActivity"
+    tools:context="ott.spices.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <!--  This is your template view -->
