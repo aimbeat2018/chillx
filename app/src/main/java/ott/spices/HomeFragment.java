@@ -101,7 +101,6 @@ public class HomeFragment extends Fragment {
     final long DELAY_MS = 1800;
     final long PERIOD_MS = 7000;
     int currentPage = 0;
-
     private ShimmerFrameLayout shimmerFrameLayout;
     private RecyclerView recyclerViewMovie, recyclerViewTv, recyclerViewTvSeries, recyclerViewGenre, recyclerViewContinueWatching;
     private LinearLayout continueWatchingLayout;
@@ -227,7 +226,7 @@ public class HomeFragment extends Fragment {
         btnMoreSeries = view.findViewById(R.id.btn_more_series);
         btnMoreTv = view.findViewById(R.id.btn_more_tv);
         imgFree = view.findViewById(R.id.imgFree);
-        tvseries = view.findViewById(R.id.tvseries);
+//        tvseries = view.findViewById(R.id.tvseries);
         btnMoreMovie = view.findViewById(R.id.btn_more_movie);
         btnContinueWatchingClear = view.findViewById(R.id.continue_watching_clear_btn);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
@@ -260,7 +259,7 @@ public class HomeFragment extends Fragment {
         movieLayout = view.findViewById(R.id.movieLayout);
         tvSeriesLayout = view.findViewById(R.id.tvSeriesLayout);
         circleIndicator = view.findViewById(R.id.indicator_unselected_background);
-        my_account = view.findViewById(R.id.my_account);
+//        my_account = view.findViewById(R.id.my_account);
         tvGoldTitleLayout = view.findViewById(R.id.tvGoldTitleLayout);
         btn_more_Gold = view.findViewById(R.id.btn_more_Gold);
         recyclerViewGold = view.findViewById(R.id.recyclerViewGold);
@@ -314,17 +313,17 @@ public class HomeFragment extends Fragment {
         });
 
 
-        tvseries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getContext(), ItemSeriesActivity.class);
-                intent.putExtra("title", "TV Series");
-                getActivity().startActivity(intent);
-
-
-            }
-        });
+//        tvseries.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new Intent(getContext(), ItemSeriesActivity.class);
+//                intent.putExtra("title", "TV Series");
+//                getActivity().startActivity(intent);
+//
+//
+//            }
+//        });
 
 
         imgFree.setOnClickListener(new View.OnClickListener() {
@@ -1102,7 +1101,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void btnClick() {
-        my_account.setOnClickListener(v -> startActivity(new Intent(activity, MoreActivity.class)));
+//        my_account.setOnClickListener(v -> startActivity(new Intent(activity, MoreActivity.class)));
 
         btnMoreMovie.setOnClickListener(v -> {
             /*Intent intent = new Intent(getContext(), ItemMovieActivity.class);
