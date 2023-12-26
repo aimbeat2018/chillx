@@ -144,7 +144,7 @@ public class PurchasePlanActivity extends AppCompatActivity implements PackageAd
         currency = config.getCurrencySymbol();
         exchangeRate = config.getExchangeRate();
         packageRv.setHasFixedSize(true);
-        packageRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        packageRv.setLayoutManager(new LinearLayoutManager(this));
 
         getPurchasePlanInfo();
 

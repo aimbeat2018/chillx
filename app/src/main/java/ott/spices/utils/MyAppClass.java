@@ -81,7 +81,7 @@ public class MyAppClass extends Application implements DefaultLifecycleObserver 
 
     private DownloadManager downloadManager;
     private DownloadTracker downloadTracker;
-    private static final String TAG = "Bigshots";
+    private static final String TAG = "Spice69";
     private DatabaseProvider databaseProvider;
     private File downloadDirectory;
     protected String userAgent;

@@ -1,128 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:id="@+id/linear_layout"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_marginStart="20dp"-->
-<!--    android:layout_marginTop="@dimen/spacing_middle"-->
-<!--    android:layout_marginEnd="20dp"-->
-<!--    android:background="@drawable/border_back_primary_color"-->
-<!--    android:orientation="vertical">-->
-
-<!--    <RelativeLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="120dp"-->
-<!--        android:background="@drawable/imgpackage"-->
-<!--        android:paddingLeft="30dp">-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/package_name"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:gravity="start"-->
-<!--            android:padding="10dp"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="16sp"-->
-<!--            tools:text="STARTER PACK" />-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/package_validity"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/package_name"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:gravity="start"-->
-<!--            android:padding="10dp"-->
-<!--            android:textColor="@color/white"-->
-
-<!--            android:textSize="20sp"-->
-<!--            tools:text="3 MONTH" />-->
-
-<!--        &lt;!&ndash;  <TextView-->
-<!--              android:id="@+id/package_tv"-->
-<!--              android:layout_width="match_parent"-->
-<!--              android:layout_height="wrap_content"-->
-<!--              android:gravity="start"-->
-<!--              android:layout_below="@+id/package_name"-->
-<!--              android:padding="10dp"-->
-<!--              android:textColor="@color/colorPrimary"-->
-<!--              android:textSize="16sp"-->
-<!--              tools:text="$4.99 Per Month" />&ndash;&gt;-->
-
-
-<!--        <TextView-->
-<!--            android:id="@+id/price"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@+id/package_name"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:gravity="end"-->
-<!--            android:padding="10dp"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="20sp"-->
-<!--            tools:text="$4.99 Per Month" />-->
-
-<!--    </RelativeLayout>-->
-
-
-<!--</LinearLayout>-->
-
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10dp"
-    android:background="@drawable/semi_round_bg_button"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:gravity="center"
+    android:layout_marginHorizontal="15dp"
+    android:background="@drawable/subsdesign"
     android:orientation="vertical"
-    android:backgroundTint="@color/gray_line"
-    android:paddingHorizontal="@dimen/dimen_10dp">
+    android:layout_marginVertical="10dp">
 
-    <TextView
-        android:id="@+id/package_name"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="Features"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        android:src="@drawable/ic_done" />
 
-    <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:padding="10dp"
-        android:src="@drawable/ic_done" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="No Ads"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/package_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Features"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
     <TextView
         android:id="@+id/price"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:text="$678909" />
@@ -132,11 +39,11 @@
         android:id="@+id/package_validity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="16sp"
         tools:text="3 MONTH" />
 

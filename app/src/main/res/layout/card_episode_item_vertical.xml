@@ -1,270 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?><!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:id="@+id/card_view_home"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_margin="@dimen/spacing_medium"-->
-<!--    android:layout_marginHorizontal="20dp"-->
-<!--    android:nestedScrollingEnabled="false"-->
-<!--    app:cardCornerRadius="7dp">-->
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <com.balysv.materialripple.MaterialRippleLayout-->
-<!--            android:id="@+id/lyt_parent"-->
-<!--            style="@style/RippleStyleBlack"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="100dp">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="160dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <RelativeLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/image"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:contentDescription="@string/episode"-->
-<!--                        android:scaleType="centerCrop"-->
-<!--                        android:src="@drawable/poster_placeholder" />-->
-
-<!--                    <LinearLayout-->
-
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_alignParentBottom="true"-->
-<!--                        android:layout_marginStart="8dp"-->
-<!--                        android:layout_marginEnd="10dp"-->
-<!--                        android:layout_marginBottom="5dp"-->
-<!--                        android:orientation="vertical"-->
-<!--                        android:padding="3dp">-->
-
-<!--                      &lt;!&ndash;  <TextView-->
-<!--                            android:id="@+id/name"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:gravity="center"-->
-<!--                            android:maxLines="1"-->
-<!--                            android:singleLine="true"-->
-<!--                            android:textColor="@color/white"-->
-<!--                            android:textSize="16sp"-->
-<!--                            tools:text="Episode name" />&ndash;&gt;-->
-
-<!--                        <TextView-->
-<!--                            android:visibility="invisible"-->
-<!--                            android:id="@+id/season_name"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:gravity="center"-->
-<!--                            android:maxLines="1"-->
-<!--                            android:singleLine="true"-->
-<!--                            android:textColor="@color/white"-->
-<!--                            android:textSize="16sp"-->
-<!--                            tools:text="Season name" />-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/publish_date"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:maxLines="1"-->
-<!--                            android:singleLine="true"-->
-<!--                            android:textColor="@color/white"-->
-<!--                            android:textSize="16sp"-->
-<!--                            android:visibility="gone"-->
-<!--                            tools:text="Publish Date" />-->
-
-<!--                    </LinearLayout>-->
-<!--                    &lt;!&ndash;<ImageView-->
-<!--                        android:layout_centerInParent="true"-->
-<!--                        android:src="@drawable/ic_outline_play_circle_filled_24px"-->
-<!--                        android:layout_width="38dp"-->
-<!--                        android:layout_height="38dp" />&ndash;&gt;-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/play_status_tv"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_centerInParent="true"-->
-<!--                        android:background="@drawable/transparent_round_back"-->
-<!--                        android:gravity="center"-->
-<!--                        android:paddingLeft="5dp"-->
-<!--                        android:paddingRight="5dp"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:visibility="gone"-->
-<!--                        tools:text="Play Now" />-->
-
-
-<!--                </RelativeLayout>-->
-
-<!--                <LinearLayout-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:layout_weight="2"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:padding="3dp">-->
-
-
-<!--                    <ImageView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="end"-->
-<!--                        android:padding="3dp"-->
-<!--                        android:src="@drawable/download_bottom"-->
-<!--                        android:visibility="gone" />-->
-
-<!--                </LinearLayout>-->
-
-<!--            </LinearLayout>-->
-
-
-<!--        </com.balysv.materialripple.MaterialRippleLayout>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:visibility="visible"-->
-<!--            android:orientation="vertical">-->
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:gravity="center_vertical"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/name"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Episode name"-->
-<!--                    android:gravity="center_horizontal"-->
-<!--                    android:focusable="true"-->
-<!--                    android:paddingBottom="2dp"-->
-<!--                    android:focusableInTouchMode="true"-->
-<!--                    android:textAppearance="@style/TextAppearance.Medium.Bold"-->
-<!--                    android:singleLine="true"-->
-<!--                    android:scrollHorizontally="true"-->
-<!--                    android:ellipsize="marquee"-->
-<!--                    android:marqueeRepeatLimit ="marquee_forever"/>-->
-
-
-<!--                &lt;!&ndash; <TextView-->
-<!--                     android:id="@+id/type"-->
-<!--                     android:layout_width="wrap_content"-->
-<!--                     android:layout_height="wrap_content"-->
-<!--                     android:text="Two Line"-->
-<!--                     android:focusable="true"-->
-<!--                     android:focusableInTouchMode="true"-->
-<!--                     android:textAppearance="@style/TextAppearance.Medium.Bold"-->
-<!--                     android:singleLine="true"-->
-<!--                     android:textSize="12dp"-->
-<!--                     android:scrollHorizontally="true"-->
-<!--                     android:ellipsize="marquee"-->
-<!--                     android:marqueeRepeatLimit ="marquee_forever"/>&ndash;&gt;-->
-
-
-<!--                <View-->
-<!--                    android:layout_width="@dimen/spacing_medium"-->
-<!--                    android:layout_height="0dp" />-->
-
-<!--                <LinearLayout-->
-<!--                    android:id="@+id/ll_download_video"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:layout_gravity="start"-->
-<!--                    android:layout_marginStart="5dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="start"-->
-<!--                    android:orientation="horizontal"-->
-<!--                    android:visibility="visible"-->
-<!--                    android:weightSum="2">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/img_download_state"-->
-<!--                        android:layout_width="25dp"-->
-<!--                        android:layout_height="25dp"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:contentDescription="@null"-->
-<!--                        android:padding="5dp"-->
-<!--                        android:src="@drawable/ic_download11"-->
-<!--                        app:tint="@color/white" />-->
-
-<!--                    <ProgressBar-->
-<!--                        android:id="@+id/downloadProgress"-->
-<!--                        style="@style/CircularDeterminateProgressBar"-->
-<!--                        android:layout_width="@dimen/dimen_25dp"-->
-<!--                        android:layout_height="@dimen/dimen_25dp"-->
-<!--                        android:indeterminateOnly="false"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:progress="50"-->
-<!--                        android:visibility="gone"-->
-<!--                        android:progressDrawable="@drawable/circle"-->
-<!--                        android:rotation="-90"-->
-<!--                        tools:progress="0" />-->
-
-<!--                    <TextView-->
-<!--                        android:id="@+id/tv_download_state"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="center"-->
-<!--                        android:text="Download"-->
-<!--                        android:textColor="@color/white"-->
-<!--                        android:textSize="12sp" />-->
-
-
-<!--                </LinearLayout>-->
-
-<!--            </LinearLayout>-->
-
-<!--        </LinearLayout>-->
-
-<!--    </LinearLayout>-->
-
-<!--</androidx.cardview.widget.CardView>-->
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_home"
-    android:layout_width="260dp"
-    android:layout_height="150dp"
+    android:layout_width="180dp"
+    android:layout_height="170dp"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="10dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-     >
+        android:orientation="vertical">
 
         <com.balysv.materialripple.MaterialRippleLayout
             android:id="@+id/lyt_parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="100dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/black"
                 android:alpha="0.9"
+                android:background="@color/black"
                 android:orientation="horizontal">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="130dp">
 
                     <ImageView
                         android:id="@+id/image"
@@ -273,7 +39,6 @@
                         android:contentDescription="@string/episode"
                         android:scaleType="centerCrop"
                         android:src="@drawable/poster_placeholder" />
-
 
 
                     <LinearLayout
@@ -372,8 +137,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginVertical="10dp"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -381,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
-                android:gravity="center"
+
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -445,58 +208,60 @@
                             android:visibility="gone" />
                     </LinearLayout>
 
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+
                     <LinearLayout
+                        android:id="@+id/ll_download_video"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:gravity="start"
+                        android:orientation="horizontal"
+                        android:visibility="visible"
+                        android:weightSum="2">
 
+                        <ImageView
+                            android:id="@+id/img_download_state"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="@null"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_download11"
+                            app:tint="@color/white" />
 
-                        <LinearLayout
-                            android:id="@+id/ll_download_video"
+                        <ProgressBar
+                            android:id="@+id/downloadProgress"
+                            style="@style/CircularDeterminateProgressBar"
+                            android:layout_width="@dimen/dimen_25dp"
+                            android:layout_height="@dimen/dimen_25dp"
+                            android:layout_gravity="center"
+                            android:indeterminateOnly="false"
+                            android:progress="50"
+                            android:progressDrawable="@drawable/circle"
+                            android:rotation="-90"
+                            android:visibility="gone"
+                            tools:progress="0" />
+
+                        <TextView
+                            android:id="@+id/tv_download_state"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="start"
-                            android:orientation="horizontal"
-                            android:visibility="visible"
-                            android:weightSum="2">
-
-                            <ImageView
-                                android:id="@+id/img_download_state"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:layout_gravity="center"
-                                android:contentDescription="@null"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_download11"
-                                app:tint="@color/white" />
-
-                            <ProgressBar
-                                android:id="@+id/downloadProgress"
-                                style="@style/CircularDeterminateProgressBar"
-                                android:layout_width="@dimen/dimen_25dp"
-                                android:layout_height="@dimen/dimen_25dp"
-                                android:layout_gravity="center"
-                                android:indeterminateOnly="false"
-                                android:progress="50"
-                                android:progressDrawable="@drawable/circle"
-                                android:rotation="-90"
-                                android:visibility="gone"
-                                tools:progress="0" />
-
-                            <TextView
-                                android:id="@+id/tv_download_state"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginHorizontal="5dp"
-                                android:gravity="center"
-                                android:text="Download"
-                                android:textColor="@color/white"
-                                android:textSize="12sp" />
-
-
-                        </LinearLayout>
+                            android:layout_marginHorizontal="5dp"
+                            android:gravity="center"
+                            android:text="Download"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
 
 
                     </LinearLayout>
@@ -530,14 +295,14 @@
 
         </LinearLayout>
 
-<!--        <View-->
-<!--            android:id="@+id/view1"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:alpha="0.1"-->
-<!--            android:visibility="visible"-->
-<!--            android:background="@drawable/image_gradient_bg" />-->
+        <!--        <View-->
+        <!--            android:id="@+id/view1"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:alpha="0.1"-->
+        <!--            android:visibility="visible"-->
+        <!--            android:background="@drawable/image_gradient_bg" />-->
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

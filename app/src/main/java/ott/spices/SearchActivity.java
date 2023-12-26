@@ -95,7 +95,7 @@ public class SearchActivity extends AppCompatActivity {
     public TextView view_more;
     SearchGridAdapter mAdapter;
 
-//    CleverTapAPI clevertapSearchdInstance;
+    //    CleverTapAPI clevertapSearchdInstance;
     private AdView mAdView;
     private HomePageAdapter adapterMovie;
 
@@ -129,6 +129,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
         recyclerViewTrending = findViewById(R.id.recyclerViewTrending);
+        recyclerViewTrending.setVisibility(GONE);
         recyclerViewTrending.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewTrending.setHasFixedSize(true);
         recyclerViewTrending.setNestedScrollingEnabled(false);
@@ -346,7 +347,7 @@ public class SearchActivity extends AppCompatActivity {
         }
 
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         //   recyclerView.addItemDecoration(new SpacingItemDecoration(3, Tools.dpToPx(this, 12), true));
 
         recyclerView.setHasFixedSize(true);
@@ -560,7 +561,7 @@ public class SearchActivity extends AppCompatActivity {
                 models.setIsPaid(movie.getIsPaid());
                 listMovie.add(models);
             }
-            recyclerViewTrending.setVisibility(View.VISIBLE);
+            recyclerViewTrending.setVisibility(View.GONE);
             adapterMovie.notifyDataSetChanged();
         } else {
 

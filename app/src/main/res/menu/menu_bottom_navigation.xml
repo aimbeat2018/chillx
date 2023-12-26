@@ -4,42 +4,25 @@
     <item
         android:id="@+id/home"
         android:icon="@drawable/bg_home_footer"
-        app:cnb_backgroundColor="@color/colorPrimary"
-        app:cnb_iconColor="@color/white"
-        app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="@color/white"
+
         android:title="Home"/>
 
     <item
         android:id="@+id/search"
         android:icon="@drawable/ic_action_search"
-        app:cnb_backgroundColor="@color/colorPrimary"
-        app:cnb_iconColor="@color/white"
-        app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="@color/white"
+
         android:title="Search"/>
     <item
         android:id="@+id/reels"
         android:icon="@drawable/reels"
-        app:cnb_backgroundColor="@color/colorPrimary"
-        app:cnb_iconColor="@color/white"
-        app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="@color/white"
         android:title="Reels"/>
     <item
         android:id="@+id/download"
         android:icon="@drawable/ic_download1"
-        app:cnb_backgroundColor="@color/colorPrimary"
-        app:cnb_iconColor="@color/white"
-        app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="@color/white"
+
         android:title="Download"/>
     <item
         android:id="@+id/account"
         android:icon="@drawable/ic_user"
-        app:cnb_backgroundColor="@color/colorPrimary"
-        app:cnb_iconColor="@color/white"
-        app:cnb_iconTintMode="src_in"
-        app:cnb_textColor="@color/white"
         android:title="Account"/>
 </menu>

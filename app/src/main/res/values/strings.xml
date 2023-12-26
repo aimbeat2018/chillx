@@ -23,8 +23,8 @@
     <!--app_title for main navigation & home title-->
     <string name="app_title">Spice69 - Live TV &amp; Movie</string>
     <string name="app_version">1.3.1</string>
-    <string name="contact_email">customercare@BigShots.co.in</string>
-    <string name="copyright_text">Copyright @ BigShots, All right reserved</string>
+    <string name="contact_email">customercare@spice69.co.in</string>
+    <string name="copyright_text">Copyright @ Spice69, All right reserved</string>
 
     <!-- App -->
     <string name="featured_tv_channels">Featured Tv Channel</string>
@@ -283,7 +283,7 @@
     <string name="gold_cine_prime">Gold Primeplay</string>
     <string name="select_server">Select Server</string>
     <string name="home">Home</string>
-    <string name="buy_any_subscription_below_and_enjoy_oxoo_prime">Buy any subscription below and enjoy Bigshots features.</string>
+    <string name="buy_any_subscription_below_and_enjoy_oxoo_prime">Buy any subscription below and enjoy Spice69 features.</string>
     <string name="all_tv_channels">TV Channels</string>
     <string name="all_kids_videos">All Kids Videos</string>
     <string name="all_tv_series">All TV Series</string>

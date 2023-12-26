@@ -26,6 +26,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -183,12 +184,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtmobile"
+                                android:layout_gravity="center"
                                 android:backgroundTint="@color/white"
+                                android:gravity="center"
                                 android:includeFontPadding="false"
                                 android:padding="2dp"
                                 android:text=""
-                                android:layout_gravity="center"
-                                android:gravity="center"
                                 android:textColor="@color/white"
                                 android:textSize="12sp" />
 
@@ -261,6 +262,7 @@
                     android:layout_marginHorizontal="15dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/gener_backgorund_layout"
+                    android:backgroundTint="@color/colorPrimary"
                     android:orientation="horizontal">
 
                     <RelativeLayout
@@ -268,8 +270,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
                         android:layout_marginVertical="10dp"
-                        android:background="@drawable/bottomnavigationbackground"
-                        android:backgroundTint="@color/colorPrimary">
+                        android:background="@drawable/bottomnavigationbackground">
 
                         <ImageView
                             android:layout_width="50dp"

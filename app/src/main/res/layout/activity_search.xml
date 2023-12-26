@@ -32,18 +32,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_round_bg"
                 android:backgroundTint="@color/black"
-                android:orientation="horizontal"
-                android:background="@drawable/edit_text_round_bg">
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/search_text"
                     style="@style/EditText.Flat.Grey"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:hint="Search  Web Series,Movies &amp; Videos"
-                    android:layout_weight="1"
                     android:minHeight="40dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
@@ -55,9 +55,9 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:padding="5dp"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/ic_search_grey"/>
+                    android:padding="5dp"
+                    android:src="@drawable/ic_search_grey" />
             </LinearLayout>
 
             <TextView
@@ -65,8 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:text="Type"
-                android:visibility="gone"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
@@ -83,8 +83,8 @@
                     android:layout_height="wrap_content"
                     android:onClick="btToggleClick"
                     android:text="@string/movie"
-                    android:textSize="12sp"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_flex_2"
@@ -92,8 +92,8 @@
                     android:layout_height="wrap_content"
                     android:onClick="btToggleClick"
                     android:text="@string/tv_series"
-                    android:textSize="12sp"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_flex_3"
@@ -128,16 +128,15 @@
                     android:layout_width="160dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone"
                     android:background="@drawable/edit_text_round_bg_overlay_light"
                     android:drawableEnd="@drawable/ic_arrow_drop_down_white_24dp"
                     android:focusable="false"
                     android:paddingLeft="@dimen/spacing_middle"
                     android:paddingRight="@dimen/spacing_middle"
                     android:text="@string/all_genres"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:visibility="gone" />
             </RelativeLayout>
-
 
 
             <androidx.recyclerview.widget.RecyclerView
@@ -148,19 +147,17 @@
                 android:scrollbars="vertical"
                 android:scrollingCache="true" />
 
-            
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/view_more"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="View More"
                 android:layout_gravity="right"
-                android:textSize="18dp"
+                android:text="View More"
                 android:textAllCaps="false"
-                android:textColor="@color/red" />
-
+                android:textColor="@color/red"
+                android:textSize="18dp"
+                android:visibility="gone" />
 
 
             <RelativeLayout
@@ -233,8 +230,8 @@
                 android:id="@+id/yearRangeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/rangeTV"
@@ -308,10 +305,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/btn_rect_grey_outline"
-                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTint="@color/white"
                     android:text="@string/cancel"
-                    android:textColor="@color/white"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary" />
 
                 <View
                     android:layout_width="@dimen/spacing_middle"
@@ -323,7 +320,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/btn_rect_grey_outline"
-                    android:backgroundTint="@color/colorAccent"
+                    android:backgroundTint="@color/colorPrimary"
                     android:text="@string/search"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
@@ -334,10 +331,11 @@
                 android:id="@+id/recyclerViewTrending"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:layout_below="@id/movieTitleLayout"
+                android:layout_marginTop="10dp"
                 android:scrollbars="vertical"
-                android:scrollingCache="true" />
+                android:scrollingCache="true"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -352,49 +350,45 @@
                     android:layout_weight="1"
 
                     android:text="Recentally Searched"
-                    android:textSize="16dp"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textAllCaps="true" />
+                    android:textSize="16dp" />
 
                 <View
                     android:layout_width="@dimen/spacing_middle"
                     android:layout_height="0dp" />
 
                 <TextView
-                    android:visibility="invisible"
                     android:id="@+id/tv_clearall"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="CLEAR ALL"
                     android:gravity="end"
-                    android:textSize="16dp"
+                    android:text="CLEAR ALL"
                     android:textAllCaps="false"
-                    android:textColor="@color/red" />
+                    android:textColor="@color/red"
+                    android:textSize="16dp"
+                    android:visibility="invisible" />
 
             </LinearLayout>
 
-            <com.google.android.gms.ads.AdView
-                android:visibility="gone"
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/banneradView"
                 android:layout_width="@dimen/_320sdp"
                 android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center|bottom"
-                android:layout_alignParentBottom="true"
-                ads:adSize="BANNER"
                 android:layout_marginBottom="@dimen/_50sdp"
-                ads:adUnitId="@string/admob_banner_unit_id">
-            </com.google.android.gms.ads.AdView>
+                android:visibility="gone"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/admob_banner_unit_id"/>
 
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewhistory"
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" />
 
 
             <!--  <androidx.recyclerview.widget.RecyclerView

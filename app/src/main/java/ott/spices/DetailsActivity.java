@@ -516,53 +516,53 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             }
         });
 
-
-        AdView adView1 = new AdView(DetailsActivity.this);
-        adView1.setAdSize(AdSize.BANNER);
-        adView1.setAdUnitId(getResources().getString(R.string.admob_banner_unit_id));
+//
+//        AdView adView1 = new AdView(DetailsActivity.this);
+//        adView1.setAdSize(AdSize.BANNER);
+//        adView1.setAdUnitId(getResources().getString(R.string.admob_banner_unit_id));
         //adView.setAdUnitId("ca-app-pub-1307905966777808/6708516251");
-        mAdView = findViewById(R.id.banneradView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        mAdView.setAdListener(new AdListener() {
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-
-                mAdView.setVisibility(View.GONE);
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            @Override
-            public void onAdImpression() {
-                // Code to be executed when an impression is recorded
-                // for an ad.
-            }
-
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-        });
+//        mAdView = findViewById(R.id.banneradView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+//
+//        mAdView.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdClicked() {
+//                // Code to be executed when the user clicks on an ad.
+//            }
+//
+//            @Override
+//            public void onAdClosed() {
+//                // Code to be executed when the user is about to return
+//                // to the app after tapping on an ad.
+//
+//                mAdView.setVisibility(View.GONE);
+//
+//            }
+//
+//            @Override
+//            public void onAdFailedToLoad(LoadAdError adError) {
+//                // Code to be executed when an ad request fails.
+//            }
+//
+//            @Override
+//            public void onAdImpression() {
+//                // Code to be executed when an impression is recorded
+//                // for an ad.
+//            }
+//
+//            @Override
+//            public void onAdLoaded() {
+//                // Code to be executed when an ad finishes loading.
+//
+//            }
+//
+//            @Override
+//            public void onAdOpened() {
+//                // Code to be executed when an ad opens an overlay that
+//                // covers the screen.
+//            }
+//        });
 
 
         //for showing banner ads to package status inactive user//visibility set to mAdView
@@ -832,9 +832,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     if (response.body() != null) {
                         ActiveStatus activeStatus = response.body();
                         if (activeStatus.getStatus().equals("active")) {
-                            mAdView.setVisibility(View.GONE);
+//                            mAdView.setVisibility(View.GONE);
                         } else {
-                            mAdView.setVisibility(View.VISIBLE);
+//                            mAdView.setVisibility(View.VISIBLE);
 
                         }
 
@@ -2490,7 +2490,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     downloadBt.setVisibility(VISIBLE);
                     watchNowBt.setVisibility(GONE);
-                    trailerBt.setVisibility(GONE);
+                    trailerBt.setVisibility(VISIBLE);
 
                     // cast & crew adapter
                     castCrewAdapter = new CastCrewAdapter(this, castCrews);

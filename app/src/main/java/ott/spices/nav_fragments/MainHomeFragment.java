@@ -24,7 +24,9 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 import com.volcaniccoder.bottomify.BottomifyNavigationView;
 
@@ -52,13 +54,13 @@ public class MainHomeFragment extends Fragment {
     LinearLayout searchRootLayout;
     String from = "";
     SharedPreferences sharedPreferences;
-    LinearLayoutCompat lnr_home, lnr_gold, lnr_watchlist, lnr_download, lnr_account, lnr_search;
-    AppCompatImageView img_home, img_gold, img_watchlist, img_download, img_account, img_search;
-    TextView txt_home, txt_gold, txt_watchlist, txt_download, txt_account, txt_search;
+    LinearLayoutCompat lnr_home, lnr_reels, lnr_download, lnr_account, lnr_search;
+    AppCompatImageView img_home, img_reels, img_download, img_account, img_search;
+    TextView txt_home, txt_reels, txt_download, txt_account, txt_search;
     FloatingActionButton fab_goals;
-//    CleverTapAPI clevertapscreenviewd;
+    //    CleverTapAPI clevertapscreenviewd;
     private AdView mAdView;
-    ChipNavigationBar bottomNav;
+    BottomNavigationView bottomNav;
 
     @Nullable
     @Override
@@ -67,12 +69,8 @@ public class MainHomeFragment extends Fragment {
         if (bundle != null) {
             from = bundle.getString("from");
         }
-
-//        if (from.equals("main")) {
         activity = (MainActivity) getActivity();
-        /*} else {
-            activity1 = (MoreActivity) getActivity();
-        }*/
+
         return inflater.inflate(R.layout.fragment_main_home, container, false);
     }
 
@@ -81,7 +79,25 @@ public class MainHomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         searchRootLayout = view.findViewById(R.id.search_root_layout);
+
+        lnr_home = view.findViewById(R.id.lnr_home);
+        lnr_reels = view.findViewById(R.id.lnr_reels);
+        lnr_download = view.findViewById(R.id.lnr_download);
+        lnr_account = view.findViewById(R.id.lnr_account);
+        lnr_search = view.findViewById(R.id.lnr_search);
+        img_home = view.findViewById(R.id.img_home);
+        img_reels = view.findViewById(R.id.img_reels);
+        img_download = view.findViewById(R.id.img_download);
+        img_account = view.findViewById(R.id.img_account);
+        img_search = view.findViewById(R.id.img_search);
+        txt_home = view.findViewById(R.id.txt_home);
+        txt_reels = view.findViewById(R.id.txt_reels);
+        txt_download = view.findViewById(R.id.txt_download);
+        txt_account = view.findViewById(R.id.txt_account);
+        txt_search = view.findViewById(R.id.txt_search);
+
         bottomNav = view.findViewById(R.id.bottomNav);
+
 
 //        clevertapscreenviewd = CleverTapAPI.getDefaultInstance(getActivity());
 
@@ -147,29 +163,22 @@ public class MainHomeFragment extends Fragment {
             }
         });
 
-
-//        if (activity != null)
         sharedPreferences = activity.getSharedPreferences("push", MODE_PRIVATE);
-//        else
-//            sharedPreferences = activity1.getSharedPreferences("push", MODE_PRIVATE);
 
         boolean isDark = sharedPreferences.getBoolean("dark", false);
 
-       /* if (isDark) {
-            //bottomifyNavigationView
-            bottomifyNavigationViewDark.setVisibility(View.VISIBLE);
-            bottomifyNavigationViewDark.setBackgroundColor(getResources().getColor(R.color.black_window_light));
-        } else {
-            //bottomifyNavigationView light
-            bottomifyNavigationViewLight.setVisibility(View.VISIBLE);
-            bottomifyNavigationViewLight.setBackgroundColor(getResources().getColor(R.color.white));
-        }*/
+        loadHomeFragment();
+//        bottomMenu();
 
-        bottomNav.setItemSelected(R.id.home,
-                true);
-        loadFragment(new HomeFragment());
-        bottomMenu();
+        lnr_home.setOnClickListener(v -> loadHomeFragment());
 
+        lnr_search.setOnClickListener(v -> loadSearchFragment());
+
+        lnr_reels.setOnClickListener(v -> loadReels());
+
+        lnr_download.setOnClickListener(v -> loadDownloadFragment());
+
+        lnr_account.setOnClickListener(v -> loadAccountFragment());
     }
 
 
@@ -205,7 +214,7 @@ public class MainHomeFragment extends Fragment {
     private void bottomMenu() {
         bottomNav.setOnItemSelectedListener
                 (i -> {
-                    switch (i) {
+                    switch (i.getItemId()) {
                         case R.id.home:
                             loadFragment(new HomeFragment());
                             break;
@@ -228,6 +237,7 @@ public class MainHomeFragment extends Fragment {
                             break;
                     }
 
+                    return false;
                 });
     }
 
@@ -241,11 +251,9 @@ public class MainHomeFragment extends Fragment {
         img_home.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
 
 
-        txt_gold.setTextColor(getResources().getColor(R.color.white));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        txt_reels.setTextColor(getResources().getColor(R.color.white));
+        img_reels.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-        txt_watchlist.setTextColor(getResources().getColor(R.color.white));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_download.setTextColor(getResources().getColor(R.color.white));
         img_download.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -261,16 +269,12 @@ public class MainHomeFragment extends Fragment {
         loadFragment(new HomeFragment());
     }
 
-    public void loadGold() {
+    public void loadReels() {
         txt_home.setTextColor(getResources().getColor(R.color.white));
         img_home.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-
-        txt_gold.setTextColor(getResources().getColor(R.color.red));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-
-        txt_watchlist.setTextColor(getResources().getColor(R.color.white));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        txt_reels.setTextColor(getResources().getColor(R.color.red));
+        img_reels.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_download.setTextColor(getResources().getColor(R.color.white));
         img_download.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -278,41 +282,10 @@ public class MainHomeFragment extends Fragment {
         txt_account.setTextColor(getResources().getColor(R.color.white));
         img_account.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-
         txt_search.setTextColor(getResources().getColor(R.color.white));
         img_search.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-
-        loadFragment(new CpGoldFragment());
-    }
-
-    public void loadWatchlist() {
-        txt_home.setTextColor(getResources().getColor(R.color.white));
-        img_home.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_gold.setTextColor(getResources().getColor(R.color.white));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_watchlist.setTextColor(getResources().getColor(R.color.red));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-
-        txt_download.setTextColor(getResources().getColor(R.color.white));
-        img_download.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_account.setTextColor(getResources().getColor(R.color.white));
-        img_account.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_search.setTextColor(getResources().getColor(R.color.white));
-        img_search.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-//        loadFragment(new FavoriteFragment());
-
-        Intent intent = new Intent(getActivity(), SearchActivity.class);
+        Intent intent = new Intent(getActivity(), ReelsListActivity.class);
         startActivity(intent);
     }
 
@@ -321,19 +294,14 @@ public class MainHomeFragment extends Fragment {
         img_home.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
 
-        txt_gold.setTextColor(getResources().getColor(R.color.white));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_watchlist.setTextColor(getResources().getColor(R.color.white));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        txt_reels.setTextColor(getResources().getColor(R.color.white));
+        img_reels.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_download.setTextColor(getResources().getColor(R.color.red));
         img_download.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_account.setTextColor(getResources().getColor(R.color.white));
         img_account.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
 
         txt_search.setTextColor(getResources().getColor(R.color.white));
         img_search.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -342,27 +310,19 @@ public class MainHomeFragment extends Fragment {
         loadFragment(new DownloadNewFragment());
     }
 
-
     public void loadAccountFragment() {
 
         txt_home.setTextColor(getResources().getColor(R.color.white));
         img_home.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-
-        txt_gold.setTextColor(getResources().getColor(R.color.white));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_watchlist.setTextColor(getResources().getColor(R.color.white));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        txt_reels.setTextColor(getResources().getColor(R.color.white));
+        img_reels.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_download.setTextColor(getResources().getColor(R.color.white));
         img_download.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
-
         txt_account.setTextColor(getResources().getColor(R.color.red));
         img_account.setColorFilter(ContextCompat.getColor(activity, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-
 
         txt_search.setTextColor(getResources().getColor(R.color.white));
         img_search.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -374,18 +334,14 @@ public class MainHomeFragment extends Fragment {
     }
 
 
-    public void loadsearchFragment() {
+    public void loadSearchFragment() {
 
         txt_home.setTextColor(getResources().getColor(R.color.white));
         img_home.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
 
-        txt_gold.setTextColor(getResources().getColor(R.color.white));
-        img_watchlist.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
-
-
-        txt_watchlist.setTextColor(getResources().getColor(R.color.white));
-        img_gold.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
+        txt_reels.setTextColor(getResources().getColor(R.color.white));
+        img_reels.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
 
         txt_download.setTextColor(getResources().getColor(R.color.white));
         img_download.setColorFilter(ContextCompat.getColor(activity, R.color.white), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -402,10 +358,8 @@ public class MainHomeFragment extends Fragment {
         Intent intent = new Intent(getActivity(), SearchActivity.class);
         startActivity(intent);
 
-
         //loadFragment(new AccountFragment());
     }
-
 
     //----load fragment----------------------
     private boolean loadFragment(Fragment fragment) {

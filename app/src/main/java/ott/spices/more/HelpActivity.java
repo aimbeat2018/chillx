@@ -221,7 +221,7 @@ public class HelpActivity extends AppCompatActivity {
 
         // emailIntent.putExtra(Intent.EXTRA_EMAIL, "admin@primeplay.app");
         //  emailIntent.putExtra(Intent.EXTRA_EMAIL, "info@primeplay.co.in");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "BigShots Customer Query ");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Spice69 Customer Query ");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));

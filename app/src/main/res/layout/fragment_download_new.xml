@@ -195,6 +195,7 @@
                     android:layout_marginTop="15sp"
                     android:layout_marginRight="30dp"
                     android:background="@drawable/btn_rounded_primary"
+                    android:backgroundTint="@color/colorPrimary"
                     android:text="@string/subscribe_text"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />

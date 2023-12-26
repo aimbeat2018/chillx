@@ -342,7 +342,7 @@
                                 android:id="@+id/genre_rv"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_genre"/>
+                                android:layout_below="@id/tv_genre" />
 
                         </RelativeLayout>
 
@@ -644,6 +644,7 @@
                                     android:minWidth="0dp"
                                     android:text="Show all"
                                     android:textAllCaps="false"
+                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
@@ -736,6 +737,7 @@
                                     android:minWidth="0dp"
                                     android:text="Show all"
                                     android:textAllCaps="false"
+                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
@@ -782,6 +784,7 @@
                                     android:minWidth="0dp"
                                     android:text="Show all"
                                     android:textAllCaps="false"
+                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
