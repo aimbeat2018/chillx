@@ -161,7 +161,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         //belo line test for firebase crashlist report
         //   throw new RuntimeException("Test Crash"); // Force a crash
 
-        //  printHashKey(this);
+//          printHashKey(this);
 
     }
 

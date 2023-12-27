@@ -184,7 +184,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
                 .appendQueryParameter("tn", aPackage.getName())
                 .appendQueryParameter("am", aPackage.getPrice())
                 .appendQueryParameter("cu", "INR")
-                .appendQueryParameter("url", "https://bigshots.co.in/")
+                .appendQueryParameter("url", "https://primeplay.co.in/")
                 .build();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(uri);

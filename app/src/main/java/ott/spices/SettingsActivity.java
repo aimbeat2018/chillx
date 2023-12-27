@@ -102,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
         tvTerms.setOnClickListener(v -> {
             Intent intent = new Intent(SettingsActivity.this, TermsActivity.class);
             intent.putExtra("from", "terms");
-            intent.putExtra("url", "https://bigshots.co.in//terms-condition.php");
+            intent.putExtra("url", "https://primeplay.co.in/terms-condition");
             intent.putExtra("title", "Terms & Condition");
             startActivity(intent);
         });

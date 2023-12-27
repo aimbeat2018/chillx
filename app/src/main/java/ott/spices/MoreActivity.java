@@ -3,13 +3,18 @@ package ott.spices;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -448,7 +453,7 @@ public class MoreActivity extends AppCompatActivity {
 
     public void onOnSupportClick(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + "8976395879"));
+        intent.setData(Uri.parse("tel:" + "8447030345"));
         startActivity(intent);
 
     }
@@ -485,7 +490,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onPrivacyClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "privacy");
-        intent.putExtra("url", "https://bigshots.co.in/privacy-policy.php");
+        intent.putExtra("url", "https://primeplay.co.in/privacy-policy");
         intent.putExtra("title", "Privacy Policy");
         startActivity(intent);
 
@@ -494,7 +499,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onTermsClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "terms");
-        intent.putExtra("url", "https://bigshots.co.in//terms-condition.php");
+        intent.putExtra("url", "https://primeplay.co.in/terms-condition");
         intent.putExtra("title", "Terms & Condition");
         startActivity(intent);
 
@@ -503,7 +508,7 @@ public class MoreActivity extends AppCompatActivity {
     public void onRefundClick(View view) {
         Intent intent = new Intent(MoreActivity.this, TermsActivity.class);
         intent.putExtra("from", "refund");
-        intent.putExtra("url", "https://bigshots.co.in//refund-policy.php");
+        intent.putExtra("url", "https://primeplay.co.in/refund-policy");
         intent.putExtra("title", "Refund Policy");
         startActivity(intent);
 
@@ -511,22 +516,46 @@ public class MoreActivity extends AppCompatActivity {
 
     public void onSignOutClick(View view) {
         if (status) {
-            new MaterialAlertDialogBuilder(MoreActivity.this)
-                    .setMessage("Are you sure to logout ?")
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            logoutUser();
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }).create().show();
+//            new MaterialAlertDialogBuilder(MoreActivity.this)
+//                    .setMessage("Are you sure to logout ?")
+//                    .setPositiveButton("YES", (dialog, which) -> logoutUser())
+//                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
+
+            showLogoutDialog();
         }
 
+    }
+
+    private void showLogoutDialog() {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MoreActivity.this);
+        // Get the layout inflater
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.logout_dialog_layout, null);
+        builder.setView(view);
+        builder.setCancelable(false);
+        final android.app.AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.show();
+
+        Button setButton = view.findViewById(R.id.ok_bt);
+        Button cancelButton = view.findViewById(R.id.cancel_bt);
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                logoutUser();
+                alertDialog.dismiss();
+
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
     }
 
 
@@ -538,7 +567,9 @@ public class MoreActivity extends AppCompatActivity {
             User user = db.getUserData();
            /* activeUserName.setText(user.getName());
             activeEmail.setText(user.getEmail());*/
-            planname.setText(activeStatus.getPackageTitle() + " " + activeStatus.getExpireDate());
+            TextView plandate = findViewById(R.id.plandate);
+            plandate.setText("Expire date : " + activeStatus.getExpireDate());
+            planname.setText("Plan name : " + activeStatus.getPackageTitle());
             //    activeExpireDate.setText(activeStatus.getExpireDate());
 
         } else {

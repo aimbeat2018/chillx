@@ -13,7 +13,6 @@
         layout="@layout/app_bar_layout" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
@@ -115,7 +114,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/genreText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -170,7 +168,6 @@
                 android:visibility="gone">
 
                 <TextView
-                    android:id="@+id/countrytv"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
@@ -227,7 +224,6 @@
             </RelativeLayout>
 
             <LinearLayout
-                android:id="@+id/yearRangeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -344,7 +340,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_recentaly"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

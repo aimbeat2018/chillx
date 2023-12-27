@@ -185,7 +185,6 @@
     <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     <com.infideap.drawerbehavior.AdvanceDrawerLayout
-        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone">
@@ -197,14 +196,12 @@
 
 
             <FrameLayout
-                android:id="@+id/fragment_container1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="50dp" />
 
 
             <com.volcaniccoder.bottomify.BottomifyNavigationView
-                android:id="@+id/bottomify_nav"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"
@@ -222,7 +219,6 @@
 
 
             <com.volcaniccoder.bottomify.BottomifyNavigationView
-                android:id="@+id/bottomify_nav_light"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_alignParentBottom="true"

@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "367523810094",
-    "firebase_url": "https://bigshots-e5fb3-default-rtdb.firebaseio.com",
-    "project_id": "bigshots-e5fb3",
-    "storage_bucket": "bigshots-e5fb3.appspot.com"
+    "project_number": "404413671842",
+    "firebase_url": "https://spice69-13720-default-rtdb.firebaseio.com",
+    "project_id": "spice69-13720",
+    "storage_bucket": "spice69-13720.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:367523810094:android:7181a610befad5bc9e48bf",
+        "mobilesdk_app_id": "1:404413671842:android:83b7b4f32cd48671f6aafb",
         "android_client_info": {
           "package_name": "ott.spices"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDT-Ru2qSIRwFBmiHVFygUtX0owbwpCSXo"
+          "current_key": "AIzaSyD5A04TU2aMTvMSR1v0I5AOK2OcaHXVK8s"
         }
       ],
       "services": {

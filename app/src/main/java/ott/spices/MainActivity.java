@@ -524,31 +524,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.action_search:
-
-                final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                    @Override
-                    public boolean onQueryTextSubmit(String s) {
-
-                        Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
-                        intent.putExtra("q", s);
-                        startActivity(intent);
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onQueryTextChange(String s) {
-                        return false;
-                    }
-                });
-
-                return true;
-
-        }
+//        switch (item.getItemId()) {
+//
+//            case R.id.action_search:
+//
+//                final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+//                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                    @Override
+//                    public boolean onQueryTextSubmit(String s) {
+//
+//                        Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
+//                        intent.putExtra("q", s);
+//                        startActivity(intent);
+//
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onQueryTextChange(String s) {
+//                        return false;
+//                    }
+//                });
+//
+//                return true;
+//
+//        }
         return super.onOptionsItemSelected(item);
     }
 

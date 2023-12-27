@@ -41,7 +41,6 @@
 
 
     <RelativeLayout
-        android:id="@+id/edt_box"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll_edtbox"
@@ -213,7 +212,6 @@
                             android:orientation="vertical">
                             <!--                                app:ccp_countryPreference="us,in"-->
                             <TextView
-                                android:id="@+id/tv_selectage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
@@ -365,7 +363,6 @@
                                 android:layout_gravity="center" />
 
                             <TextView
-                                android:id="@+id/text_reme_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"

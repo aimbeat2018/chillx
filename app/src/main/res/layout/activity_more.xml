@@ -25,8 +25,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="250dp"
                 android:layout_marginBottom="10dp"
+                android:background="@drawable/profile_back"
                 android:orientation="vertical">
 
                 <ImageView
@@ -140,7 +141,7 @@
                             android:layout_marginHorizontal="10dp"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:visibility="gone">
+                            android:visibility="visible">
 
                             <TextView
                                 android:id="@+id/textName"
@@ -151,7 +152,8 @@
                                 android:includeFontPadding="false"
                                 android:text=""
                                 android:textColor="@color/white"
-                                android:textSize="14sp" />
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/textEmail"
@@ -179,19 +181,46 @@
                                 android:textColor="@color/white"
                                 android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/planname"
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/txtmobile"
-                                android:layout_gravity="center"
-                                android:backgroundTint="@color/white"
-                                android:gravity="center"
-                                android:includeFontPadding="false"
-                                android:padding="2dp"
-                                android:text=""
-                                android:textColor="@color/white"
-                                android:textSize="12sp" />
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/planname"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/white"
+                                    android:gravity="center"
+                                    android:includeFontPadding="false"
+                                    android:padding="2dp"
+                                    android:text=""
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp" />
+
+                                <View
+                                    android:layout_width="2dp"
+                                    android:layout_height="20dp"
+                                    android:background="@color/white" />
+
+                                <TextView
+                                    android:id="@+id/plandate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:backgroundTint="@color/white"
+                                    android:gravity="center"
+                                    android:includeFontPadding="false"
+                                    android:padding="2dp"
+                                    android:text=""
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
 
 
                             <!-- <ImageView
@@ -223,7 +252,8 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:onClick="onNotLoginClick"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/txt_LoginRegister"
@@ -255,74 +285,74 @@
                     </LinearLayout>
                 </LinearLayout>
 
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/lnrPremium"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/subsdesign"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@drawable/bottomnavigationbackground">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="10dp"
+                        android:src="@drawable/premium"
+                        app:tint="@color/white" />
+                </RelativeLayout>
+
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/lnrPremium"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/gener_backgorund_layout"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="10dp"
-                        android:layout_marginVertical="10dp"
-                        android:background="@drawable/bottomnavigationbackground">
-
-                        <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:padding="10dp"
-                            android:src="@drawable/premium"
-                            app:tint="@color/white" />
-                    </RelativeLayout>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
                         android:gravity="start"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="start"
-                            android:includeFontPadding="false"
-                            android:text="Get Premium"
-                            android:textColor="@color/white"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
+                        android:includeFontPadding="false"
+                        android:text="Get Premium"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/txt_LoginRegister"
-                            android:layout_gravity="center"
-                            android:gravity="start"
-                            android:padding="3dp"
-                            android:text="For better experience"
-                            android:textColor="@color/white"
-                            android:textSize="12sp" />
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txt_LoginRegister"
                         android:layout_gravity="center"
-                        android:layout_marginHorizontal="8dp"
+                        android:gravity="start"
                         android:padding="3dp"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
-                        app:tint="@color/white" />
+                        android:text="For better experience"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="8dp"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_baseline_keyboard_arrow_right_24"
+                    app:tint="@color/white" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
             <include layout="@layout/nav_layout" />

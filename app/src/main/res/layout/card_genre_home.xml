@@ -30,11 +30,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:minWidth="0dp"
-                android:text="Show all"
+                android:text="View all"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:textSize="12sp" />
 
         </LinearLayout>
 

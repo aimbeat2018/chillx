@@ -43,27 +43,7 @@
     </style>
 
 
-    <style name="DarkCardView" parent="CardView.Dark">
-        <item name="cardBackgroundColor">@color/black_window</item>
-    </style>
-
-    <style name="MyTextInputLayoutDark" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">@color/text_field_border_color_dark</item>
-        <item name="android:strokeWidth">2</item>
-        <item name="hintTextColor">@color/white</item>
-    </style>
-
-    <style name="MyTextInputLayoutLight" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">@color/text_field_border_color_light</item>
-        <item name="android:strokeWidth">2</item>
-        <item name="hintTextColor">@color/black</item>
-    </style>
-
     <!-- This will set the fade in animation on all your activities by default -->
-    <style name="WindowAnimationTransition">
-        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
-        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-    </style>
 
     <style name="AppTheme.Nobar" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
@@ -110,18 +90,6 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="FullscreenTheme" parent="AppTheme.NoActionBar">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowBackground">@null</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
     <style name="ExoMediaButton.Previous">
         <item name="android:visibility">gone</item>
     </style>
@@ -138,39 +106,11 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="EditText.GreySoft" parent="@style/AppTheme">
-        <item name="colorControlActivated">@color/grey_40</item>
-        <item name="colorControlHighlight">@color/grey_40</item>
-        <item name="colorControlNormal">@color/grey_20</item>
-    </style>
-
-    <style name="CardWidgetStyle" parent="@android:style/Theme.DeviceDefault">
-        <item name="editTextStyle">@style/EditTextOverride</item>
-        <item name="android:editTextStyle">@style/EditTextOverride</item>
-    </style>
-
-    <style name="EditTextOverride" parent="@android:style/Widget.EditText">
-        <item name="android:textColor">@color/grey_40</item>
-        <item name="android:textColorHint">@color/grey_20</item>
-    </style>
-
-
-    <style name="DefaultTheme" parent="AppTheme.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-    </style>
 
     <style name="EditText.Flat.Grey" parent="@style/AppTheme">
         <item name="android:textColorHint">@color/grey_20</item>
         <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Subhead</item>
         <item name="android:textColor">@color/grey_40</item>
-    </style>
-
-    <style name="AppBottomSheetDialogDarkTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalDarkStyle</item>
     </style>
 
     <style name="AppBottomSheetDialogLightTheme"
@@ -183,42 +123,10 @@
         <item name="android:background">@drawable/rounded_bottom_shit_light</item>
     </style>
 
-    <style name="AppModalDarkStyle"
-        parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/rounded_bottom_shit_dark</item>
-    </style>
-
-    <style name="Button.Primary.Borderless" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/colorPrimary</item>
-    </style>
-
-    <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:background">@drawable/btn_rounded_corner</item>
-    </style>
-
     <!-- Dual Audio Added this here -->
     <style name="TrackSelectionDialogThemeOverlay" parent="ThemeOverlay.AppCompat.Dialog.Alert">
         <item name="windowNoTitle">false</item>
 
-    </style>
-
-    <style name="TextLabelLight" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="android:textColorHint">@color/green_500</item>
-        <item name="android:textSize">18sp</item>
-        <item name="colorControlNormal">@color/grey_400</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
-        <item name="boxStrokeColor">#fff</item>
-        <item name="cornerRadius">5dp</item>
-
-
-    </style>
-
-    <style name="TextLabelLightDark" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="android:textColorHint">@color/green_500</item>
-        <item name="android:textSize">18sp</item>
-        <item name="colorControlNormal">@color/grey_400</item>
-        <item name="colorControlActivated">@color/colorPrimary</item>
-        <item name="boxStrokeColor">@color/colorPrimary</item>
     </style>
 
 

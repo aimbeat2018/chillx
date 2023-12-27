@@ -309,7 +309,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
             }
         });
 
-        dialog.show();
+//        dialog.show();
         dialog.getWindow().setAttributes(lp);
 
 
@@ -356,7 +356,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
 
     public void fetch_stripe_Payment_data(String strip_plan_amount) {
         //   RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        String url = "https://bigshots.co.in/bigshots_backoffice/rest_api/v130/stripe_payment";
+        String url = "https://hunters.co.in/ppv1/rest-api/v130/stripe_payment";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 //  StringRequest stringRequest = new StringRequest(Request.Method.POST, url + "?amount=" + 100 + "&currency=" + "INR" + "&customer=" + 18,

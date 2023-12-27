@@ -129,8 +129,8 @@ public class HelpActivity extends AppCompatActivity {
         bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "activity");
         mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
-        mobile = findViewById(R.id.t4);
-        email = findViewById(R.id.t6);
+//        mobile = findViewById(R.id.t4);
+//        email = findViewById(R.id.t6);
         call_us = findViewById(R.id.call_us);
         mail_us = findViewById(R.id.mail_us);
 
@@ -139,9 +139,9 @@ public class HelpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 // intent.setData(Uri.parse("tel:" + mobile.getText()));
-                intent.setData(Uri.parse("tel:" + "8976395879"));
+                intent.setData(Uri.parse("tel:" + "8447030345"));
                 //System.out.println("OnItemClickListener ==> listData ==> " + mobile.getText());
-                System.out.println("OnItemClickListener ==> listData ==> " + "8976395879");
+                System.out.println("OnItemClickListener ==> listData ==> " + "8447030345");
                 startActivity(intent);
             }
         });
@@ -216,7 +216,7 @@ public class HelpActivity extends AppCompatActivity {
         //  emailIntent .setType("vnd.android.cursor.dir/email");
         //  String to[] = {"info@primeplay.co.in"};
 
-        String to[] = {"customercare@spices.co.in"};
+        String to[] = {"customercare@spice69.co.in"};
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
 
         // emailIntent.putExtra(Intent.EXTRA_EMAIL, "admin@primeplay.app");

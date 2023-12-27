@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -157,7 +158,7 @@ public class ProfileActivity extends AppCompatActivity {
         userIv = findViewById(R.id.user_iv);
         editProfilePicture = findViewById(R.id.pro_pic_edit_image_view);
         progressBar = findViewById(R.id.progress_bar);
-        deactivateBt = findViewById(R.id.deactive_bt);
+        deactivateBt = findViewById(R.id.deactivateButton);
         backbtn = findViewById(R.id.imgback);
         genderSpinner = findViewById(R.id.genderSpinnerField);
         setPasswordBtn = findViewById(R.id.setPasswordBtn);
@@ -203,7 +204,7 @@ public class ProfileActivity extends AppCompatActivity {
              /*   if (ccp.getSelectedCountryCode().equals("")) {
                     Toast.makeText(this, "Select countryCode", Toast.LENGTH_SHORT).show();
                 } else if (ccp.getSelectedCountryCode().contains("91")) {*/
-                    sendOtp(id, email, phone, name, pass, currentPass);
+                sendOtp(id, email, phone, name, pass, currentPass);
 
 //                    if (etPhone.getText().toString().contains("+")) {
 //                        sendVerificationCode(etPhone.getText().toString());
@@ -263,6 +264,7 @@ public class ProfileActivity extends AppCompatActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.layout_deactivate, null);
         builder.setView(view);
         final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.show();
 
         final EditText passEt = view.findViewById(R.id.pass_et);
@@ -272,9 +274,9 @@ public class ProfileActivity extends AppCompatActivity {
         ImageView closeIv = view.findViewById(R.id.close_iv);
 //        final ProgressBar progressBar = view.findViewById(R.id.progress_bar);
         LinearLayout topLayout = view.findViewById(R.id.top_layout);
-        if (isDark) {
-            topLayout.setBackgroundColor(getResources().getColor(R.color.overlay_dark_30));
-        }
+//        if (isDark) {
+//            topLayout.setBackgroundColor(getResources().getColor(R.color.overlay_dark_30));
+//        }
 
         okBt.setOnClickListener(v -> {
             String pass = passEt.getText().toString();
@@ -405,7 +407,7 @@ public class ProfileActivity extends AppCompatActivity {
                         }*/
 
 
-                       // String ccode = ccp.getSelectedCountryCode();
+                        // String ccode = ccp.getSelectedCountryCode();
                         String ccode = "91";
                         if (etPhone.getText().toString().contains(ccode))
                             addUserToCleverTap(user.getName(), user.getUserId(), user.getEmail(), etPhone.getText().toString());
@@ -613,6 +615,7 @@ public class ProfileActivity extends AppCompatActivity {
         builder.setView(view);
         builder.setCancelable(false);
         final AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.show();
 
         EditText passEt = view.findViewById(R.id.passwordEt);
@@ -897,13 +900,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         txt_resend.setOnClickListener(view -> {
 
-           // if (ccp.getSelectedCountryCode().contains("91")) {
-                sendOtp(idString,
-                        emailString,
-                        phoneString,
-                        nameString,
-                        passString,
-                        currentPassString);
+            // if (ccp.getSelectedCountryCode().contains("91")) {
+            sendOtp(idString,
+                    emailString,
+                    phoneString,
+                    nameString,
+                    passString,
+                    currentPassString);
            /* } else {
                 if (etPhone.getText().toString().contains("+")) {
                     resendVerificationCode(phoneString, verificationToken);
@@ -918,9 +921,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         otp_viewIndia.setOtpCompletionListener(otp -> userEnteredOtp = otp);
 
-       // if (ccp.getSelectedCountryCode().contains("91")) {
-            otp_viewIndia.setVisibility(View.VISIBLE);
-            otp_view.setVisibility(View.GONE);
+        // if (ccp.getSelectedCountryCode().contains("91")) {
+        otp_viewIndia.setVisibility(View.VISIBLE);
+        otp_view.setVisibility(View.GONE);
       /*  } else {
             otp_viewIndia.setVisibility(View.GONE);
             otp_view.setVisibility(View.VISIBLE);
@@ -932,22 +935,22 @@ public class ProfileActivity extends AppCompatActivity {
 //                    + otp_edit_box3.getText().toString()
 //                    + otp_edit_box4.getText().toString();
 
-           // if (ccp.getSelectedCountryCode().contains("91")) {
-                if (userEnteredOtp.equals("")) {
-                    Toast.makeText(ProfileActivity.this, "Enter OTP", Toast.LENGTH_SHORT).show();
-                } else if (!userEnteredOtp.equals(intentOtp)) {
-                    Toast.makeText(ProfileActivity.this, "Enter Valid OTP", Toast.LENGTH_SHORT).show();
-                } else {
-                    dialog.dismiss();
-                    updateProfile(idString, emailString, phoneString, nameString, passString, currentPassString);
-                }
-           // } else {
+            // if (ccp.getSelectedCountryCode().contains("91")) {
+            if (userEnteredOtp.equals("")) {
+                Toast.makeText(ProfileActivity.this, "Enter OTP", Toast.LENGTH_SHORT).show();
+            } else if (!userEnteredOtp.equals(intentOtp)) {
+                Toast.makeText(ProfileActivity.this, "Enter Valid OTP", Toast.LENGTH_SHORT).show();
+            } else {
+                dialog.dismiss();
+                updateProfile(idString, emailString, phoneString, nameString, passString, currentPassString);
+            }
+            // } else {
                /* if (userEnteredOtp.equals("")) {
                     Toast.makeText(ProfileActivity.this, "Enter OTP", Toast.LENGTH_SHORT).show();
                 } else {
                     verifyCode(userEnteredOtp);
                 }*/
-         //   }
+            //   }
         });
 
         txt_change_no.setOnClickListener(view -> dialog.dismiss());

@@ -1058,7 +1058,6 @@
                                 android:textAppearance="@style/TextAppearance.Medium.Bold" />
 
                             <TextView
-                                android:id="@+id/tv_cast"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="@style/TextAppearance.Small"

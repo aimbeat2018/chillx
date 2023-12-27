@@ -419,7 +419,6 @@
                             </RelativeLayout>
 
                             <Button
-                                android:id="@+id/play_button_home"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
                                 android:layout_centerHorizontal="true"
@@ -459,7 +458,6 @@
 
 
                             <LinearLayout
-                                android:id="@+id/ll_socialmedia"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
@@ -528,7 +526,6 @@
                             android:visibility="gone">
 
                             <RelativeLayout
-                                android:id="@+id/slider_layout2"
                                 android:layout_width="match_parent"
                                 android:layout_height="100dp"
                                 android:visibility="gone">
@@ -540,7 +537,6 @@
                             </RelativeLayout>
 
                             <com.github.islamkhsh.CardSliderViewPager
-                                android:id="@+id/c_viewPager2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="24dp"
@@ -562,7 +558,6 @@
 
 
                         <RelativeLayout
-                            android:id="@+id/startappNativeAdContainer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
@@ -628,7 +623,6 @@
                                 android:paddingRight="0dp">
 
                                 <TextView
-                                    android:id="@+id/featured_tv_layout_title"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -642,9 +636,8 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="end"
                                     android:minWidth="0dp"
-                                    android:text="Show all"
+                                    android:text="View all"
                                     android:textAllCaps="false"
-                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
@@ -735,9 +728,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="right"
                                     android:minWidth="0dp"
-                                    android:text="Show all"
+                                    android:text="View all"
                                     android:textAllCaps="false"
-                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
@@ -782,9 +774,8 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:minWidth="0dp"
-                                    android:text="Show all"
+                                    android:text="View all"
                                     android:textAllCaps="false"
-                                    android:visibility="gone"
                                     android:textColor="@color/white"
                                     android:textSize="12sp" />
 
