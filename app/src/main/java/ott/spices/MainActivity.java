@@ -649,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 finish();
             }
         });
-        if(dialog==null) {
+        if (dialog == null) {
 
             dialog.show();
             dialog.getWindow().setAttributes(lp);
