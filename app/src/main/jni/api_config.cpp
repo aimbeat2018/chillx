@@ -3,8 +3,8 @@
 
 
 //std::string SERVER_URL = "https://primeplay.co.in/webworld_backoffice/rest-api/";
-std::string SERVER_URL = "https://hunters.co.in/ppv1/rest-api/";
-std::string API_KEY = "2b14kpa3k18nyqbu1sdre1cy";
+std::string SERVER_URL = "https://hitprime.in/hitprime_backoffice/rest-api/";
+std::string API_KEY = "2b14kpa3k18nyqbu1sdre1cy4kpa3k18";
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 
 
