@@ -17,10 +17,10 @@
     //startapp
 
 
-    <string name="app_name">Spice69</string>
+    <string name="app_name">ChillX</string>
     <!--app_title for main navigation & home title-->
-    <string name="contact_email">customercare@spice69.co.in</string>
-    <string name="copyright_text">Copyright @ Spice69, All right reserved</string>
+    <string name="contact_email">customercare@chillx.co.in</string>
+    <string name="copyright_text">Copyright @ ChillX, All right reserved</string>
 
     <!-- App -->
     <string name="featured_tv_channels">Featured Tv Channel</string>

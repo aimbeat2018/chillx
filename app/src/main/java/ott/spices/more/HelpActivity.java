@@ -216,12 +216,12 @@ public class HelpActivity extends AppCompatActivity {
         //  emailIntent .setType("vnd.android.cursor.dir/email");
         //  String to[] = {"info@primeplay.co.in"};
 
-        String to[] = {"customercare@spice69.co.in"};
+        String to[] = {"customercare@chillx.co.in"};
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
 
         // emailIntent.putExtra(Intent.EXTRA_EMAIL, "admin@primeplay.app");
         //  emailIntent.putExtra(Intent.EXTRA_EMAIL, "info@primeplay.co.in");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Spice69 Customer Query ");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "ChillX Customer Query ");
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
