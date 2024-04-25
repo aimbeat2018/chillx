@@ -96,7 +96,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Log.e(TAG, "No restricted app installed!!");
         }*/
 
-        Intent intent1 = getIntent();
+      /*  Intent intent1 = getIntent();
         intent1.putExtra("branch_force_new_session", true);
         setIntent(intent1);
 
@@ -152,9 +152,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 //                    startActivity(intent);
 //                    finish();
             }
-        }, intent1.getData(), this);
+        }, intent1.getData(), this);*/
         vpnStatus = new HelperUtils(SplashScreenActivity.this).isVpnConnectionAvailable();
 
+
+        getConfigurationData();
 //        getConfigurationData();
 
         //check VPN connection is set or not
@@ -180,7 +182,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             Log.e(TAG, "printHashKey()", e);
         }
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,7 +361,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
     }
-
 
     public void userPackageStatus(String userId) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();

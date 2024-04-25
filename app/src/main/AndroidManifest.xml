@@ -323,7 +323,7 @@
             </intent-filter>
 
             <!-- Branch URI scheme -->
-            <intent-filter>
+        <!--    <intent-filter>
                 <data
                     android:host="open"
                     android:scheme="ott.spices" />
@@ -334,7 +334,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
 
-            <!-- Branch App Links -->
+            &lt;!&ndash; Branch App Links &ndash;&gt;
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -344,26 +344,26 @@
                 <data
                     android:host="primeplay.app.link"
                     android:scheme="https" />
-                <!-- <data -->
-                <!-- android:host="primeplay.test-app.link" -->
-                <!-- android:scheme="https" /> -->
+                &lt;!&ndash; <data &ndash;&gt;
+                &lt;!&ndash; android:host="primeplay.test-app.link" &ndash;&gt;
+                &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
                 <data
                     android:host="primeplay-alternate.app.link"
                     android:scheme="https" />
-                <!-- <data -->
-                <!-- android:host="primeplay-alternate.test-app.link" -->
-                <!-- android:scheme="https" /> -->
-            </intent-filter>
+                &lt;!&ndash; <data &ndash;&gt;
+                &lt;!&ndash; android:host="primeplay-alternate.test-app.link" &ndash;&gt;
+                &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
+            </intent-filter>-->
         </activity> <!-- Branch init -->
-        <meta-data
+       <!-- <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_dugmRJVBQCu3M55tr663UcliwBnOBKte" /> <!-- <meta-data -->
-        <!-- android:name="io.branch.sdk.BranchKey.test" -->
-        <!-- android:value="key_test_htkeKSJuGtD0L26zt30XKhpdzBhTFNDy" /> -->
-        <!-- Branch testing (TestMode "true" to simulate fresh installs on dev environment) -->
+            android:value="key_live_dugmRJVBQCu3M55tr663UcliwBnOBKte" /> &lt;!&ndash; <meta-data &ndash;&gt;
+        &lt;!&ndash; android:name="io.branch.sdk.BranchKey.test" &ndash;&gt;
+        &lt;!&ndash; android:value="key_test_htkeKSJuGtD0L26zt30XKhpdzBhTFNDy" /> &ndash;&gt;
+        &lt;!&ndash; Branch testing (TestMode "true" to simulate fresh installs on dev environment) &ndash;&gt;
         <meta-data
             android:name="io.branch.sdk.TestMode"
-            android:value="false" />
+            android:value="false" />-->
 
         <activity
             android:name=".ItemMovieActivity"

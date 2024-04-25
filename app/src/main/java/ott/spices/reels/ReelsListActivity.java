@@ -275,7 +275,7 @@ public class ReelsListActivity extends AppCompatActivity implements Player.Liste
                         @Override
                         public void onShareClick(ItemReelsBinding reelsBinding, int pos) {
 
-                            shareReels(reelsModelList.get(pos));
+//                            shareReels(reelsModelList.get(pos));
 //                            FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.getInstance();
 //
 //                            String link = "https://primeplay.page.link/" + reelsModelList.get(pos).getReelsId();
@@ -339,7 +339,7 @@ public class ReelsListActivity extends AppCompatActivity implements Player.Liste
     }
 
 
-    private void shareReels(ReelsModel model) {
+ /*   private void shareReels(ReelsModel model) {
         BranchUniversalObject buo = new BranchUniversalObject()
                 .setCanonicalIdentifier("content/12345")
                 .setTitle(model.getTitle())
@@ -371,7 +371,7 @@ public class ReelsListActivity extends AppCompatActivity implements Player.Liste
             }
         });
     }
-
+*/
     public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.ViewHolder> {
 
         private int playAtPosition = 0;

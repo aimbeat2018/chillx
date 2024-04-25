@@ -19,7 +19,7 @@
 
     <string name="app_name">ChillX</string>
     <!--app_title for main navigation & home title-->
-    <string name="contact_email">customercare@chillx.co.in</string>
+    <string name="contact_email">customercare@chillx.in</string>
     <string name="copyright_text">Copyright @ ChillX, All right reserved</string>
 
     <!-- App -->

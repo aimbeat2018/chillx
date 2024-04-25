@@ -453,7 +453,7 @@ public class MoreActivity extends AppCompatActivity {
 
     public void onOnSupportClick(View view) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + "8447030345"));
+        intent.setData(Uri.parse("tel:" + "8291030554"));
         startActivity(intent);
 
     }

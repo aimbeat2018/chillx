@@ -139,9 +139,9 @@ public class HelpActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 // intent.setData(Uri.parse("tel:" + mobile.getText()));
-                intent.setData(Uri.parse("tel:" + "8447030345"));
+                intent.setData(Uri.parse("tel:" + "8291030554"));
                 //System.out.println("OnItemClickListener ==> listData ==> " + mobile.getText());
-                System.out.println("OnItemClickListener ==> listData ==> " + "8447030345");
+                System.out.println("OnItemClickListener ==> listData ==> " + "8291030554");
                 startActivity(intent);
             }
         });
@@ -216,7 +216,7 @@ public class HelpActivity extends AppCompatActivity {
         //  emailIntent .setType("vnd.android.cursor.dir/email");
         //  String to[] = {"info@primeplay.co.in"};
 
-        String to[] = {"customercare@chillx.co.in"};
+        String to[] = {"customercare@chillx.in"};
         emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
 
         // emailIntent.putExtra(Intent.EXTRA_EMAIL, "admin@primeplay.app");

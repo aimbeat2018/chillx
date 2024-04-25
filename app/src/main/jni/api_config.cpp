@@ -3,7 +3,7 @@
 
 
 //std::string SERVER_URL = "https://primeplay.co.in/webworld_backoffice/rest-api/";
-std::string SERVER_URL = "https://hitprime.in/hitprime_backoffice/rest-api/";
+std::string SERVER_URL = "https://chillx.in/chillx_backoffice/rest-api/";
 std::string API_KEY = "2b14kpa3k18nyqbu1sdre1cy4kpa3k18";
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 

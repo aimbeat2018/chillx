@@ -232,7 +232,7 @@
                     android:layout_height="70dp"
                     android:layout_marginTop="5dp"
                     android:gravity="end"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/img_share"
