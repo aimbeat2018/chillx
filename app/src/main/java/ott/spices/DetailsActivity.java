@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.provider.Settings;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Rational;
@@ -3133,8 +3134,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         tvName.setText(title);
                         tvName.setVisibility(GONE);
                         tvTitleTv.setText(title);
-
-                        tvDes.setText(detailsModel.getDescription());
+                        tvDes.setText(Html.fromHtml(detailsModel.getDescription()));
+//                        tvDes.setText(detailsModel.getDescription());
                         V_URL = detailsModel.getStreamUrl();
                         castImageUrl = detailsModel.getThumbnailUrl();
 
@@ -3266,7 +3267,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     tvName.setText(title);
                     tvRelease.setText("Release On " + singleDetails.getRelease());
                     runtime.setText(singleDetails.getRuntime());
-                    tvDes.setText(singleDetails.getDescription());
+//                    tvDes.setText(singleDetails.getDescription());
+                    tvDes.setText(Html.fromHtml(singleDetails.getDescription()));
 
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
                             .into(posterIv);
@@ -3550,7 +3552,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     tvName.setText(title);
                     tvRelease.setText("Release On " + singleDetails.getRelease());
                     runtime.setText(singleDetails.getRuntime());
-                    tvDes.setText(singleDetails.getDescription());
+
+                    tvDes.setText(Html.fromHtml(singleDetails.getDescription()));
 
 
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
@@ -3877,31 +3880,35 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
 */
 
-        player.setPlayWhenReady(true);
-        //used for PIP video on screen after back click and exit from app (rk251023)
-        Display d = getWindowManager()
-                .getDefaultDisplay();
-        Point p = new Point();
-        d.getSize(p);
-        int width = p.x;
-        int height = p.y;
+        if (player != null) {
+            player.setPlayWhenReady(true);
+            //used for PIP video on screen after back click and exit from app (rk251023)
+            Display d = getWindowManager()
+                    .getDefaultDisplay();
+            Point p = new Point();
+            d.getSize(p);
+            int width = p.x;
+            int height = p.y;
 
-        //Rational ratio= new Rational(width, height);
-        Rational ratio = new Rational(18, 12);
+            //Rational ratio= new Rational(width, height);
+            Rational ratio = new Rational(18, 12);
 
-        PictureInPictureParams.Builder
-                pip_Builder
-                = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pip_Builder = new PictureInPictureParams
-                    .Builder();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pip_Builder.setAspectRatio(ratio).build();
-        }
+            PictureInPictureParams.Builder
+                    pip_Builder
+                    = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                pip_Builder = new PictureInPictureParams
+                        .Builder();
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                pip_Builder.setAspectRatio(ratio).build();
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            enterPictureInPictureMode(pip_Builder.build());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                enterPictureInPictureMode(pip_Builder.build());
+            }
+        }else {
+            super.onBackPressed();
         }
 
     }

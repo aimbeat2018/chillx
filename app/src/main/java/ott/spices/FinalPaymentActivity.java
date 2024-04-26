@@ -96,7 +96,8 @@ public class FinalPaymentActivity extends AppCompatActivity {
     PackageManager packageManager;
     List pkgAppsList;
     private static final String GOOGLE_TEZ_PACKAGE_NAME = "com.google.android.apps.nbu.paisa.user";
-    boolean isAppInstalled ;
+    boolean isAppInstalled;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -65,24 +65,25 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (PreferenceUtils.isMandatoryLogin(ctx)){
+              /*  if (PreferenceUtils.isMandatoryLogin(ctx)){
                     if (PreferenceUtils.isLoggedIn(ctx)){
-                        goToDetailsActivity(obj);
+
                     }else {
                         ctx.startActivity(new Intent(ctx, LoginActivity.class));
                     }
                 }else {
                     goToDetailsActivity(obj);
-                }
+                }*/
+                goToDetailsActivity(obj);
             }
         });
         setAnimation(holder.itemView, position);
 
 
         // holder.cat_name.setText(obj.getTitle());
-      //  holder.duration.setText(obj.getMovieDuration());
+        //  holder.duration.setText(obj.getMovieDuration());
         //holder.cat_type.setText(obj.getVideoType());
-       // holder.description.setText(obj.getDescription());
+        // holder.description.setText(obj.getDescription());
 
 /*
 
@@ -180,8 +181,6 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
 */
 
 
-
-
     }
 
 
@@ -226,8 +225,8 @@ public class CommonGridAdapter extends RecyclerView.Adapter<CommonGridAdapter.Or
             lyt_parent = v.findViewById(R.id.lyt_parent);
             qualityTv = v.findViewById(R.id.quality_tv);
             releaseDateTv = v.findViewById(R.id.release_date_tv);
-            cardView = v.findViewById(R.id.top_layout);
-            cardView = v.findViewById(R.id.top_layout);
+           /* cardView = v.findViewById(R.id.top_layout);
+            cardView = v.findViewById(R.id.top_layout);*/
         }
 
     }
