@@ -7,7 +7,7 @@
     android:alpha="0.8"
     android:background="@drawable/background_gradient"
     android:orientation="vertical"
-    tools:context="ott.spices.more.HelpActivity">
+    tools:context="ott.chillx.more.HelpActivity">
 
     <include
         android:id="@+id/subscription_toolbar"

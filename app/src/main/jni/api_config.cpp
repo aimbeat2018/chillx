@@ -10,21 +10,21 @@ std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 
 //WARNING: ==>> Don't change anything below.
 extern "C" JNIEXPORT jstring JNICALL
-Java_ott_spices_AppConfig_getApiServerUrl(
+Java_ott_chillx_AppConfig_getApiServerUrl(
         JNIEnv *env,
         jclass clazz) {
     return env->NewStringUTF(SERVER_URL.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_ott_spices_AppConfig_getApiKey(
+Java_ott_chillx_AppConfig_getApiKey(
         JNIEnv *env,
         jclass clazz) {
     return env->NewStringUTF(API_KEY.c_str());
 }
 
 extern "C" JNIEXPORT jstring JNICALL
-Java_ott_spices_AppConfig_getPurchaseCode(
+Java_ott_chillx_AppConfig_getPurchaseCode(
         JNIEnv *env,
         jclass clazz) {
     return env->NewStringUTF(PURCHASE_CODE.c_str());

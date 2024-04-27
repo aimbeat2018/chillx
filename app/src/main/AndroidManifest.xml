@@ -326,7 +326,7 @@
         <!--    <intent-filter>
                 <data
                     android:host="open"
-                    android:scheme="ott.spices" />
+                    android:scheme="chillx" />
 
                 <action android:name="android.intent.action.VIEW" />
 

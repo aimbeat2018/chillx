@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ott.spices.MoreActivity">
+    tools:context="ott.chillx.MoreActivity">
 
     <include
         android:id="@+id/subscription_toolbar"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="ott.spices.SearchActivity">
+    tools:context="ott.chillx.SearchActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -249,7 +249,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ott.spices.widget.RangeSeekBar
+                <ott.chillx.widget.RangeSeekBar
                     android:id="@+id/range_seek_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
