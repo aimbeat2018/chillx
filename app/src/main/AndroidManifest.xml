@@ -47,7 +47,7 @@
     </queries>
 
     <application
-        android:name=".utils.MyAppClass"
+        android:name="ott.istream.utils.MyAppClass"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -60,49 +60,49 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:usesCleartextTraffic,android:theme,android:allowBackup">
         <activity
-            android:name=".ForgotPinActivity"
+            android:name="ott.istream.ForgotPinActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".PinActivity"
+            android:name="ott.istream.PinActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".AgrrepayActivity"
+            android:name="ott.istream.AgrrepayActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".OneUPIPaymentActivity"
+            android:name="ott.istream.OneUPIPaymentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".EasyUPIPaymentActivity"
+            android:name="ott.istream.EasyUPIPaymentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".AutoPaymentUpi"
+            android:name="ott.istream.AutoPaymentUpi"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".reels.ReelsListActivity"
+            android:name="ott.istream.reels.ReelsListActivity"
             android:exported="false">
 
             <!-- <action android:name="android.intent.action.VIEW"/> -->
@@ -116,86 +116,86 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".GrievanceSupportActivity"
+            android:name="ott.istream.GrievanceSupportActivity"
             android:exported="false" />
         <activity
-            android:name=".FavActivity"
+            android:name="ott.istream.FavActivity"
             android:exported="false"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".NoInternet"
+            android:name="ott.istream.NoInternet"
             android:exported="false" />
         <activity
-            android:name=".widget.OfflinePlayerNewActivity"
+            android:name="ott.istream.widget.OfflinePlayerNewActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".MobileNumberSignupActivity"
+            android:name="ott.istream.MobileNumberSignupActivity"
             android:exported="false" />
         <activity
-            android:name=".FinalPaymentActivity"
+            android:name="ott.istream.FinalPaymentActivity"
             android:exported="false" />
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name="ott.istream.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".OtpForgotPasswordActivity"
+            android:name="ott.istream.OtpForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".ItemPopularActivity"
+            android:name="ott.istream.ItemPopularActivity"
             android:exported="false"
             android:screenOrientation="portrait" /> <!-- <activity -->
         <!-- android:name=".OfflinePlayerActivity" -->
         <!-- android:exported="false" -->
         <!-- android:screenOrientation="portrait" /> -->
         <activity
-            android:name=".LoginViaMobileActivity"
+            android:name="ott.istream.LoginViaMobileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".OtpActivity"
+            android:name="ott.istream.OtpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CashFreePaymentActivity"
+            android:name="ott.istream.CashFreePaymentActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ItemGoldSeriesActivity"
+            android:name="ott.istream.ItemGoldSeriesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".more.ApplyPromoCodeActivity"
+            android:name="ott.istream.more.ApplyPromoCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".more.HelpActivity"
+            android:name="ott.istream.more.HelpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".more.MyTransactionActivity"
+            android:name="ott.istream.more.MyTransactionActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MoreActivity"
+            android:name="ott.istream.MoreActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RazorPayActivity"
+            android:name="ott.istream.RazorPayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".GoldRazorPayActivity"
+            android:name="ott.istream.GoldRazorPayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SearchActivity"
+            android:name="ott.istream.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PapalPaymentActivity"
+            android:name="ott.istream.PapalPaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".WebViewActivity"
+            android:name="ott.istream.WebViewActivity"
             android:screenOrientation="portrait" />
 
         <meta-data
@@ -252,40 +252,40 @@
             </intent-filter>
         </activity> <!-- facebook end -->
         <activity
-            android:name=".TermsActivity"
+            android:name="ott.istream.TermsActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".ReplyActivity"
+            android:name="ott.istream.ReplyActivity"
             android:label="@string/title_activity_reply"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProfileActivity"
+            android:name="ott.istream.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".PassResetActivity"
+            android:name="ott.istream.PassResetActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".SearchResultActivity"
+            android:name="ott.istream.SearchResultActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".SignUpActivity"
+            android:name="ott.istream.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".LoginActivity"
+            android:name="ott.istream.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".LoginSocialNumberNotFoundActivity"
+            android:name="ott.istream.LoginSocialNumberNotFoundActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".DetailsActivity"
+            android:name="ott.istream.DetailsActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/title_activity_details"
             android:resizeableActivity="true"
@@ -294,23 +294,23 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
         <activity
-            android:name=".GoldDetailsActivity"
+            android:name="ott.istream.GoldDetailsActivity"
             android:configChanges="screenLayout|screenSize|orientation"
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
         <activity
-            android:name=".MainActivity"
+            android:name="ott.istream.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="ott.istream.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="ott.istream.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask"
@@ -323,79 +323,79 @@
             </intent-filter>
 
             <!-- Branch URI scheme -->
-        <!--    <intent-filter>
-                <data
-                    android:host="open"
-                    android:scheme="chillx" />
+            <!--    <intent-filter>
+                    <data
+                        android:host="open"
+                        android:scheme="istream" />
 
-                <action android:name="android.intent.action.VIEW" />
+                    <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
+                </intent-filter>
 
-            &lt;!&ndash; Branch App Links &ndash;&gt;
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
+                &lt;!&ndash; Branch App Links &ndash;&gt;
+                <intent-filter android:autoVerify="true">
+                    <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                    <category android:name="android.intent.category.DEFAULT" />
+                    <category android:name="android.intent.category.BROWSABLE" />
 
-                <data
-                    android:host="primeplay.app.link"
-                    android:scheme="https" />
-                &lt;!&ndash; <data &ndash;&gt;
-                &lt;!&ndash; android:host="primeplay.test-app.link" &ndash;&gt;
-                &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
-                <data
-                    android:host="primeplay-alternate.app.link"
-                    android:scheme="https" />
-                &lt;!&ndash; <data &ndash;&gt;
-                &lt;!&ndash; android:host="primeplay-alternate.test-app.link" &ndash;&gt;
-                &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
-            </intent-filter>-->
+                    <data
+                        android:host="primeplay.app.link"
+                        android:scheme="https" />
+                    &lt;!&ndash; <data &ndash;&gt;
+                    &lt;!&ndash; android:host="primeplay.test-app.link" &ndash;&gt;
+                    &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
+                    <data
+                        android:host="primeplay-alternate.app.link"
+                        android:scheme="https" />
+                    &lt;!&ndash; <data &ndash;&gt;
+                    &lt;!&ndash; android:host="primeplay-alternate.test-app.link" &ndash;&gt;
+                    &lt;!&ndash; android:scheme="https" /> &ndash;&gt;
+                </intent-filter>-->
         </activity> <!-- Branch init -->
-       <!-- <meta-data
-            android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_dugmRJVBQCu3M55tr663UcliwBnOBKte" /> &lt;!&ndash; <meta-data &ndash;&gt;
-        &lt;!&ndash; android:name="io.branch.sdk.BranchKey.test" &ndash;&gt;
-        &lt;!&ndash; android:value="key_test_htkeKSJuGtD0L26zt30XKhpdzBhTFNDy" /> &ndash;&gt;
-        &lt;!&ndash; Branch testing (TestMode "true" to simulate fresh installs on dev environment) &ndash;&gt;
-        <meta-data
-            android:name="io.branch.sdk.TestMode"
-            android:value="false" />-->
+        <!-- <meta-data
+             android:name="io.branch.sdk.BranchKey"
+             android:value="key_live_dugmRJVBQCu3M55tr663UcliwBnOBKte" /> &lt;!&ndash; <meta-data &ndash;&gt;
+         &lt;!&ndash; android:name="io.branch.sdk.BranchKey.test" &ndash;&gt;
+         &lt;!&ndash; android:value="key_test_htkeKSJuGtD0L26zt30XKhpdzBhTFNDy" /> &ndash;&gt;
+         &lt;!&ndash; Branch testing (TestMode "true" to simulate fresh installs on dev environment) &ndash;&gt;
+         <meta-data
+             android:name="io.branch.sdk.TestMode"
+             android:value="false" />-->
 
         <activity
-            android:name=".ItemMovieActivity"
+            android:name="ott.istream.ItemMovieActivity"
             android:label="@string/title_activity_item_show"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ItemTVActivity"
+            android:name="ott.istream.ItemTVActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".ItemSeriesActivity"
+            android:name="ott.istream.ItemSeriesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".SubscriptionActivity"
+            android:name="ott.istream.SubscriptionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".StripePaymentActivity"
+            android:name="ott.istream.StripePaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".PurchasePlanActivity"
+            android:name="ott.istream.PurchasePlanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name=".DownloadActivity"
+            android:name="ott.istream.DownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
-        <activity android:name=".onepay.PaymentActivity" />
-        <activity android:name=".onepay.PaymentResultActivity" /> <!-- <activity android:name=".reelsvideo.Home" /> -->
+        <activity android:name="ott.istream.onepay.PaymentActivity" />
+        <activity android:name="ott.istream.onepay.PaymentResultActivity" /> <!-- <activity android:name=".reelsvideo.Home" /> -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ppapplogo" /> <!-- Test mode -->
@@ -423,7 +423,7 @@
             android:resource="@color/colorAccent" />
 
         <service
-            android:name=".firebaseservice.MyFirebaseMessagingService"
+            android:name="ott.istream.firebaseservice.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -432,7 +432,7 @@
         </service>
 
         <receiver
-            android:name=".firebaseservice.BootReceiver"
+            android:name="ott.istream.firebaseservice.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -445,7 +445,7 @@
 
 
         <service
-            android:name=".offlinedownload.DemoDownloadService"
+            android:name="ott.istream.offlinedownload.DemoDownloadService"
             android:exported="false">
 
             <!-- This is needed for Scheduler -->

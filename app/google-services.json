@@ -1,27 +1,45 @@
 {
   "project_info": {
-    "project_number": "404413671842",
-    "firebase_url": "https://spice69-13720-default-rtdb.firebaseio.com",
-    "project_id": "spice69-13720",
-    "storage_bucket": "spice69-13720.appspot.com"
+    "project_number": "378317597223",
+    "firebase_url": "https://istream-df3a3-default-rtdb.firebaseio.com",
+    "project_id": "istream-df3a3",
+    "storage_bucket": "istream-df3a3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404413671842:android:83b7b4f32cd48671f6aafb",
+        "mobilesdk_app_id": "1:378317597223:android:a479422cb48c530a05fc02",
         "android_client_info": {
-          "package_name": "ott.chillx"
+          "package_name": "ott.istream"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "378317597223-t0hojemclak0n9rd6nqrqc0d3os9gmg6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ott.istream",
+            "certificate_hash": "b267c86455d258c6087ced7158c4bd3c4f521c27"
+          }
+        },
+        {
+          "client_id": "378317597223-bhah4ck326kabup6822bcmfifk9hjk0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyD5A04TU2aMTvMSR1v0I5AOK2OcaHXVK8s"
+          "current_key": "AIzaSyADhKROjkw9wCT74ReS3s8i3tUYL2-sT6A"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "378317597223-bhah4ck326kabup6822bcmfifk9hjk0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

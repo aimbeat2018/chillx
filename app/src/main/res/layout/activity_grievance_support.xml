@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="Officer Email: \ngrievanceofficer@chillx.in"
+                android:text="Officer Email: \ngrievanceofficer@istream.in"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textSize="18sp" />
 
@@ -57,6 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Officer Mobile:  +91 8291030554"
+                android:visibility="gone"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:textSize="18sp" />
 

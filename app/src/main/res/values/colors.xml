@@ -42,7 +42,7 @@
     <color name="grey_transparent">#417C7C7C</color>
     <color name="grey_transparent2">#E97C7C7C</color>
     <color name="blue">#0000FF</color>
-    <color name="red">#c495d2</color>
+    <color name="red">#E50914</color>
     <color name="gray">#A3A2A2</color>
     <color name="green">#008000</color>
 
@@ -63,7 +63,7 @@
     <!--Material color list from https://material.io/guidelines/style/color.html-->
 
 
-    <color name="red_600">#c495d2</color>
+    <color name="red_600">#E50914</color>
 
     <color name="green_500">#4CAF50</color>
     <color name="black_light">#0E0F13</color>

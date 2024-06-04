@@ -21,7 +21,7 @@ android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "ott.chillx"
+        applicationId "ott.istream"
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 1
@@ -75,7 +75,7 @@ android {
         }
     }
     ndkVersion '21.4.7075529'
-    namespace 'ott.chillx'
+    namespace 'ott.istream'
     lint {
         abortOnError false
         checkReleaseBuilds false

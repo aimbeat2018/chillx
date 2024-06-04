@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="ott.chillx.SearchActivity">
+    tools:context="ott.istream.SearchActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -249,7 +249,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <ott.chillx.widget.RangeSeekBar
+                <ott.istream.widget.RangeSeekBar
                     android:id="@+id/range_seek_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
