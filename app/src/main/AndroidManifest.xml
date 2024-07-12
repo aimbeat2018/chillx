@@ -47,7 +47,7 @@
     </queries>
 
     <application
-        android:name="ott.istream.utils.MyAppClass"
+        android:name="ott.chillx.utils.MyAppClass"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -60,49 +60,49 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:usesCleartextTraffic,android:theme,android:allowBackup">
         <activity
-            android:name="ott.istream.ForgotPinActivity"
+            android:name="ott.chillx.ForgotPinActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.PinActivity"
+            android:name="ott.chillx.PinActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.AgrrepayActivity"
+            android:name="ott.chillx.AgrrepayActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.OneUPIPaymentActivity"
+            android:name="ott.chillx.OneUPIPaymentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.EasyUPIPaymentActivity"
+            android:name="ott.chillx.EasyUPIPaymentActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.AutoPaymentUpi"
+            android:name="ott.chillx.AutoPaymentUpi"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.reels.ReelsListActivity"
+            android:name="ott.chillx.reels.ReelsListActivity"
             android:exported="false">
 
             <!-- <action android:name="android.intent.action.VIEW"/> -->
@@ -116,87 +116,94 @@
                 android:value="" />
         </activity>
         <activity
-            android:name="ott.istream.GrievanceSupportActivity"
+            android:name="ott.chillx.GrievanceSupportActivity"
             android:exported="false" />
         <activity
-            android:name="ott.istream.FavActivity"
+            android:name="ott.chillx.FavActivity"
             android:exported="false"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.NoInternet"
+            android:name="ott.chillx.NoInternet"
             android:exported="false" />
         <activity
-            android:name="ott.istream.widget.OfflinePlayerNewActivity"
+            android:name="ott.chillx.widget.OfflinePlayerNewActivity"
             android:exported="false"
             android:screenOrientation="landscape" />
         <activity
-            android:name="ott.istream.MobileNumberSignupActivity"
+            android:name="ott.chillx.MobileNumberSignupActivity"
             android:exported="false" />
         <activity
-            android:name="ott.istream.FinalPaymentActivity"
+            android:name="ott.chillx.FinalPaymentActivity"
             android:exported="false" />
         <activity
-            android:name="ott.istream.ChangePasswordActivity"
+            android:name="ott.chillx.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name="ott.istream.OtpForgotPasswordActivity"
+            android:name="ott.chillx.OtpForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name="ott.istream.ItemPopularActivity"
+            android:name="ott.chillx.ItemPopularActivity"
             android:exported="false"
             android:screenOrientation="portrait" /> <!-- <activity -->
         <!-- android:name=".OfflinePlayerActivity" -->
         <!-- android:exported="false" -->
         <!-- android:screenOrientation="portrait" /> -->
         <activity
-            android:name="ott.istream.LoginViaMobileActivity"
+            android:name="ott.chillx.LoginViaMobileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.OtpActivity"
+            android:name="ott.chillx.OtpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.CashFreePaymentActivity"
+            android:name="ott.chillx.CashFreePaymentActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.ItemGoldSeriesActivity"
+            android:name="ott.chillx.ItemGoldSeriesActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.more.ApplyPromoCodeActivity"
+            android:name="ott.chillx.more.ApplyPromoCodeActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.more.HelpActivity"
+            android:name="ott.chillx.more.HelpActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.more.MyTransactionActivity"
+            android:name="ott.chillx.more.MyTransactionActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.MoreActivity"
+            android:name="ott.chillx.MoreActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.RazorPayActivity"
+            android:name="ott.chillx.RazorPayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.GoldRazorPayActivity"
+            android:name="ott.chillx.GoldRazorPayActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.SearchActivity"
+            android:name="ott.chillx.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ott.istream.PapalPaymentActivity"
+            android:name="ott.chillx.PapalPaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.WebViewActivity"
+            android:name="ott.chillx.WebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".SubpaisaActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -234,6 +241,25 @@
             android:name="com.snap.kit.clientId"
             android:value="9bb58d92-9eb6-485c-859d-9aa6854e04fe" />
 
+        <meta-data
+            android:name="com.phonepe.android.sdk.isUAT"
+            android:value="false" />
+        <meta-data
+            android:name="com.phonepe.android.sdk.isSimulator"
+            android:value="false" />
+        <meta-data
+            android:name="com.phonepe.android.sdk.MerchantId"
+            android:value="M22OW170WC7KP" />
+
+        <!--
+         android:value="M1GQPJSNH1HW" />
+                    android:value="PGTESTPAYUAT" />
+        -->
+
+        <meta-data
+            android:name="com.phonepe.android.sdk.AppId"
+            android:value="75ebc415eb7f4ff9b9573178de893edb" /><!--rplace by app id given by phonepe-->
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -252,40 +278,40 @@
             </intent-filter>
         </activity> <!-- facebook end -->
         <activity
-            android:name="ott.istream.TermsActivity"
+            android:name="ott.chillx.TermsActivity"
             android:screenOrientation="fullSensor"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.ReplyActivity"
+            android:name="ott.chillx.ReplyActivity"
             android:label="@string/title_activity_reply"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="ott.istream.ProfileActivity"
+            android:name="ott.chillx.ProfileActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.PassResetActivity"
+            android:name="ott.chillx.PassResetActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.SearchResultActivity"
+            android:name="ott.chillx.SearchResultActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.SignUpActivity"
+            android:name="ott.chillx.SignUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.LoginActivity"
+            android:name="ott.chillx.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.LoginSocialNumberNotFoundActivity"
+            android:name="ott.chillx.LoginSocialNumberNotFoundActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.DetailsActivity"
+            android:name="ott.chillx.DetailsActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:label="@string/title_activity_details"
             android:resizeableActivity="true"
@@ -294,23 +320,23 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
         <activity
-            android:name="ott.istream.GoldDetailsActivity"
+            android:name="ott.chillx.GoldDetailsActivity"
             android:configChanges="screenLayout|screenSize|orientation"
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" /> <!-- android:configChanges="screenLayout|screenSize|orientation" -->
         <activity
-            android:name="ott.istream.MainActivity"
+            android:name="ott.chillx.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="ott.istream.SettingsActivity"
+            android:name="ott.chillx.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.SplashScreenActivity"
+            android:name="ott.chillx.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:launchMode="singleTask"
@@ -366,36 +392,43 @@
              android:value="false" />-->
 
         <activity
-            android:name="ott.istream.ItemMovieActivity"
+            android:name="ott.chillx.ItemMovieActivity"
             android:label="@string/title_activity_item_show"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="ott.istream.ItemTVActivity"
+            android:name="ott.chillx.ItemTVActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.ItemSeriesActivity"
+            android:name="ott.chillx.ItemSeriesActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.SubscriptionActivity"
+            android:name="ott.chillx.SubscriptionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.StripePaymentActivity"
+            android:name="ott.chillx.StripePaymentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.PurchasePlanActivity"
+            android:name="ott.chillx.PurchasePlanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
-            android:name="ott.istream.DownloadActivity"
+            android:name="ott.chillx.DownloadActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
-        <activity android:name="ott.istream.onepay.PaymentActivity" />
-        <activity android:name="ott.istream.onepay.PaymentResultActivity" /> <!-- <activity android:name=".reelsvideo.Home" /> -->
+        <activity
+            android:name=".PhonepayKotline"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity android:name="ott.chillx.onepay.PaymentActivity" />
+        <activity android:name="ott.chillx.onepay.PaymentResultActivity" /> <!-- <activity android:name=".reelsvideo.Home" /> -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ppapplogo" /> <!-- Test mode -->
@@ -423,7 +456,7 @@
             android:resource="@color/colorAccent" />
 
         <service
-            android:name="ott.istream.firebaseservice.MyFirebaseMessagingService"
+            android:name="ott.chillx.firebaseservice.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -432,7 +465,7 @@
         </service>
 
         <receiver
-            android:name="ott.istream.firebaseservice.BootReceiver"
+            android:name="ott.chillx.firebaseservice.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -445,7 +478,7 @@
 
 
         <service
-            android:name="ott.istream.offlinedownload.DemoDownloadService"
+            android:name="ott.chillx.offlinedownload.DemoDownloadService"
             android:exported="false">
 
             <!-- This is needed for Scheduler -->

@@ -608,12 +608,22 @@
                         android:text=""
                         android:textSize="14sp"
                         android:textStyle="normal" />
-
+                    <TextView
+                        android:id="@+id/tv_viewMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:layout_gravity="right"
+                        android:text="View More"
+                        android:textColor="@color/red"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"/>
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
                 </LinearLayout>
 
 

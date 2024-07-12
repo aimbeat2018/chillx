@@ -17,10 +17,10 @@
     //startapp
 
 
-    <string name="app_name">Istream</string>
+    <string name="app_name">ChillX</string>
     <!--app_title for main navigation & home title-->
-    <string name="contact_email">customercare@istream.in</string>
-    <string name="copyright_text">Copyright @ Istream, All right reserved</string>
+    <string name="contact_email">customercare@chillx.in</string>
+    <string name="copyright_text">Copyright @ ChillX, All right reserved</string>
 
     <!-- App -->
     <string name="featured_tv_channels">Featured Tv Channel</string>
@@ -59,7 +59,8 @@
     <string name="close_vpn">Close VPN and re-open this app.</string>
     <string name="track_selection_title">Change Track</string>
     <string name="age_verify">you are 18+?</string>
-
+    <string name="view_less">View Less</string>
+    <string name="view_more">View More</string>
 
     <!-- payment related to Settings -->
     <!--PayPal accepted currency-->

@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="The content is strictly meant for audience above the age of 18 years only. The content may have nudity, sex, string language and violence.Viewer discretion advised"
+        android:text="This content is suitable only for adults i.e for the age category of 18 and above. If you click on Okay you confirm and submit that you are an adult"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
@@ -32,7 +32,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/btn_rounded_primary"
-        android:text="I'M Over 18"
+        android:text="Okay"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="14sp"

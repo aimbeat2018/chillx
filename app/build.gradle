@@ -12,20 +12,32 @@ apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 repositories {
     mavenCentral()
     maven { url 'https://maven.google.com' }
+    maven { url 'https://jitpack.io'
+        credentials {
+            username "gabruappindia_16632"
+            password "ANLG42_SP16632"
+
+        }
+/*
+        credentials { username 'bhaukaalproductions_15654' }
+*/
+    }
 }
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'org.jetbrains.kotlin.android'
+
 
 android {
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
     defaultConfig {
-        applicationId "ott.istream"
+        applicationId "ott.chillx"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 7
+        versionName "1.6"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -61,6 +73,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
     packagingOptions {
         resources {
             excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/license.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt', 'META-INF/notice.txt', 'META-INF/ASL2.0', 'META-INF/*.kotlin_module']
@@ -75,7 +90,7 @@ android {
         }
     }
     ndkVersion '21.4.7075529'
-    namespace 'ott.istream'
+    namespace 'ott.chillx'
     lint {
         abortOnError false
         checkReleaseBuilds false
@@ -112,7 +127,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation "com.google.firebase:firebase-auth"
     implementation 'com.google.firebase:firebase-messaging'
-    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:18.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:15.2.0'
 
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
@@ -175,6 +190,9 @@ dependencies {
     implementation 'com.razorpay:checkout:1.6.19'
     implementation 'com.razorpay:razorpay-java:1.3.9'
     implementation 'com.infideap.drawerbehavior:drawer-behavior:0.0.5'
+
+    implementation files('libs/SabPaisaSDK_Ver1.0.aar')
+
 
 
     // space bottom navigation view
@@ -270,7 +288,7 @@ dependencies {
 //    implementation 'dev.shreyaspatil.EasyUpiPayment:EasyUpiPayment:3.0.3'
 //
     implementation 'com.gpfreetech:IndiUpi:1.1'
-
+    implementation 'phonepe.intentsdk.android.release:IntentSDK:2.4.3'
 
 }
 
