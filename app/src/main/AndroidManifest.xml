@@ -427,6 +427,21 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name="ott.chillx.SpeedlightActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.chillx.in"
+                    android:scheme="https" />
+            </intent-filter>
+
+        </activity>
         <activity android:name="ott.chillx.onepay.PaymentActivity" />
         <activity android:name="ott.chillx.onepay.PaymentResultActivity" /> <!-- <activity android:name=".reelsvideo.Home" /> -->
         <meta-data

@@ -165,6 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
         ccp = findViewById(R.id.ccp);
 
         id = PreferenceUtils.getUserId(ProfileActivity.this);
+        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
 
 
         backbtn.setOnClickListener(v -> {

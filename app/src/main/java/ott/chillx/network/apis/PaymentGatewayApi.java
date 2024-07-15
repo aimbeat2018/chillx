@@ -25,4 +25,15 @@ public interface PaymentGatewayApi {
     Call<ResponseBody> paymentgatway_status(@Header("API-KEY") String apiKey,
                                             @Field("userId") String userId);
 
+    @FormUrlEncoded
+    @POST("payment_initiate")
+    Call<ResponseBody> payment_initiate(@Header("API-KEY") String apiKey,
+                                        @Field("customerName") String customer_name,
+                                        @Field("user_id") String user_id,
+                                        @Field("amount") String amount,
+                                        @Field("description") String description
+                                        // @Field("plan_id") String plan_id
+
+    );
+
 }

@@ -73,7 +73,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
     ImageView imgUpi;
     CardView card_paytm,
             card_payuMoney,
-            card_cashfree, card_razorpay, card_gpay, card_autoupi, card_oneupi, card_stripe, card_aggrepay, card_onepay,card_subpaisa;
+            card_cashfree, card_razorpay, card_gpay, card_autoupi, card_oneupi, card_stripe, card_aggrepay, card_onepay,card_subpaisa,card_speedlight;
     ImageView close_iv;
     private Package aPackage;
 //    CleverTapAPI clevertapPaymentStartedInstance, clevertapscreenviewd;
@@ -345,6 +345,7 @@ public class FinalPaymentActivity extends AppCompatActivity {
         card_aggrepay = findViewById(R.id.card_agrrepay);
         card_onepay = findViewById(R.id.card_onepay);
         card_subpaisa = findViewById(R.id.card_yespaisa);
+        card_speedlight = findViewById(R.id.card_speedlight);
 
         imgUpi = findViewById(R.id.imgUpi);
         lnrGooglePay = findViewById(R.id.lnrGooglePay);
@@ -502,6 +503,16 @@ public class FinalPaymentActivity extends AppCompatActivity {
                 intent.putExtra("from", "subpaisa");
                 startActivity(intent);
 
+            }
+        });
+        card_speedlight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FinalPaymentActivity.this, SpeedlightActivity.class);
+                intent.putExtra("package", aPackage);
+                intent.putExtra("currency", "currency");
+                intent.putExtra("from", "oneupi");
+                startActivity(intent);
             }
         });
         card_aggrepay.setOnClickListener(new View.OnClickListener() {

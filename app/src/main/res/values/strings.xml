@@ -1,8 +1,8 @@
 <resources>
-    <string name="facebook_app_id" translatable="false">736847477946447</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb736847477946447</string>
-    <string name="facebook_application_id" translatable="false">736847477946447</string>
-    <string name="facebook_client_token" translatable="false">3926eea852cfac3c34d653f44947d390</string>
+    <string name="facebook_app_id" translatable="false">802950165226284</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb802950165226284</string>
+    <string name="facebook_application_id" translatable="false">802950165226284</string>
+    <string name="facebook_client_token" translatable="false">71e74f12f5f6ec85060cf7b128d87080</string>
 
 
     //banner admob
