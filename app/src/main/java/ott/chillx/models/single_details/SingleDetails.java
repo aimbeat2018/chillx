@@ -2,8 +2,11 @@
 package ott.chillx.models.single_details;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import ott.chillx.models.single_details_tv.DescriptionSlugModel;
 
 public class SingleDetails {
 
@@ -79,6 +82,13 @@ public class SingleDetails {
     @SerializedName("trailler_youtube_source")
     @Expose
     private String trailerUrl = null;
+    @SerializedName("safe")
+    @Expose
+    private String safe;
+
+    @SerializedName("description1")
+    @Expose
+    private List<DescriptionSlugModel> description1 = null;
 
     public String getVideosId() {
         return videosId;
@@ -270,5 +280,21 @@ public class SingleDetails {
 
     public void setTrailerUrl(String trailerUrl) {
         this.trailerUrl = trailerUrl;
+    }
+
+    public List<DescriptionSlugModel> getDescription1() {
+        return description1;
+    }
+
+    public void setDescription1(List<DescriptionSlugModel> description1) {
+        this.description1 = description1;
+    }
+
+    public String getSafe() {
+        return safe;
+    }
+
+    public void setSafe(String safe) {
+        this.safe = safe;
     }
 }

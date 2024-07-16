@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.media.AudioManager;
@@ -21,6 +22,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
@@ -64,12 +66,15 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.mediarouter.app.MediaRouteButton;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.balysv.materialripple.MaterialRippleLayout;
 
 import at.huber.youtubeExtractor.VideoMeta;
@@ -79,7 +84,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import ott.chillx.adapters.CastCrewAdapter;
 import ott.chillx.adapters.CommentsAdapter;
 import ott.chillx.adapters.DownloadAdapter;
-//import ott.istream.adapters.EpisodeDownloadAdapter;
+//import ott.hitprimeuser.adapters.EpisodeDownloadAdapter;
 import ott.chillx.adapters.HomePageAdapter;
 import ott.chillx.adapters.ProgramAdapter;
 import ott.chillx.adapters.RelatedTvAdapter;
@@ -91,6 +96,7 @@ import ott.chillx.database.downlaod.DownloadViewModel;
 import ott.chillx.models.DownloadInfo;
 import ott.chillx.models.VideoFile;
 import ott.chillx.models.single_details.VideoQuality;
+import ott.chillx.models.single_details_tv.DescriptionSlugModel;
 import ott.chillx.network.apis.CommentApi;
 import ott.chillx.network.apis.FavouriteApi;
 import ott.chillx.network.apis.LoginApi;
@@ -102,7 +108,6 @@ import ott.chillx.network.apis.UserDataApi;
 import ott.chillx.network.model.ActiveStatus;
 import ott.chillx.network.model.FavoriteModel;
 
-//import com.clevertap.android.sdk.CleverTapAPI;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -142,8 +147,18 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.cast.MediaInfo;
@@ -208,11 +223,15 @@ import com.squareup.picasso.Picasso;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import okhttp3.ResponseBody;
 import ott.chillx.utils.Constants;
@@ -244,15 +263,18 @@ import static ott.chillx.offlinedownload.ExoDownloadState.DOWNLOAD_START;
 public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener, ProgramAdapter.OnProgramClickListener,
         RelatedTvAdapter.RelatedTvClickListener, DownloadTracker.Listener {
     private static final int PERMISSION_REQUEST_CODE = 1;
+    boolean maxText = false;
     private static final int PRELOAD_TIME_S = 20;
     public static final String TAG = DetailsActivity.class.getSimpleName();
-    private TextView tvName, tvDirector, tvRelease, tvDes,tv_viewMore, tvGenre, tvRelated, runtime;
+    private TextView tvName, tvDirector, tvRelease, tvGenre, tvRelated, runtime, tvDes, tv_viewMore;
     private RecyclerView rvServer, rvServerForTV, rvRelated, rvComment, castRv, rec_season_spinner;
     LinearLayoutCompat lnr_buy_subsc;
     private Spinner seasonSpinner;
     private LinearLayout seasonSpinnerContainer;
     public static RelativeLayout lPlay;
     private RelativeLayout contentDetails;
+    LinearLayoutCompat lnr_buy_gold;
+    AppCompatButton rent_bt;
     private LinearLayout subscriptionLayout, topbarLayout;
     private AppCompatButton subscribeBt;
     private ImageView backIv, subBackIv;
@@ -278,7 +300,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     public static LinearLayout llBottom, llBottomParent;
     public static RelativeLayout llcomment;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private String categoryType = "", id = "";
+    private String categoryType = "", id = "", is_gold = "", amt = "";
     private ImageButton imgAddFav, shareIv2, reportIv;
     public static ImageView imgBack, serverIv;
     private Button watchNowBt;
@@ -317,7 +339,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private final String strSubtitle = "Null";
     public static MediaSource mediaSource = null;
     public static ImageView imgSubtitle, imgAudio, img_quality;
-    TextView txt_qualitytest;
+    TextView txt_qualitytest, txt_warningDescription;
+    LinearLayout linWarning;
     private final List<SubtitleModel> listSub = new ArrayList<>();
     private AlertDialog alertDialog;
     private String mediaUrl;
@@ -337,6 +360,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private String ct_season_id = "";
     private String ct_season_name = "";
     private String ct_content_title = "";
+    private String safe = "";
 
     private CastPlayer castPlayer;
     private boolean castSession;
@@ -344,6 +368,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     // String castImageUrl;
     String castImageUrl;
     private String url;
+
+
 
     private LinearLayout tvLayout, sheduleLayout, tvTopLayout;
     private TextView tvTitleTv, watchStatusTv, timeTv, programTv, proGuideTv, watchLiveTv;
@@ -408,6 +434,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     String deviceNoDynamic = "";
     String deviceNo = "";
 
+    private static final int MAX_LINES_COLLAPSED = 4;  // Set the maximum number of lines to show initially
+
+
     private List<DownloadInfo> downloadingFileList = new ArrayList<>();
     private List<VideoFile> videoFiles = new ArrayList<>();
 //    EpisodeDownloadAdapter adapter;
@@ -442,9 +471,30 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     RecyclerView recContent;
     private AdView mAdView;
 
-    ArrayList<String> contentList = new ArrayList<>();
-    private static final int MAX_LINES_COLLAPSED = 4;  // Set the maximum number of lines to show initially
-    boolean maxText = false;
+        ArrayList<DescriptionSlugModel> contentList = new ArrayList<>();
+    // LottieAnimationView animation_view;
+//    ArrayList<String> contentList = new ArrayList<>();
+
+
+
+    //interstitial ads
+    // public static final String TEST_DEVICE_HASHED_ID = "ABCDEF012345";
+
+    public static  String TEST_DEVICE_HASHED_ID = "";
+    private static final long GAME_LENGTH_MILLISECONDS = 3000;
+    // private static final String AD_UNIT_ID = "/6499/example/interstitial";
+    // private static final String AD_UNIT_ID = "/23081990290,23174538281/ott.hitprimeuser.Interstitial0.1719825731";
+    //private static final String TAG = "MyActivity";
+    private final AtomicBoolean isMobileAdsInitializeCalled = new AtomicBoolean(false);
+    // private GoogleMobileAdsConsentManager googleMobileAdsConsentManager;
+    private AdManagerInterstitialAd interstitialAd;
+    private CountDownTimer countDownTimer;
+    private boolean gamePaused;
+    private boolean gameOver;
+    private boolean adIsLoading;
+    private long timerMilliseconds;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -477,6 +527,54 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        //admanager interstial ads
+        // Log the Mobile Ads SDK version.
+
+
+        try {
+            String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+            TEST_DEVICE_HASHED_ID = md5(android_id).toUpperCase();
+            Log.i("device id=",TEST_DEVICE_HASHED_ID);
+
+        }catch (Exception e){}
+
+
+
+        Log.d(TAG, "Google Mobile Ads SDK Version: " + MobileAds.getVersion());
+
+//        googleMobileAdsConsentManager =
+//                GoogleMobileAdsConsentManager.getInstance(getApplicationContext());
+//        googleMobileAdsConsentManager.gatherConsent(
+//                this,
+//                consentError -> {
+//                    if (consentError != null) {
+//                        // Consent not obtained in current session.
+//                        Log.w(
+//                                TAG,
+//                                String.format("%s: %s", consentError.getErrorCode(), consentError.getMessage()));
+//                    }
+//
+//                    startGame();
+//
+//                    if (googleMobileAdsConsentManager.canRequestAds()) {
+//                        initializeMobileAdsSdk();
+//                    }
+//
+//                    if (googleMobileAdsConsentManager.isPrivacyOptionsRequired()) {
+//                        // Regenerate the options menu to include a privacy setting.
+//                        invalidateOptionsMenu();
+//                    }
+//                });
+//
+//        // This sample attempts to load ads using consent obtained in the previous session.
+//        if (googleMobileAdsConsentManager.canRequestAds()) {
+//            initializeMobileAdsSdk();
+//        }
+//close code of admanger interstial
+
+
+
+
 
         SharedPreferences sharedPreferencesfamily = DetailsActivity.this.getSharedPreferences(Constants.FAMILYCONTENTSTATUS, MODE_PRIVATE);
         familycontent = sharedPreferencesfamily.getBoolean("familycontent", false);
@@ -490,7 +588,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             helperUtils.showWarningDialog(DetailsActivity.this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
             return;
         }
-
 
         db = new DatabaseHelper(DetailsActivity.this);
 
@@ -506,6 +603,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         initViews();
 
+
         //admob banner ads
         MobileAds.initialize(DetailsActivity.this);
         MobileAds.initialize(DetailsActivity.this, new OnInitializationCompleteListener() {
@@ -514,11 +612,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             }
         });
 
-//
+
 //        AdView adView1 = new AdView(DetailsActivity.this);
 //        adView1.setAdSize(AdSize.BANNER);
 //        adView1.setAdUnitId(getResources().getString(R.string.admob_banner_unit_id));
-        //adView.setAdUnitId("ca-app-pub-1307905966777808/6708516251");
+//        //adView.setAdUnitId("ca-app-pub-1307905966777808/6708516251");
 //        mAdView = findViewById(R.id.banneradView);
 //        AdRequest adRequest = new AdRequest.Builder().build();
 //        mAdView.loadAd(adRequest);
@@ -537,7 +635,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //                mAdView.setVisibility(View.GONE);
 //
 //            }
-//
 //            @Override
 //            public void onAdFailedToLoad(LoadAdError adError) {
 //                // Code to be executed when an ad request fails.
@@ -554,13 +651,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //                // Code to be executed when an ad finishes loading.
 //
 //            }
-//
 //            @Override
 //            public void onAdOpened() {
 //                // Code to be executed when an ad opens an overlay that
 //                // covers the screen.
 //            }
 //        });
+
+
 
 
         //for showing banner ads to package status inactive user//visibility set to mAdView
@@ -602,7 +700,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         webSettings.setJavaScriptEnabled(true);
         webView.setWebChromeClient(new WebChromeClient());
 
-
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -619,16 +716,53 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     //finish();
                     // onBackPressed();
 
-
                     Intent intent = new Intent(DetailsActivity.this, MainActivity.class);
                     intent.putExtra("login_status", "user_login");
                     startActivity(intent);
+                    finish();
+                    player.setPlayWhenReady(false);
                 }
-
 
             }
         });
 
+// Set onClickListener for the button
+        tv_viewMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(String.valueOf(tvDes.getLineCount()), "line");
+                if (tvDes.getLineCount() > MAX_LINES_COLLAPSED) {
+                    if (!maxText) {
+                        // Expand the text view
+                        tvDes.setMaxLines(Integer.MAX_VALUE);
+                        tv_viewMore.setText(R.string.view_less);
+                        tvDes.setLines(MAX_LINES_COLLAPSED);
+                        maxText = true;
+
+                        // Measure the height of the TextView with a large height constraint to get the total line count.
+                        tvDes.measure(View.MeasureSpec.makeMeasureSpec(tvDes.getWidth(), View.MeasureSpec.AT_MOST),
+                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+
+                        int totalLineCount = tvDes.getLineCount();
+
+                        tvDes.setMaxLines(totalLineCount);
+                    } else {
+                        // Collapse the text view
+                        tvDes.setLines(MAX_LINES_COLLAPSED);
+                        tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+
+                        tv_viewMore.setText(R.string.view_more);
+                        maxText = false;
+                    }
+                } else {
+                    // Collapse the text view
+                    tvDes.setLines(MAX_LINES_COLLAPSED);
+                    tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+                    maxText = false;
+                    tv_viewMore.setText(R.string.view_more);
+                }
+            }
+        });
 
         categoryType = getIntent().getStringExtra("vType");
         id = getIntent().getStringExtra("id");
@@ -636,6 +770,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         //handle Continue watching task
         isFromContinueWatching = getIntent().getBooleanExtra(Constants.IS_FROM_CONTINUE_WATCHING, false);
+
+//        categoryType = getIntent().getStringExtra("vType");
+//        id = getIntent().getStringExtra("id");
+
+        if (getIntent().getStringExtra("is_gold") != null) {
+            is_gold = getIntent().getStringExtra("is_gold");
+            amt = getIntent().getStringExtra("amt");
+
+            rent_bt.setText("Rent @ ₹" + amt);
+        }
+
         try {
             if (isFromContinueWatching) {
                 id = getIntent().getStringExtra(Constants.CONTENT_ID);
@@ -646,6 +791,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 mediaUrl = getIntent().getStringExtra(Constants.STREAM_URL);
                 playerCurrentPosition = getIntent().getLongExtra(Constants.POSITION, 0);
                 resumePosition = playerCurrentPosition;
+                getContinueWatchingData(categoryType, id);
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -728,43 +874,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             }
         });
 
-        tv_viewMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(String.valueOf(tvDes.getLineCount()), "line");
-                if (tvDes.getLineCount() > MAX_LINES_COLLAPSED) {
-                    if (!maxText) {
-                        // Expand the text view
-                        tvDes.setMaxLines(Integer.MAX_VALUE);
-                        tv_viewMore.setText(R.string.view_less);
-                        tvDes.setLines(MAX_LINES_COLLAPSED);
-                        maxText = true;
-
-                        // Measure the height of the TextView with a large height constraint to get the total line count.
-                        tvDes.measure(View.MeasureSpec.makeMeasureSpec(tvDes.getWidth(), View.MeasureSpec.AT_MOST),
-                                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-
-                        int totalLineCount = tvDes.getLineCount();
-
-                        tvDes.setMaxLines(totalLineCount);
-                    } else {
-                        // Collapse the text view
-                        tvDes.setLines(MAX_LINES_COLLAPSED);
-                        tvDes.setMaxLines(MAX_LINES_COLLAPSED);
-
-                        tv_viewMore.setText(R.string.view_more);
-                        maxText = false;
-                    }
-                } else {
-                    // Collapse the text view
-                    tvDes.setLines(MAX_LINES_COLLAPSED);
-                    tvDes.setMaxLines(MAX_LINES_COLLAPSED);
-                    maxText = false;
-                    tv_viewMore.setText(R.string.view_more);
-                }
-            }
-        });
-
 
         imgAddFav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -843,16 +952,216 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             DownloadService.startForeground(this, DemoDownloadService.class);
         }
 
-        contentList.add("18+");
-        contentList.add("Language");
-        contentList.add("Sex");
-        contentList.add("Nudity");
-        contentList.add("Violence");
+//        contentList.add("18+");
+//        contentList.add("Language");
+//        contentList.add("Sex");
+//        contentList.add("Nudity");
+//        contentList.add("Violence");
 
-
-        recContent.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, RecyclerView.HORIZONTAL, false));
-        recContent.setAdapter(new ContentAdapter());
     }
+
+    public String md5(String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            for (int i=0; i<messageDigest.length; i++)
+                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+
+    //admanger interstial ads
+
+//    private void createTimer(final long milliseconds) {
+//        // Create the game timer, which counts down to the end of the level
+//        // and shows the "retry" button.
+//        if (countDownTimer != null) {
+//            countDownTimer.cancel();
+//        }
+//
+//        final TextView textView = findViewById(R.id.timer);
+//
+//        countDownTimer =
+//                new CountDownTimer(milliseconds, 50) {
+//                    @Override
+//                    public void onTick(long millisUnitFinished) {
+//                        timerMilliseconds = millisUnitFinished;
+//                        textView.setText("seconds remaining: " + ((millisUnitFinished / 1000) + 1));
+//                    }
+//
+//                    @Override
+//                    public void onFinish() {
+//                        gameOver = true;
+//                        textView.setText("done!");
+///*
+//            retryButton.setVisibility(View.VISIBLE);
+//*/
+//                        try {
+//                            if(!PreferenceUtils.isActivePlan(DetailsActivity.this)) {//if plan not active then show ads
+//                                showInterstitial();
+//                            }
+//                        }catch (Exception e){}
+//
+//                    }
+//                };
+//
+//
+//        countDownTimer.start();
+//    }
+
+
+
+
+
+//    public void loadAd() {
+//        // Request a new ad if one isn't already loaded.
+//        if (adIsLoading || interstitialAd != null) {
+//            return;
+//        }
+//        adIsLoading = true;
+//        AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
+//        AdManagerInterstitialAd.load(
+//                this,
+//                //  AD_UNIT_ID,
+//                getResources().getString(R.string.admanager_interstial_unit_id),
+//                adRequest,
+//                new AdManagerInterstitialAdLoadCallback() {
+//                    @Override
+//                    public void onAdLoaded(@NonNull AdManagerInterstitialAd interstitialAd) {
+//                        // The mInterstitialAd reference will be null until
+//                        // an ad is loaded.
+//                        DetailsActivity.this.interstitialAd = interstitialAd;
+//                        adIsLoading = false;
+//                        Log.i(TAG, "onAdLoaded");
+//                        // Toast.makeText(DetailsActivity.this, "onAdLoaded()", Toast.LENGTH_SHORT).show();
+//
+//
+//
+//                        interstitialAd.setFullScreenContentCallback(
+//                                new FullScreenContentCallback() {
+//                                    @Override
+//                                    public void onAdDismissedFullScreenContent() {
+//                                        // Called when fullscreen content is dismissed.
+//                                        Log.d("TAG", "The ad was dismissed.");
+//                                        // Make sure to set your reference to null so you don't
+//                                        // show it a second time.
+//                                        DetailsActivity.this.interstitialAd = null;
+//                                    }
+//
+//                                    @Override
+//                                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+//                                        // Called when fullscreen content failed to show.
+//                                        Log.d("TAG", "The ad failed to show.");
+//                                        // Make sure to set your reference to null so you don't
+//                                        // show it a second time.
+//                                        DetailsActivity.this.interstitialAd = null;
+//                                    }
+//
+//                                    @Override
+//                                    public void onAdShowedFullScreenContent() {
+//                                        // Called when fullscreen content is shown.
+//                                        Log.d("TAG", "The ad was shown.");
+//                                    }
+//                                });
+//                    }
+//
+//                    @Override
+//                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+//                        // Handle the error
+//                        Log.i(TAG, loadAdError.getMessage());
+//                        interstitialAd = null;
+//                        adIsLoading = false;
+//                        String error =
+//                                String.format(
+//                                        java.util.Locale.US,
+//                                        "domain: %s, code: %d, message: %s",
+//                                        loadAdError.getDomain(),
+//                                        loadAdError.getCode(),
+//                                        loadAdError.getMessage());
+//                        //Toast.makeText(DetailsActivity.this, "onAdFailedToLoad() with error: " + error, Toast.LENGTH_SHORT) .show();
+//
+//
+//                    }
+//                });
+//    }
+//
+//    private void showInterstitial() {
+//        // Show the ad if it's ready. Otherwise restart the game.
+//        if (interstitialAd != null) {
+//            interstitialAd.show(this);
+//        } else {
+//            startGame();
+//            if (googleMobileAdsConsentManager.canRequestAds()) {
+//                loadAd();
+//            }
+//        }
+//    }
+//
+//    private void startGame() {
+//        // Hide the button, and kick off the timer.
+//        // retryButton.setVisibility(View.INVISIBLE);
+//        createTimer(GAME_LENGTH_MILLISECONDS);
+//        gamePaused = false;
+//        gameOver = false;
+//    }
+//
+//    private void resumeGame() {
+//        if (gameOver || !gamePaused) {
+//            return;
+//        }
+//        // Create a new timer for the correct length.
+//        gamePaused = false;
+//        createTimer(timerMilliseconds);
+//    }
+//
+//    private void pauseGame() {
+//        if (gameOver || gamePaused) {
+//            return;
+//        }
+//        countDownTimer.cancel();
+//        gamePaused = true;
+//    }
+//
+//    private void initializeMobileAdsSdk() {
+//        if (isMobileAdsInitializeCalled.getAndSet(true)) {
+//            return;
+//        }
+//
+//        // Set your test devices.
+//        MobileAds.setRequestConfiguration(
+//                new RequestConfiguration.Builder()
+//                        .setTestDeviceIds(Arrays.asList(TEST_DEVICE_HASHED_ID))
+//                        .build());
+//
+//        new Thread(
+//                () -> {
+//                    // Initialize the Google Mobile Ads SDK on a background thread.
+//                    MobileAds.initialize(this, initializationStatus -> {});
+//
+//                    // Load an ad on the main thread.
+//                    runOnUiThread(() -> loadAd());
+//                })
+//                .start();
+//    }
+//
+
+
+
+
+
+
+
+
 
 
     public void userPackageStatus(String userId) {
@@ -866,12 +1175,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         ActiveStatus activeStatus = response.body();
-                        if (activeStatus.getStatus().equals("active")) {
+//                        if (activeStatus.getStatus().equals("active")) {
 //                            mAdView.setVisibility(View.GONE);
-                        } else {
+//                        } else {
 //                            mAdView.setVisibility(View.VISIBLE);
-
-                        }
+//
+//                        }
 
                     }
                 }
@@ -987,7 +1296,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void show_userAgeConfirmDialog(EpiModel items, EpisodeAdapter.OriginalViewHolder holder, String from, int position) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-        dialog.setContentView(R.layout.confirm_age_dialog);
+        dialog.setContentView(R.layout.confirm_user_age_dialog);
         dialog.setCancelable(false);
 
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -1302,6 +1611,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         imgAudio = findViewById(R.id.img_audio);
         img_quality = findViewById(R.id.img_quality);
         txt_qualitytest = findViewById(R.id.txt_qualitytest);
+        txt_warningDescription = findViewById(R.id.txt_warningDescription);
+        linWarning = findViewById(R.id.linWarning);
         mediaRouteButton = findViewById(R.id.media_route_button);
         chromeCastTv = findViewById(R.id.chrome_cast_tv);
         castControlView = findViewById(R.id.cast_control_view);
@@ -1347,24 +1658,18 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         //descriptionBackIv = findViewById(R.id.back_iv);
         dGenryTv = findViewById(R.id.genre_tv);
         serverIv = findViewById(R.id.img_server);
-
+        lnr_buy_gold = findViewById(R.id.lnr_buy_gold);
+        rent_bt = findViewById(R.id.rent_bt);
         seriestLayout = findViewById(R.id.series_layout);
         favIv = findViewById(R.id.add_fav2);
         sereisTitleTv = findViewById(R.id.seriest_title_tv);
         shareIv2 = findViewById(R.id.share_iv2);
         reportIv = findViewById(R.id.report_iv);
         progressBarProfile = findViewById(R.id.progressBarProfile);
+//        animation_view = findViewById(R.id.animation_view);
 
-        txtSubscribe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-            }
-        });
-        //season download
-//        seasonDownloadLayout = findViewById(R.id.seasonDownloadLayout);
-//        seasonDownloadSpinner = findViewById(R.id.seasonSpinnerField);
-//        seasonDownloadRecyclerView = findViewById(R.id.seasonDownloadRecyclerView);
+
+        txtSubscribe.setOnClickListener(view -> startActivity(new Intent(DetailsActivity.this, LoginActivity.class)));
 
     }
 
@@ -1422,6 +1727,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 lPlay.setVisibility(VISIBLE);
                 imgFull.setVisibility(GONE);
                 initVideoPlayer(mediaUrl, DetailsActivity.this, serverType);
+
 
             } else {
                 initGetData();
@@ -1555,107 +1861,121 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             @Override
             public void onClick(View v) {
 
-                if (!familycontent) {
+                if (safe.equals("1")) {
 
 
 //agepopup rk 261023
-                    final Dialog dialog = new Dialog(DetailsActivity.this);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-                    dialog.setContentView(R.layout.confirm_age_dialog);
-                    dialog.setCancelable(false);
-
-                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                    lp.copyFrom(dialog.getWindow().getAttributes());
-                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
-                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
-
-                    btConfirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                                if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
-                                    serverType = "";
-                                    mediaUrl = trailerUrl;
-                                    CommonModels commonModels = new CommonModels();
-                                    commonModels.setStremURL(trailerUrl);
-                                    commonModels.setServerType("");
-                                    descriptionLayout.setVisibility(GONE);
-                                    lPlay.setVisibility(VISIBLE);
-                                    releasePlayer();
-                                    preparePlayer(commonModels);
-
-
-//                                    HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
-//                                    trailervideoAction.put("Title", title);
-//                                    trailervideoAction.put("Video id", sharevideo_id);
-//                                    trailervideoAction.put("Season ID", ct_season_id);
-//                                    trailervideoAction.put("Season Name", ct_season_name);
-//                                    trailervideoAction.put("Content Type", ct_content_type);
-//                                    trailervideoAction.put("Content language", ct_content_language);
-//                                    trailervideoAction.put("Release Date", share_releasedate);
+//                    final Dialog dialog = new Dialog(DetailsActivity.this);
+//                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+//                    dialog.setContentView(R.layout.confirm_user_age_dialog);
+//                    dialog.setCancelable(false);
 //
-//                                    clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+//                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//                    lp.copyFrom(dialog.getWindow().getAttributes());
+//                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//
+//                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
+//                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
+//
+//                    btConfirm.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//
+//                            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+//                                if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+//                                    serverType = "";
+//                                    mediaUrl = trailerUrl;
+//                                    CommonModels commonModels = new CommonModels();
+//                                    commonModels.setStremURL(trailerUrl);
+//                                    commonModels.setServerType("");
+//                                    descriptionLayout.setVisibility(GONE);
+//                                    lPlay.setVisibility(VISIBLE);
+//                                    releasePlayer();
+//                                    preparePlayer(commonModels);
+//
+//
+////                                    HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
+////                                    trailervideoAction.put("Title", title);
+////                                    trailervideoAction.put("Video id", sharevideo_id);
+////                                    trailervideoAction.put("Season ID", ct_season_id);
+////                                    trailervideoAction.put("Season Name", ct_season_name);
+////                                    trailervideoAction.put("Content Type", ct_content_type);
+////                                    trailervideoAction.put("Content language", ct_content_language);
+////                                    trailervideoAction.put("Release Date", share_releasedate);
+////
+////                                    clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+//
+//
+//                                }
+//                            } else {
+//
+//                                showAgeConfirmDialog(null, null, "trailer", 0);
+//
+//                            }
+//                            dialog.dismiss();
+//                        }
+//                    });
+//
+//
+//                    txtCancel.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            dialog.dismiss();
+////                finish();
+//                        }
+//                    });
+//
+//                    dialog.show();
+//                    dialog.getWindow().setAttributes(lp);
+
+                    if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+                        serverType = "";
+                        mediaUrl = trailerUrl;
+                        CommonModels commonModels = new CommonModels();
+                        commonModels.setStremURL(trailerUrl);
+                        commonModels.setServerType("");
+                        descriptionLayout.setVisibility(GONE);
+                        lPlay.setVisibility(VISIBLE);
+                        releasePlayer();
+                        preparePlayer(commonModels);
 
 
-                                }
-                            } else {
-
-                                showAgeConfirmDialog(null, null, "trailer", 0);
-
-                            }
-                            dialog.dismiss();
-                        }
-                    });
-
-
-                    txtCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-//                finish();
-                        }
-                    });
-
-                    dialog.show();
-                    dialog.getWindow().setAttributes(lp);
+                    }
 
                 } else {
 
-                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                        if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
-                            serverType = "";
-                            mediaUrl = trailerUrl;
-                            CommonModels commonModels = new CommonModels();
-                            commonModels.setStremURL(trailerUrl);
-                            commonModels.setServerType("");
-                            descriptionLayout.setVisibility(GONE);
-                            lPlay.setVisibility(VISIBLE);
-                            releasePlayer();
-                            preparePlayer(commonModels);
-
-
-//                            HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
-//                            trailervideoAction.put("Title", title);
-//                            trailervideoAction.put("Video id", sharevideo_id);
-//                            trailervideoAction.put("Season ID", ct_season_id);
-//                            trailervideoAction.put("Season Name", ct_season_name);
-//                            trailervideoAction.put("Content Type", ct_content_type);
-//                            trailervideoAction.put("Content language", ct_content_language);
-//                            trailervideoAction.put("Release Date", share_releasedate);
+//                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+//                        if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+//                            serverType = "";
+//                            mediaUrl = trailerUrl;
+//                            CommonModels commonModels = new CommonModels();
+//                            commonModels.setStremURL(trailerUrl);
+//                            commonModels.setServerType("");
+//                            descriptionLayout.setVisibility(GONE);
+//                            lPlay.setVisibility(VISIBLE);
+//                            releasePlayer();
+//                            preparePlayer(commonModels);
 //
-//                            clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+//
+////                            HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
+////                            trailervideoAction.put("Title", title);
+////                            trailervideoAction.put("Video id", sharevideo_id);
+////                            trailervideoAction.put("Season ID", ct_season_id);
+////                            trailervideoAction.put("Season Name", ct_season_name);
+////                            trailervideoAction.put("Content Type", ct_content_type);
+////                            trailervideoAction.put("Content language", ct_content_language);
+////                            trailervideoAction.put("Release Date", share_releasedate);
+////
+////                            clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+//
+//
+//                        }
+//                    } else {
 
+                    showAgeConfirmDialog(null, null, "trailer", 0);
 
-                        }
-                    } else {
-
-                        showAgeConfirmDialog(null, null, "trailer", 0);
-
-                    }
+//                    }
 
 
                 }
@@ -1702,24 +2022,143 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             }
         });
 
+//        animation_view.setOnClickListener(v -> {
+//
+//
+//            if (safe.equals("1")) {
+//
+//
+////agepopup rk 261023
+////                    final Dialog dialog = new Dialog(DetailsActivity.this);
+////                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+////                    dialog.setContentView(R.layout.confirm_user_age_dialog);
+////                    dialog.setCancelable(false);
+////
+////                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+////                    lp.copyFrom(dialog.getWindow().getAttributes());
+////                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+////                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+////
+////                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
+////                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
+////
+////                    btConfirm.setOnClickListener(new View.OnClickListener() {
+////                        @Override
+////                        public void onClick(View v) {
+////
+////                            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+////                                if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+////                                    serverType = "";
+////                                    mediaUrl = trailerUrl;
+////                                    CommonModels commonModels = new CommonModels();
+////                                    commonModels.setStremURL(trailerUrl);
+////                                    commonModels.setServerType("");
+////                                    descriptionLayout.setVisibility(GONE);
+////                                    lPlay.setVisibility(VISIBLE);
+////                                    releasePlayer();
+////                                    preparePlayer(commonModels);
+////
+////
+//////                                    HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
+//////                                    trailervideoAction.put("Title", title);
+//////                                    trailervideoAction.put("Video id", sharevideo_id);
+//////                                    trailervideoAction.put("Season ID", ct_season_id);
+//////                                    trailervideoAction.put("Season Name", ct_season_name);
+//////                                    trailervideoAction.put("Content Type", ct_content_type);
+//////                                    trailervideoAction.put("Content language", ct_content_language);
+//////                                    trailervideoAction.put("Release Date", share_releasedate);
+//////
+//////                                    clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+////
+////
+////                                }
+////                            } else {
+////
+////                                showAgeConfirmDialog(null, null, "trailer", 0);
+////
+////                            }
+////                            dialog.dismiss();
+////                        }
+////                    });
+////
+////
+////                    txtCancel.setOnClickListener(new View.OnClickListener() {
+////                        @Override
+////                        public void onClick(View v) {
+////                            dialog.dismiss();
+//////                finish();
+////                        }
+////                    });
+////
+////                    dialog.show();
+////                    dialog.getWindow().setAttributes(lp);
+//
+//                if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+//                    serverType = "";
+//                    mediaUrl = trailerUrl;
+//                    CommonModels commonModels = new CommonModels();
+//                    commonModels.setStremURL(trailerUrl);
+//                    commonModels.setServerType("");
+//                    descriptionLayout.setVisibility(GONE);
+//                    lPlay.setVisibility(VISIBLE);
+//                    releasePlayer();
+//                    preparePlayer(commonModels);
+//
+//
+//                }
+//
+//            } else {
+//
+////                if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+////                    if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+////                        serverType = "";
+////                        mediaUrl = trailerUrl;
+////                        CommonModels commonModels = new CommonModels();
+////                        commonModels.setStremURL(trailerUrl);
+////                        commonModels.setServerType("");
+////                        descriptionLayout.setVisibility(GONE);
+////                        lPlay.setVisibility(VISIBLE);
+////                        releasePlayer();
+////                        preparePlayer(commonModels);
+////
+////
+//////                            HashMap<String, Object> trailervideoAction = new HashMap<String, Object>();
+//////                            trailervideoAction.put("Title", title);
+//////                            trailervideoAction.put("Video id", sharevideo_id);
+//////                            trailervideoAction.put("Season ID", ct_season_id);
+//////                            trailervideoAction.put("Season Name", ct_season_name);
+//////                            trailervideoAction.put("Content Type", ct_content_type);
+//////                            trailervideoAction.put("Content language", ct_content_language);
+//////                            trailervideoAction.put("Release Date", share_releasedate);
+//////
+//////                            clevertapTrailerwatchlistInstance.pushEvent("Trailer Video started", trailervideoAction);
+////
+////
+////                    }
+////                } else {
+//
+//                showAgeConfirmDialog(null, null, "trailer", 0);
+//
+////                }
+//
+//
+//            }
+//
+//        });
 
-        watchLiveTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideExoControlForTv();
-                initMoviePlayer(mediaUrl, serverType, DetailsActivity.this);
 
-                watchStatusTv.setText(getString(R.string.watching_on) + " " + getString(R.string.app_name));
-                watchLiveTv.setVisibility(GONE);
+        watchLiveTv.setOnClickListener(v -> {
+            hideExoControlForTv();
+            initMoviePlayer(mediaUrl, serverType, DetailsActivity.this);
 
-                timeTv.setText(currentProgramTime);
-                programTv.setText(currentProgramTitle);
-            }
+            watchStatusTv.setText(getString(R.string.watching_on) + " " + getString(R.string.app_name));
+            watchLiveTv.setVisibility(GONE);
+
+            timeTv.setText(currentProgramTime);
+            programTv.setText(currentProgramTitle);
         });
 
-        shareIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        shareIv.setOnClickListener(v -> {
 
 
 //                HashMap<String, Object> SharedvideoAction = new HashMap<String, Object>();
@@ -1733,31 +2172,23 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //                clevertapSharedInstance.pushEvent("Shared", SharedvideoAction);
 
 
-                //  Tools.share(DetailsActivity.this, title,sharetitle,sharevideo_id,sharedescription,share_releasedate,clevertapSharedInstance);
-                Tools.share(DetailsActivity.this, title);
+            //  Tools.share(DetailsActivity.this, title,sharetitle,sharevideo_id,sharedescription,share_releasedate,clevertapSharedInstance);
+            Tools.share(DetailsActivity.this, title);
 
-                // clevertap event shared
+            // clevertap event shared
 
 
-            }
         });
 
-        tvReportIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reportMovie();
+        tvReportIV.setOnClickListener(v -> reportMovie());
+
+        shareIv2.setOnClickListener(v -> {
+            if (title == null) {
+
+
+                new ToastMsg(DetailsActivity.this).toastIconError("Title should not be empty.");
+                return;
             }
-        });
-
-        shareIv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (title == null) {
-
-
-                    new ToastMsg(DetailsActivity.this).toastIconError("Title should not be empty.");
-                    return;
-                }
 //                HashMap<String, Object> SharedvideoAction = new HashMap<String, Object>();
 //
 //                SharedvideoAction.put("Title", sharetitle);
@@ -1770,19 +2201,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //                clevertapSharedInstance.pushEvent("Shared", SharedvideoAction);
 
 
-                Tools.share(DetailsActivity.this, title);
+            Tools.share(DetailsActivity.this, title);
 
 
-            }
         });
 
         //report icon
-        reportIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reportMovie();
-            }
-        });
+        reportIv.setOnClickListener(v -> reportMovie());
 
         castPlayer.addListener(new Player.Listener() {
 
@@ -1869,20 +2294,30 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
             }
         });
-        backIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
+        rent_bt.setOnClickListener(v -> {
+
+           /* if (userId == null) {
+                new ToastMsg(GoldDetailsActivity.this).toastIconError(getResources().getString(R.string.subscribe_error));
+                startActivity(new Intent(GoldDetailsActivity.this, LoginActivity.class));
                 finish();
+            } else {
+                startActivity(new Intent(GoldDetailsActivity.this, PurchasePlanActivity.class));
+            }*/
+            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                Intent intent = new Intent(DetailsActivity.this, GoldRazorPayActivity.class);
+                intent.putExtra("videoId", id);
+                intent.putExtra("videoAmount", amt);
+                startActivity(intent);
+            } else {
+                startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
             }
+
         });
 
-        subBackIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backIv.setOnClickListener(v -> finish());
+
+        subBackIv.setOnClickListener(v -> finish());
 
     }
 
@@ -2505,6 +2940,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             if (!categoryType.equals("tv")) {
 
                 //----related rv----------
+//                relatedAdapter = new HomePageAdapter(this, listRelated, "");
                 relatedAdapter = new HomePageAdapter(this, listRelated);
                 rvRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
                         false));
@@ -2526,7 +2962,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     downloadBt.setVisibility(VISIBLE);
                     watchNowBt.setVisibility(GONE);
-                    trailerBt.setVisibility(VISIBLE);
+                    trailerBt.setVisibility(GONE);
 
                     // cast & crew adapter
                     castCrewAdapter = new CastCrewAdapter(this, castCrews);
@@ -2775,6 +3211,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (resumePosition > 0) {
                     player.seekTo(resumePosition);
                     player.setPlayWhenReady(true);
+
+//                    nulnulnul
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -3054,67 +3492,28 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
 
-//    private void paidControl(String isPaid) {
-//        if (isPaid.equals("1")) {
-//            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-//                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-//                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
-//                        seasonSpinnerContainer.setVisibility(VISIBLE);
-////                        contentDetails.setVisibility(VISIBLE);
-//                        lnr_buy_subsc.setVisibility(GONE);
-//
-//                    } else {
-//                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-//                    }
-//                } else {
-//                    seasonSpinnerContainer.setVisibility(GONE);
-////                    contentDetails.setVisibility(GONE);
-//                    lnr_buy_subsc.setVisibility(VISIBLE);
-//
-//                    Toast.makeText(DetailsActivity.this, "Buy Plan", Toast.LENGTH_SHORT).show();
-//                    releasePlayer();
-//                }
-//            } else {
-//                startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-//                finish();
-//            }
-//        } else {
-//            //free content
-//            seasonSpinnerContainer.setVisibility(VISIBLE);
-//            contentDetails.setVisibility(VISIBLE);
-//            lnr_buy_subsc.setVisibility(GONE);
-//        }
-//    }
-
     private void paidControl(String isPaid) {
-        if (isPaid.equals("0")) {
-//            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-//                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-//                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
-//                        seasonSpinnerContainer.setVisibility(VISIBLE);
+        if (is_gold.equals("0")) {
+//            if (PreferenceUtils.isValid(DetailsActivity.this)) {
+//                seasonSpinnerContainer.setVisibility(VISIBLE);
 ////                        contentDetails.setVisibility(VISIBLE);
-//                        lnr_buy_subsc.setVisibility(GONE);
-//
-//                    } else {
-//                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-//                    }
-//                } else {
-//                    seasonSpinnerContainer.setVisibility(GONE);
-////                    contentDetails.setVisibility(GONE);
-//                    lnr_buy_subsc.setVisibility(VISIBLE);
-//
-//                    Toast.makeText(DetailsActivity.this, "Buy Plan", Toast.LENGTH_SHORT).show();
-//                    releasePlayer();
-//                }
+//                lnr_buy_gold.setVisibility(GONE);
 //            } else {
-//                startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-//                finish();
+//                PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+//
+//                seasonSpinnerContainer.setVisibility(GONE);
+////                    contentDetails.setVisibility(GONE);
+//                lnr_buy_gold.setVisibility(VISIBLE);
+//                releasePlayer();
+//
 //            }
+            seasonSpinnerContainer.setVisibility(GONE);
+//                    contentDetails.setVisibility(GONE);
+            lnr_buy_gold.setVisibility(VISIBLE);
         } else {
-            //free content
             seasonSpinnerContainer.setVisibility(VISIBLE);
-            contentDetails.setVisibility(VISIBLE);
-            lnr_buy_subsc.setVisibility(GONE);
+//                        contentDetails.setVisibility(VISIBLE);
+            lnr_buy_gold.setVisibility(GONE);
         }
     }
 
@@ -3170,6 +3569,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         tvName.setVisibility(GONE);
                         tvTitleTv.setText(title);
                         tvDes.setText(Html.fromHtml(detailsModel.getDescription()));
+//                        tvDes.setText(detailsModel.getDescription().replace("&nbsp;", "\n"));
+//                        tvDes.setMaxLines(Integer.MAX_VALUE);
                         Log.d("max line", String.valueOf(tvDes.getMaxLines()));
                         if (tvDes.getLineCount() <= MAX_LINES_COLLAPSED) {
                             tv_viewMore.setVisibility(GONE);
@@ -3183,9 +3584,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                             tvDes.setMaxLines(MAX_LINES_COLLAPSED);
                         }
-//                        tvDes.setText(detailsModel.getDescription());
+
                         V_URL = detailsModel.getStreamUrl();
-                        castImageUrl = detailsModel.getThumbnailUrl();
+                        castImageUrl = detailsModel.getPosterUrl();
 
                         Picasso.get().load(detailsModel.getThumbnailUrl()).placeholder(R.drawable.album_art_placeholder)
                                 .into(tvThumbIv);
@@ -3285,16 +3686,26 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     SingleDetails singleDetails = response.body();
                     String isPaid = singleDetails.getIsPaid();
-//                    paidControl(isPaid);
-
-
+                    paidControl(isPaid);
                     try {
                         //below details for clevertap share event
-                        ct_content_type = singleDetails.getGenre().get(0).getName();
-                        ct_content_language = singleDetails.getCountry().get(0).getName();
-                        ct_season_id = singleDetails.getSeason().get(0).getSeasonsId();
-                        ct_season_name = singleDetails.getSeason().get(0).getSeasonsName();
+                        if (!singleDetails.getGenre().isEmpty()) {
+                            ct_content_type = singleDetails.getGenre().get(0).getName();
+                        }
+                        if (!singleDetails.getCountry().isEmpty()) {
+                            ct_content_language = singleDetails.getCountry().get(0).getName();
+                        }
+
+                        if (!singleDetails.getSeason().isEmpty()) {
+                            ct_season_id = singleDetails.getSeason().get(0).getSeasonsId();
+                        }
+
+                        if (!singleDetails.getSeason().isEmpty()) {
+                            ct_season_name = singleDetails.getSeason().get(0).getSeasonsName();
+                        }
                         ct_content_title = singleDetails.getSlug();
+
+                         safe = singleDetails.getSafe(); //check this condition
 
 
                         sharevideo_id = singleDetails.getVideosId();
@@ -3305,6 +3716,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     } catch (Exception e) {
 
+                        e.printStackTrace();
                     }
 
                     title = singleDetails.getTitle();
@@ -3315,21 +3727,31 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     tvName.setText(title);
                     tvRelease.setText("Release On " + singleDetails.getRelease());
                     runtime.setText(singleDetails.getRuntime());
-//                    tvDes.setText(singleDetails.getDescription());
-                    tvDes.setText(Html.fromHtml(singleDetails.getDescription()));
-                    Log.d("max line", String.valueOf(tvDes.getMaxLines()));
-                    if (tvDes.getLineCount() <= MAX_LINES_COLLAPSED) {
-                        tv_viewMore.setVisibility(GONE);
-                    } else {
-//                            tvDes.setMaxLines(MAX_LINES_COLLAPSED);
-//                            tvDes.setLines(MAX_LINES_COLLAPSED);
+                    if (singleDetails.getDescription() != null) {
+                        tvDes.setText(Html.fromHtml(singleDetails.getDescription()));
 
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvDes.getLayoutParams();
+                        if (tvDes.getLineCount() <= MAX_LINES_COLLAPSED) {
+                            tv_viewMore.setVisibility(GONE);
+                        } else {
+//                        tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+//                        tvDes.setLines(MAX_LINES_COLLAPSED);
 
-                        // Set the new line count
-                        layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                        tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvDes.getLayoutParams();
+
+                            // Set the new line count
+                            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                            tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+
+                            // Apply the updated layout parameters
+                            tvDes.setLayoutParams(layoutParams);
+                            tvDes.setLines(MAX_LINES_COLLAPSED);
+                        }
                     }
+//                    tvDes.setText(HtmlCompat.fromHtml(singleDetails.getDescription(), HtmlCompat.FROM_HTML_MODE_LEGACY));
+//                    tvDes.setText(singleDetails.getDescription().replace("&nbsp;", "\n"));
+//                    tvDes.setMaxLines(Integer.MAX_VALUE);
+//                    Log.e("max line", String.valueOf(tvDes.getLineCount()));
+
 
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
                             .into(posterIv);
@@ -3337,7 +3759,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                             .into(thumbIv);
 
                     download_check = singleDetails.getEnableDownload();
+
                     trailerUrl = singleDetails.getTrailerUrl();
+
 //                    castImageUrl = singleDetails.getThumbnailUrl();
                     castImageUrl = singleDetails.getPosterUrl();
                     downloadBt.setVisibility(VISIBLE);
@@ -3347,6 +3771,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         downloadAndTrailerBtContainer.setVisibility(VISIBLE);
                         trailerBt.setVisibility(VISIBLE);
                         downloadBt.setVisibility(VISIBLE);
+                    } else {
+                        trailerBt.setVisibility(GONE);
+//                        animation_view.setVisibility(GONE);
                     }
 
 
@@ -3440,48 +3867,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         listServer.add(models);
                     }
 
-                    setSeasonData(seasonList);
+                    contentList.clear();
+                    contentList.addAll(singleDetails.getDescription1());
+                    recContent.setLayoutManager(new LinearLayoutManager(DetailsActivity.this, RecyclerView.HORIZONTAL, false));
+                    recContent.setAdapter(new ContentAdapter(DetailsActivity.this));
 
-                     /*if season downloads are enable
-                        generate a list of downloads of every season*/
-                    //----download list--------
-//                    if (isPaid.equals("1")) {
-//                        if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-//                            if (seasonList.size() > 0) {
-////                        if (isPaid.equals("1")) {
-////                            if (listServer.size() > 0) {
-//                                setSeasonData(seasonList);
-//
-//                                //check if download is enabled
-//                                if (singleDetails.getEnableDownload().equalsIgnoreCase("1")) {
-//                                    setSeasonDownloadData(seasonListForDownload, singleDetails.getSeason());
-//                                } else {
-//                                    seasonDownloadLayout.setVisibility(GONE);
-//                                }
-////                            }
-////                        }
-//                            } else {
-//                                seasonSpinnerContainer.setVisibility(GONE);
-//                            }
-//                        }
-//                    } else {
-//                        if (seasonList.size() > 0) {
-////                        if (isPaid.equals("1")) {
-////                            if (listServer.size() > 0) {
-//                            setSeasonData(seasonList);
-//
-//                            //check if download is enableddownload_bt
-//                            if (singleDetails.getEnableDownload().equalsIgnoreCase("1")) {
-//                                setSeasonDownloadData(seasonListForDownload, singleDetails.getSeason());
-//                            } else {
-//                                seasonDownloadLayout.setVisibility(GONE);
-//                            }
-////                            }
-////                        }
-//                        } else {
-//                            seasonSpinnerContainer.setVisibility(GONE);
-//                        }
-//                    }
+
+                    setSeasonData(seasonList);
                 }
             }
 
@@ -3490,6 +3882,64 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
             }
         });
+    }
+
+
+    private void getContinueWatchingData(String vtype, String vId) {
+        Log.e(TAG, "getContinueWatchingData: " + vId + ", userId: " + userId);
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
+        Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vtype, vId);
+        call.enqueue(new Callback<SingleDetails>() {
+            @Override
+            public void onResponse(Call<SingleDetails> call, retrofit2.Response<SingleDetails> response) {
+                if (response.code() == 200) {
+
+                    SingleDetails singleDetails = response.body();
+
+                    contentList.clear();
+                    contentList.addAll(singleDetails.getDescription1());
+
+                    String warningText = "";
+
+                    for (int i = 0; i < singleDetails.getDescription1().size(); i++) {
+                        if (warningText.equals("")) {
+                            warningText = singleDetails.getDescription1().get(i).getDescriptionContent();
+
+                        } else {
+                            warningText = warningText + ", " + singleDetails.getDescription1().get(i).getDescriptionContent();
+                        }
+                    }
+                    if (warningText != "") {
+                        txt_warningDescription.setText(warningText);
+                        linWarning.setVisibility(VISIBLE);
+                        displayTextViewForDuration(10000);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SingleDetails> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+    private void displayTextViewForDuration(final long durationMillis) {
+        txt_warningDescription.setVisibility(View.VISIBLE);
+
+        // Use a Handler to delay hiding the TextView
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Hide the TextView after the specified duration
+                txt_warningDescription.setVisibility(View.GONE);
+                linWarning.setVisibility(View.GONE);
+            }
+        }, durationMillis);
     }
 
 
@@ -3595,8 +4045,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     }
                     if (trailerUrl == null || trailerUrl.equalsIgnoreCase("")) {
                         trailerBt.setVisibility(GONE);
+//                        animation_view.setVisibility(GONE);
                     } else {
                         trailerBt.setVisibility(VISIBLE);
+//                        animation_view.setVisibility(VISIBLE);
                     }
                     //check if download and trailer is unable or not
                     // control button container
@@ -3613,21 +4065,27 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     tvName.setText(title);
                     tvRelease.setText("Release On " + singleDetails.getRelease());
                     runtime.setText(singleDetails.getRuntime());
-
                     tvDes.setText(Html.fromHtml(singleDetails.getDescription()));
-                    Log.d("max line", String.valueOf(tvDes.getMaxLines()));
+//                    tvDes.setText(singleDetails.getDescription().replace("&nbsp;", "\n"));
+//                    tvDes.setMaxLines(Integer.MAX_VALUE);
+                    Log.e("max line", String.valueOf(tvDes.getMaxLines()));
                     if (tvDes.getLineCount() <= MAX_LINES_COLLAPSED) {
                         tv_viewMore.setVisibility(GONE);
                     } else {
-//                            tvDes.setMaxLines(MAX_LINES_COLLAPSED);
-//                            tvDes.setLines(MAX_LINES_COLLAPSED);
+//                        tvDes.setMaxLines(MAX_LINES_COLLAPSED);
 
                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) tvDes.getLayoutParams();
 
                         // Set the new line count
                         layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                         tvDes.setMaxLines(MAX_LINES_COLLAPSED);
+
+                        // Apply the updated layout parameters
+                        tvDes.setLayoutParams(layoutParams);
+                        tvDes.setLines(MAX_LINES_COLLAPSED);
                     }
+
+
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
                             .into(posterIv);
                     Picasso.get().load(singleDetails.getThumbnailUrl()).placeholder(R.drawable.poster_placeholder)
@@ -3901,10 +4359,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     @Override
     protected void onPause() {
         super.onPause();
+
+        //pauseGame();//admanger intestial ads
+
+
         if (isPlaying && player != null) {
             //Log.e("PLAY:::","PAUSE");
             //  player.setPlayWhenReady(false);
             player.setPlayWhenReady(true);
+//            player.stop();
 
 
         }
@@ -3919,6 +4382,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         downloadTracker.removeListener(this);
         handler.removeCallbacks(runnableCode);
+//used for pip vdo
+        try {
+            player.setPlayWhenReady(false);//used for PIP close button whene clicked  stop video background sound
+        } catch (Exception e) {
+        }
+        this.finish();
 
     }
 
@@ -3952,9 +4421,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
 */
 
+//        player.setPlayWhenReady(true);
+        //used for PIP video on screen after back click and exit from app (rk251023)
+
         if (player != null) {
-            player.setPlayWhenReady(true);
-            //used for PIP video on screen after back click and exit from app (rk251023)
             Display d = getWindowManager()
                     .getDefaultDisplay();
             Point p = new Point();
@@ -3979,15 +4449,39 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 enterPictureInPictureMode(pip_Builder.build());
             }
-        }else {
+        } else {
             super.onBackPressed();
         }
+//        player.stop();
 
     }
 
     @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, @NonNull Configuration newConfig) {
+        if (player != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+            }
+
+            if (isInPictureInPictureMode) {
+                Log.d("pipMode", "in pip");
+            } else {
+                player.stop();
+            }
+        }
+
+    }
+
+
+    @Override
     protected void onResume() {
         super.onResume();
+
+//admanger interstial ads resumegame()
+        //resumeGame();
+
+
+
         //check vpn connection
         helperUtils = new HelperUtils(DetailsActivity.this);
         vpnStatus = helperUtils.isVpnConnectionAvailable();
@@ -3995,12 +4489,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             helperUtils.showWarningDialog(DetailsActivity.this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
             player.setPlayWhenReady(false);
         }
-        if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-            lnrAlreadySubscribe.setVisibility(VISIBLE);
+        if (!is_gold.equals("")) {
+            lnrAlreadySubscribe.setVisibility(GONE);
             txtSubscribe.setVisibility(GONE);
         } else {
-            lnrAlreadySubscribe.setVisibility(GONE);
-            txtSubscribe.setVisibility(VISIBLE);
+            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                lnrAlreadySubscribe.setVisibility(VISIBLE);
+                txtSubscribe.setVisibility(GONE);
+            } else {
+                lnrAlreadySubscribe.setVisibility(GONE);
+                txtSubscribe.setVisibility(VISIBLE);
+            }
         }
 
 //        getProfile(PreferenceUtils.getUserId(DetailsActivity.this));
@@ -4962,11 +5461,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
                 }
-
-
 //                downloadedVideoList.add(download);
             }
-
         }
 
 
@@ -4994,7 +5490,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //                if (offlineDatabaseHelper.checkIfMyMovieExists(model.getStreamURL())) {
 //                    offlineDatabaseHelper.updateStatus("DOWNLOAD_PAUSE",model.getStreamURL());
 //                }
-
                     break;
 
 
@@ -5008,7 +5503,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     if (offlineDatabaseHelper.checkIfMyMovieExists(model.getStreamURL())) {
                         offlineDatabaseHelper.updateStatus("DOWNLOAD_RESUME", model.getStreamURL());
                     }
-
                     break;
 
                 case DOWNLOAD_RETRY:
@@ -5033,7 +5527,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     holder.img_download_state.setVisibility(View.VISIBLE);
 
 /*
-
                     //clevertap event Download completed
                     HashMap<String, Object> DownloadcompletedAction = new HashMap<String, Object>();
                     DownloadcompletedAction.put("Episode ID", model.getEpisodeId());
@@ -5066,6 +5559,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     break;
             }
 
+
         }
 
 
@@ -5080,7 +5574,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
 
         @Override
-        public void onBindViewHolder(final EpisodeAdapter.OriginalViewHolder holder, final int position) {
+        public void onBindViewHolder(final EpisodeAdapter.OriginalViewHolder holder, int position) {
 
             final EpiModel obj = items.get(position);
             holder.name.setText(obj.getEpi());
@@ -5118,6 +5612,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     .placeholder(R.drawable.poster_placeholder)
                     .into(holder.episodIv);
 
+            if (is_gold.equals("1")) {
+                holder.ll_download_video.setVisibility(GONE);
+            } else {
+                holder.ll_download_video.setVisibility(VISIBLE);
+            }
             holder.ll_download_video.setOnClickListener(view -> {
                 if (obj.getEpisodeStatus().equals("0")) {
                     if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
@@ -5185,80 +5684,70 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
                     }
                 } else {
-                    showAgeConfirmDialog(items.get(position), holder, "download", position);
+                    if (safe.equals("0")) {
+                        showAgeConfirmDialog(items.get(position), holder, "download", position);
+                    } else {
+                        if (offlineDatabaseHelper.checkIfMyMovieExists(items.get(position).getEpisodeId())) {
+                            CommonModels itemMovie = offlineDatabaseHelper.getMovieById(items.get(position).getEpisodeId());
+                            if (holder.ll_download_video.getTag() == null) {
+                                downloadBottomSheet(items.get(position), holder);
+
+//                            if (holder.ll_download_video.getTag() == null) {
+//                                Log.d("", "");
+//                                ExoDownloadState exoDownloadState = DOWNLOAD_START;
+//                                holder.ll_download_video.setTag(DOWNLOAD_START);
+//                                exoVideoDownloadDecision(exoDownloadState, items.getStreamURL(), items.getEpi(), items.getImageUrl(), items.getEpisodeId(), holder);
+//                            } else {
+//                                ExoDownloadState exoDownloadState = (ExoDownloadState) holder.ll_download_video.getTag();
+//                                exoVideoDownloadDecision(exoDownloadState, items.getStreamURL(), items.getEpi(), items.getImageUrl(), items.getEpisodeId(), holder);
+//                            }
+
+
+//                        downloadOptionDialog.show();
+                            } else if (holder.ll_download_video.getTag().equals(DOWNLOAD_PAUSE)) {
+                                DownloadRequest request = downloadTracker.getDownloadRequest(Uri.parse(itemMovie.getStremURL()));
+                                downloadManager.addDownload(request, Download.STATE_STOPPED);
+                            } else if (holder.ll_download_video.getTag().equals(DOWNLOAD_RESUME)) {
+                                DownloadRequest request = downloadTracker.getDownloadRequest(Uri.parse(itemMovie.getStremURL()));
+                                downloadManager.addDownload(request, Download.STOP_REASON_NONE);
+                            } else if (holder.ll_download_video.getTag().equals(DOWNLOAD_COMPLETED)) {
+                                Toast.makeText(DetailsActivity.this, "Already Downloaded, Delete from Downloaded video ", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+
+                            downloadBottomSheet(items.get(position), holder);
+
+//                        if (holder.ll_download_video.getTag() == null) {
+//                            Log.d("", "");
+//                            ExoDownloadState exoDownloadState = DOWNLOAD_START;
+//                            holder.ll_download_video.setTag(DOWNLOAD_START);
+//                            exoVideoDownloadDecision(exoDownloadState, items.getStreamURL(), items.getEpi(), items.getImageUrl(), items.getEpisodeId(), holder);
+//                        } else {
+//                            ExoDownloadState exoDownloadState = (ExoDownloadState) holder.ll_download_video.getTag();
+//                            exoVideoDownloadDecision(exoDownloadState, items.getStreamURL(), items.getEpi(), items.getImageUrl(), items.getEpisodeId(), holder);
+//                        }
+
+                        }
+                    }
                 }
 
             });
 
             holder.cardView.setOnClickListener(v -> {
 
-
-                if (!familycontent) {
-
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-                    dialog.setContentView(R.layout.confirm_age_dialog);
-                    dialog.setCancelable(false);
-
-                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                    lp.copyFrom(dialog.getWindow().getAttributes());
-                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
-                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
-
-                    btConfirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-
+                if (safe.equals("0")) {
                             if (obj.getEpisodeStatus().equals("0")) {
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                                    if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                                        if (PreferenceUtils.isValid(DetailsActivity.this)) {
-                                            if (deviceNoDynamic != null) {
-                                                if (!deviceNoDynamic.equals("")) {
-                                                    if (!deviceNo.equals(deviceNoDynamic)) {
-                                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                                        logoutUser(PreferenceUtils.getUserId(ctx));
-                                                    } else {
-                                                        //change
+                                    if (is_gold.equals("1")) {
+                                        if (deviceNoDynamic != null) {
+                                            if (!deviceNoDynamic.equals("")) {
+                                                if (!deviceNo.equals(deviceNoDynamic)) {
+                                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                    logoutUser(PreferenceUtils.getUserId(ctx));
+                                                } else {
+                                                    //change
 //                                DetailsActivity.castImageUrl=obj.getImageUrl();
 
-                                                        ((DetailsActivity) ctx).hideDescriptionLayout();
-                                                        ((DetailsActivity) ctx).showSeriesLayout();
-                                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                                        if (!castSession) {
-                                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
-                                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-                                                            } else {
-                                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
-                                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-                                                            }
-                                                        } else {
-                                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                                        }
-
-                                                        chanColor(viewHolderArray[0], position);
-                                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                                        holder.playStatusTv.setText("Playing");
-                                                        holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                                        viewHolderArray[0] = holder;
-                                                    }
-                                                } else {
                                                     ((DetailsActivity) ctx).hideDescriptionLayout();
                                                     ((DetailsActivity) ctx).showSeriesLayout();
                                                     ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
@@ -5266,19 +5755,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                     //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                                     if (!castSession) {
                                                         if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
 
+                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
                                                         } else {
                                                             //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
                                                             onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
                                                         }
                                                     } else {
                                                         ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
@@ -5301,16 +5788,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                 //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                                 if (!castSession) {
                                                     if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                }
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
                                                         onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
 
                                                     } else {
                                                         //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                }
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
                                                         onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
 
                                                     }
@@ -5324,23 +5812,171 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                 holder.playStatusTv.setText("Playing");
                                                 holder.playStatusTv.setVisibility(View.VISIBLE);
 
+
                                                 viewHolderArray[0] = holder;
                                             }
-
                                         } else {
-                                            PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                            if (!castSession) {
+                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                } else {
+                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                            }
+
+                                            chanColor(viewHolderArray[0], position);
+                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                            holder.playStatusTv.setText("Playing");
+                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                            viewHolderArray[0] = holder;
                                         }
                                     } else {
-                                        new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                                .setMessage(getString(R.string.paid_content))
-                                                .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
+                                        if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+                                            if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                                                if (deviceNoDynamic != null) {
+                                                    if (!deviceNoDynamic.equals("")) {
+                                                        if (!deviceNo.equals(deviceNoDynamic)) {
+                                                            Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                            logoutUser(PreferenceUtils.getUserId(ctx));
+                                                        } else {
+                                                            //change
+//                                DetailsActivity.castImageUrl=obj.getImageUrl();
+
+                                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                            if (!castSession) {
+                                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                                                } else {
+                                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                                                }
+                                                            } else {
+                                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                            }
+
+                                                            chanColor(viewHolderArray[0], position);
+                                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                            holder.playStatusTv.setText("Playing");
+                                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                            viewHolderArray[0] = holder;
+                                                        }
+                                                    } else {
+                                                        ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                        ((DetailsActivity) ctx).showSeriesLayout();
+                                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                        if (!castSession) {
+                                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
+                                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                            } else {
+                                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
+                                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                            }
+                                                        } else {
+                                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                        }
+
+                                                        chanColor(viewHolderArray[0], position);
+                                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                        holder.playStatusTv.setText("Playing");
+                                                        holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                        viewHolderArray[0] = holder;
+                                                    }
+                                                } else {
+                                                    ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                    ((DetailsActivity) ctx).showSeriesLayout();
+                                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                    if (!castSession) {
+                                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
+                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                        } else {
+                                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
+                                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                        }
+                                                    } else {
+                                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                    }
+
+                                                    chanColor(viewHolderArray[0], position);
+                                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                    holder.playStatusTv.setText("Playing");
+                                                    holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                                    viewHolderArray[0] = holder;
+                                                }
+
+                                            } else {
+                                                PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+                                            }
+                                        } else {
+                                            new MaterialAlertDialogBuilder(DetailsActivity.this)
+                                                    .setMessage(getString(R.string.paid_content))
+                                                    .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
+                                                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
+                                        }
                                     }
                                 } else {
                                     startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
                                 }
 
                             } else {
+
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                                     if (deviceNoDynamic != null) {
                                         if (!deviceNoDynamic.equals("")) {
@@ -5420,317 +6056,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                     }
                                 } else {
                                     showAgeConfirmDialog(items.get(position), holder, "play", position);
-//                        ((DetailsActivity) ctx).hideDescriptionLayout();
-//                        ((DetailsActivity) ctx).showSeriesLayout();
-//                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-//                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-//                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-//                        if (!castSession) {
-//                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//
-//                            } else {
-//                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//
-//                            }
-//                        } else {
-//                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-//
-//                        }
-//
-//                        chanColor(viewHolderArray[0], position);
-//                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-//                        holder.playStatusTv.setText("Playing");
-//                        holder.playStatusTv.setVisibility(View.VISIBLE);
-//
-//
-//                        viewHolderArray[0] = holder;
                                 }
 
                             }
 
 
-                            dialog.dismiss();
-                        }
-                    });
 
-
-                    txtCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-//                finish();
-                        }
-                    });
-
-                    dialog.show();
-                    dialog.getWindow().setAttributes(lp);
                 } else {
 
                     if (obj.getEpisodeStatus().equals("0")) {
                         if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                            if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                                if (PreferenceUtils.isValid(DetailsActivity.this)) {
-                                    if (deviceNoDynamic != null) {
-                                        if (!deviceNoDynamic.equals("")) {
-                                            if (!deviceNo.equals(deviceNoDynamic)) {
-                                                Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                                logoutUser(PreferenceUtils.getUserId(ctx));
-                                            } else {
-                                                //change
-//                                DetailsActivity.castImageUrl=obj.getImageUrl();
-
-                                                ((DetailsActivity) ctx).hideDescriptionLayout();
-                                                ((DetailsActivity) ctx).showSeriesLayout();
-                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                                if (!castSession) {
-                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
-                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-                                                    } else {
-                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
-                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-                                                    }
-                                                } else {
-                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                                }
-
-                                                chanColor(viewHolderArray[0], position);
-                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                                holder.playStatusTv.setText("Playing");
-                                                holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                                viewHolderArray[0] = holder;
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).hideDescriptionLayout();
-                                            ((DetailsActivity) ctx).showSeriesLayout();
-                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                            if (!castSession) {
-                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                                } else {
-                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                                }
-                                            } else {
-                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                            }
-
-                                            chanColor(viewHolderArray[0], position);
-                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                            holder.playStatusTv.setText("Playing");
-                                            holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                            viewHolderArray[0] = holder;
-                                        }
-                                    } else {
-                                        ((DetailsActivity) ctx).hideDescriptionLayout();
-                                        ((DetailsActivity) ctx).showSeriesLayout();
-                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                        if (!castSession) {
-                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                }
-                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                            } else {
-                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                }
-                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                        }
-
-                                        chanColor(viewHolderArray[0], position);
-                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                        holder.playStatusTv.setText("Playing");
-                                        holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                        viewHolderArray[0] = holder;
-                                    }
-
-                                } else {
-                                    PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-                                }
-                            } else {
-                                new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                        .setMessage(getString(R.string.paid_content))
-                                        .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                        .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
-                            }
-                        } else {
-                            startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-                        }
-
-                    } else {
-                        if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                            if (deviceNoDynamic != null) {
-                                if (!deviceNoDynamic.equals("")) {
-                                    if (!deviceNo.equals(deviceNoDynamic)) {
-                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                        logoutUser(PreferenceUtils.getUserId(ctx));
-                                    } else {
-                                        //change
-//                                DetailsActivity.castImageUrl=obj.getImageUrl();
-
-                                        ((DetailsActivity) ctx).hideDescriptionLayout();
-                                        ((DetailsActivity) ctx).showSeriesLayout();
-                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                        if (!castSession) {
-                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
-                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-                                            } else {
-                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
-                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                        }
-
-
-                                        chanColor(viewHolderArray[0], position);
-                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                        holder.playStatusTv.setText("Playing");
-                                        holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                        viewHolderArray[0] = holder;
-                                    }
-                                } else {
-                                    ((DetailsActivity) ctx).hideDescriptionLayout();
-                                    ((DetailsActivity) ctx).showSeriesLayout();
-                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                    if (!castSession) {
-                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                        } else {
-                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                        }
-                                    } else {
-                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                    }
-
-                                    chanColor(viewHolderArray[0], position);
-                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                    holder.playStatusTv.setText("Playing");
-                                    holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                    viewHolderArray[0] = holder;
-                                }
-                            }
-                        } else {
-                            showAgeConfirmDialog(items.get(position), holder, "play", position);
-//                        ((DetailsActivity) ctx).hideDescriptionLayout();
-//                        ((DetailsActivity) ctx).showSeriesLayout();
-//                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-//                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-//                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-//                        if (!castSession) {
-//                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//
-//                            } else {
-//                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//
-//                            }
-//                        } else {
-//                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-//
-//                        }
-//
-//                        chanColor(viewHolderArray[0], position);
-//                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-//                        holder.playStatusTv.setText("Playing");
-//                        holder.playStatusTv.setVisibility(View.VISIBLE);
-//
-//
-//                        viewHolderArray[0] = holder;
-                        }
-
-                    }
-
-
-                }
-
-
-//agepopup rk2610
-                // show_userAgeConfirmDialog(items.get(position), holder, "play", position);
-
-
-                //original  rk2610 comment for age popup
-/*
-                if (obj.getEpisodeStatus().equals("0")) {
-                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                        if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                            if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                            if (is_gold.equals("1")) {
                                 if (deviceNoDynamic != null) {
                                     if (!deviceNoDynamic.equals("")) {
                                         if (!deviceNo.equals(deviceNoDynamic)) {
@@ -5842,29 +6178,176 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                 }
 
                             } else {
-                                PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-                            }
-                        } else {
-                            new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                    .setMessage(getString(R.string.paid_content))
-                                    .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
-                        }
-                    } else {
-                        startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-                    }
-
-                } else {
-                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                        if (deviceNoDynamic != null) {
-                            if (!deviceNoDynamic.equals("")) {
-                                if (!deviceNo.equals(deviceNoDynamic)) {
-                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                    logoutUser(PreferenceUtils.getUserId(ctx));
-                                } else {
-                                    //change
+                                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+                                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                                        if (deviceNoDynamic != null) {
+                                            if (!deviceNoDynamic.equals("")) {
+                                                if (!deviceNo.equals(deviceNoDynamic)) {
+                                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                    logoutUser(PreferenceUtils.getUserId(ctx));
+                                                } else {
+                                                    //change
 //                                DetailsActivity.castImageUrl=obj.getImageUrl();
 
+                                                    ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                    ((DetailsActivity) ctx).showSeriesLayout();
+                                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                    if (!castSession) {
+                                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                                        } else {
+                                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                                        }
+                                                    } else {
+                                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                    }
+
+                                                    chanColor(viewHolderArray[0], position);
+                                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                    holder.playStatusTv.setText("Playing");
+                                                    holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                    viewHolderArray[0] = holder;
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                ((DetailsActivity) ctx).showSeriesLayout();
+                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                if (!castSession) {
+                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
+                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                    } else {
+                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
+                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                    }
+                                                } else {
+                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                }
+
+                                                chanColor(viewHolderArray[0], position);
+                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                holder.playStatusTv.setText("Playing");
+                                                holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                viewHolderArray[0] = holder;
+                                            }
+                                        } else {
+                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                            if (!castSession) {
+                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                } else {
+                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                            }
+
+                                            chanColor(viewHolderArray[0], position);
+                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                            holder.playStatusTv.setText("Playing");
+                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                            viewHolderArray[0] = holder;
+                                        }
+
+                                    } else {
+                                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+                                    }
+                                } else {
+                                    new MaterialAlertDialogBuilder(DetailsActivity.this)
+                                            .setMessage(getString(R.string.paid_content))
+                                            .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
+                                            .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
+                                }
+                            }
+                        } else {
+                            startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
+                        }
+
+                    } else {
+                        if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                            if (deviceNoDynamic != null) {
+                                if (!deviceNoDynamic.equals("")) {
+                                    if (!deviceNo.equals(deviceNoDynamic)) {
+                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                        logoutUser(PreferenceUtils.getUserId(ctx));
+                                    } else {
+                                        //change
+//                                DetailsActivity.castImageUrl=obj.getImageUrl();
+
+                                        ((DetailsActivity) ctx).hideDescriptionLayout();
+                                        ((DetailsActivity) ctx).showSeriesLayout();
+                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                        if (!castSession) {
+                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                            } else {
+                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                            }
+                                        } else {
+                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                        }
+
+
+                                        chanColor(viewHolderArray[0], position);
+                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                        holder.playStatusTv.setText("Playing");
+                                        holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                        viewHolderArray[0] = holder;
+                                    }
+                                } else {
                                     ((DetailsActivity) ctx).hideDescriptionLayout();
                                     ((DetailsActivity) ctx).showSeriesLayout();
                                     ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
@@ -5872,23 +6355,24 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                     //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                     if (!castSession) {
                                         if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
                                             onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
                                         } else {
                                             //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
                                             onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
                                         }
                                     } else {
                                         ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
 
                                     }
-
 
                                     chanColor(viewHolderArray[0], position);
                                     holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
@@ -5897,117 +6381,180 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                                     viewHolderArray[0] = holder;
                                 }
-                            } else {
-                                ((DetailsActivity) ctx).hideDescriptionLayout();
-                                ((DetailsActivity) ctx).showSeriesLayout();
-                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                if (!castSession) {
-                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                    } else {
-                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                    }
-                                } else {
-                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                }
-
-                                chanColor(viewHolderArray[0], position);
-                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                holder.playStatusTv.setText("Playing");
-                                holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                viewHolderArray[0] = holder;
                             }
+                        } else {
+                            showAgeConfirmDialog(items.get(position), holder, "play", position);
                         }
-                    } else {
-                        showAgeConfirmDialog(items.get(position), holder, "play", position);
-//                        ((DetailsActivity) ctx).hideDescriptionLayout();
-//                        ((DetailsActivity) ctx).showSeriesLayout();
-//                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-//                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-//                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-//                        if (!castSession) {
-//                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//
-//                            } else {
-//                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//
-//                            }
-//                        } else {
-//                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-//
-//                        }
-//
-//                        chanColor(viewHolderArray[0], position);
-//                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-//                        holder.playStatusTv.setText("Playing");
-//                        holder.playStatusTv.setVisibility(View.VISIBLE);
-//
-//
-//                        viewHolderArray[0] = holder;
+
                     }
 
-                }*/
+
+                }
 
             });
 
 
             holder.lnrDetails.setOnClickListener(v -> {
 
-                //agepopup
-                if (!familycontent) {
 
-
-                    final Dialog dialog = new Dialog(ctx);
-                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
-                    dialog.setContentView(R.layout.confirm_age_dialog);
-                    dialog.setCancelable(false);
-
-                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                    lp.copyFrom(dialog.getWindow().getAttributes());
-                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
-                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
-
-                    btConfirm.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                if (safe.equals("0")) {
                             if (obj.getEpisodeStatus().equals("0")) {
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                                    if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                                        if (PreferenceUtils.isValid(DetailsActivity.this)) {
-                                            if (deviceNoDynamic != null) {
-                                                if (!deviceNoDynamic.equals("")) {
-                                                    if (!deviceNo.equals(deviceNoDynamic)) {
-                                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                                        logoutUser(PreferenceUtils.getUserId(ctx));
-                                                    } else {
-                                                        //change
+                                    if (is_gold.equals("1")) {
+                                        if (deviceNoDynamic != null) {
+                                            if (!deviceNoDynamic.equals("")) {
+                                                if (!deviceNo.equals(deviceNoDynamic)) {
+                                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                    logoutUser(PreferenceUtils.getUserId(ctx));
+                                                } else {
+                                                    //change
 //                                DetailsActivity.castImageUrl=obj.getImageUrl();
 
+                                                    ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                    ((DetailsActivity) ctx).showSeriesLayout();
+                                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                    if (!castSession) {
+                                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                                        } else {
+                                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                                        }
+                                                    } else {
+                                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                    }
+
+                                                    chanColor(viewHolderArray[0], position);
+                                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                    holder.playStatusTv.setText("Playing");
+                                                    holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                    viewHolderArray[0] = holder;
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                ((DetailsActivity) ctx).showSeriesLayout();
+                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                if (!castSession) {
+                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
+                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                    } else {
+                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
+                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                    }
+                                                } else {
+                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                }
+
+                                                chanColor(viewHolderArray[0], position);
+                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                holder.playStatusTv.setText("Playing");
+                                                holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                viewHolderArray[0] = holder;
+                                            }
+                                        } else {
+                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                            if (!castSession) {
+                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                } else {
+                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                            }
+
+                                            chanColor(viewHolderArray[0], position);
+                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                            holder.playStatusTv.setText("Playing");
+                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                            viewHolderArray[0] = holder;
+                                        }
+                                    } else {
+                                        if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+                                            if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                                                if (deviceNoDynamic != null) {
+                                                    if (!deviceNoDynamic.equals("")) {
+                                                        if (!deviceNo.equals(deviceNoDynamic)) {
+                                                            Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                            logoutUser(PreferenceUtils.getUserId(ctx));
+                                                        } else {
+                                                            //change
+//                                DetailsActivity.castImageUrl=obj.getImageUrl();
+
+                                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                            if (!castSession) {
+                                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                                                } else {
+                                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                                                }
+                                                            } else {
+                                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                            }
+
+                                                            chanColor(viewHolderArray[0], position);
+                                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                            holder.playStatusTv.setText("Playing");
+                                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                            viewHolderArray[0] = holder;
+                                                        }
+                                                    } else {
                                                         ((DetailsActivity) ctx).hideDescriptionLayout();
                                                         ((DetailsActivity) ctx).showSeriesLayout();
                                                         ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
@@ -6015,17 +6562,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                         //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                                         if (!castSession) {
                                                             if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
                                                                 onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
                                                             } else {
                                                                 //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
                                                                 onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
                                                             }
                                                         } else {
                                                             ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
@@ -6048,17 +6597,16 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                     //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                                     if (!castSession) {
                                                         if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
                                                             onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
 
                                                         } else {
                                                             //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
                                                             onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
 
                                                         }
@@ -6074,55 +6622,23 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                                                     viewHolderArray[0] = holder;
                                                 }
+
                                             } else {
-                                                ((DetailsActivity) ctx).hideDescriptionLayout();
-                                                ((DetailsActivity) ctx).showSeriesLayout();
-                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                                if (!castSession) {
-                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                }
-                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                                    } else {
-                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                }
-                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                                    }
-                                                } else {
-                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                                }
-
-                                                chanColor(viewHolderArray[0], position);
-                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                                holder.playStatusTv.setText("Playing");
-                                                holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                                viewHolderArray[0] = holder;
+                                                PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
                                             }
-
                                         } else {
-                                            PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+                                            new MaterialAlertDialogBuilder(DetailsActivity.this)
+                                                    .setMessage(getString(R.string.paid_content))
+                                                    .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
+                                                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
                                         }
-                                    } else {
-                                        new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                                .setMessage(getString(R.string.paid_content))
-                                                .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
                                     }
                                 } else {
                                     startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
                                 }
 
                             } else {
+
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                                     if (deviceNoDynamic != null) {
                                         if (!deviceNoDynamic.equals("")) {
@@ -6157,11 +6673,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                                                 }
 
+
                                                 chanColor(viewHolderArray[0], position);
                                                 holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
                                                 holder.playStatusTv.setText("Playing");
                                                 holder.playStatusTv.setVisibility(View.VISIBLE);
-
 
                                                 viewHolderArray[0] = holder;
                                             }
@@ -6187,7 +6703,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                                     onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
 
                                                 }
-
                                             } else {
                                                 ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
 
@@ -6236,281 +6751,18 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 //
 //                        viewHolderArray[0] = holder;
                                 }
+
                             }
 
 
-                            dialog.dismiss();
-                        }
-                    });
 
 
-                    txtCancel.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            dialog.dismiss();
-//                finish();
-                        }
-                    });
-
-                    dialog.show();
-                    dialog.getWindow().setAttributes(lp);
 
                 } else {
 
                     if (obj.getEpisodeStatus().equals("0")) {
                         if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                            if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                                if (PreferenceUtils.isValid(DetailsActivity.this)) {
-                                    if (deviceNoDynamic != null) {
-                                        if (!deviceNoDynamic.equals("")) {
-                                            if (!deviceNo.equals(deviceNoDynamic)) {
-                                                Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                                logoutUser(PreferenceUtils.getUserId(ctx));
-                                            } else {
-                                                //change
-//                                DetailsActivity.castImageUrl=obj.getImageUrl();
-
-                                                ((DetailsActivity) ctx).hideDescriptionLayout();
-                                                ((DetailsActivity) ctx).showSeriesLayout();
-                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                                if (!castSession) {
-                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
-                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-                                                    } else {
-                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
-                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-                                                    }
-                                                } else {
-                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                                }
-
-                                                chanColor(viewHolderArray[0], position);
-                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                                holder.playStatusTv.setText("Playing");
-                                                holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                                viewHolderArray[0] = holder;
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).hideDescriptionLayout();
-                                            ((DetailsActivity) ctx).showSeriesLayout();
-                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                            if (!castSession) {
-                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                                } else {
-                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                                }
-                                            } else {
-                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                            }
-
-                                            chanColor(viewHolderArray[0], position);
-                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                            holder.playStatusTv.setText("Playing");
-                                            holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                            viewHolderArray[0] = holder;
-                                        }
-                                    } else {
-                                        ((DetailsActivity) ctx).hideDescriptionLayout();
-                                        ((DetailsActivity) ctx).showSeriesLayout();
-                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                        if (!castSession) {
-                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                }
-                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                            } else {
-                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                }
-                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                        }
-
-                                        chanColor(viewHolderArray[0], position);
-                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                        holder.playStatusTv.setText("Playing");
-                                        holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                        viewHolderArray[0] = holder;
-                                    }
-
-                                } else {
-                                    PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-                                }
-                            } else {
-                                new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                        .setMessage(getString(R.string.paid_content))
-                                        .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                        .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
-                            }
-                        } else {
-                            startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-                        }
-
-                    } else {
-                        if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                            if (deviceNoDynamic != null) {
-                                if (!deviceNoDynamic.equals("")) {
-                                    if (!deviceNo.equals(deviceNoDynamic)) {
-                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                        logoutUser(PreferenceUtils.getUserId(ctx));
-                                    } else {
-                                        //change
-//                                DetailsActivity.castImageUrl=obj.getImageUrl();
-
-                                        ((DetailsActivity) ctx).hideDescriptionLayout();
-                                        ((DetailsActivity) ctx).showSeriesLayout();
-                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                        if (!castSession) {
-                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
-                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-                                            } else {
-                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
-                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-                                            }
-                                        } else {
-                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                        }
-
-                                        chanColor(viewHolderArray[0], position);
-                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                        holder.playStatusTv.setText("Playing");
-                                        holder.playStatusTv.setVisibility(View.VISIBLE);
-
-
-                                        viewHolderArray[0] = holder;
-                                    }
-                                } else {
-                                    ((DetailsActivity) ctx).hideDescriptionLayout();
-                                    ((DetailsActivity) ctx).showSeriesLayout();
-                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                    if (!castSession) {
-                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                        } else {
-                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                        }
-
-                                    } else {
-                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                    }
-
-                                    chanColor(viewHolderArray[0], position);
-                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                    holder.playStatusTv.setText("Playing");
-                                    holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                    viewHolderArray[0] = holder;
-                                }
-                            }
-                        } else {
-                            showAgeConfirmDialog(items.get(position), holder, "play", position);
-//                        ((DetailsActivity) ctx).hideDescriptionLayout();
-//                        ((DetailsActivity) ctx).showSeriesLayout();
-//                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-//                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-//                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-//                        if (!castSession) {
-//                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//
-//                            } else {
-//                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//
-//                            }
-//                        } else {
-//                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-//
-//                        }
-//
-//                        chanColor(viewHolderArray[0], position);
-//                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-//                        holder.playStatusTv.setText("Playing");
-//                        holder.playStatusTv.setVisibility(View.VISIBLE);
-//
-//
-//                        viewHolderArray[0] = holder;
-                        }
-                    }
-
-                }
-
-
-                //   show_userAgeConfirmDialog(items.get(position), holder, "stop", position);
-
-
-
-               /* if (obj.getEpisodeStatus().equals("0")) {
-                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                        if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
-                            if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                            if (is_gold.equals("1")) {
                                 if (deviceNoDynamic != null) {
                                     if (!deviceNoDynamic.equals("")) {
                                         if (!deviceNo.equals(deviceNoDynamic)) {
@@ -6584,6 +6836,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                         holder.playStatusTv.setText("Playing");
                                         holder.playStatusTv.setVisibility(View.VISIBLE);
 
+
                                         viewHolderArray[0] = holder;
                                     }
                                 } else {
@@ -6617,34 +6870,179 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                     holder.playStatusTv.setText("Playing");
                                     holder.playStatusTv.setVisibility(View.VISIBLE);
 
-
                                     viewHolderArray[0] = holder;
                                 }
-
                             } else {
-                                PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
-                            }
-                        } else {
-                            new MaterialAlertDialogBuilder(DetailsActivity.this)
-                                    .setMessage(getString(R.string.paid_content))
-                                    .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
-                                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
-                        }
-                    } else {
-                        startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
-                    }
-
-                } else {
-                    if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
-                        if (deviceNoDynamic != null) {
-                            if (!deviceNoDynamic.equals("")) {
-                                if (!deviceNo.equals(deviceNoDynamic)) {
-                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
-                                    logoutUser(PreferenceUtils.getUserId(ctx));
-                                } else {
-                                    //change
+                                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+                                    if (PreferenceUtils.isValid(DetailsActivity.this)) {
+                                        if (deviceNoDynamic != null) {
+                                            if (!deviceNoDynamic.equals("")) {
+                                                if (!deviceNo.equals(deviceNoDynamic)) {
+                                                    Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                                    logoutUser(PreferenceUtils.getUserId(ctx));
+                                                } else {
+                                                    //change
 //                                DetailsActivity.castImageUrl=obj.getImageUrl();
 
+                                                    ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                    ((DetailsActivity) ctx).showSeriesLayout();
+                                                    ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                    boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                    //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                    if (!castSession) {
+                                                        if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                            onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                                        } else {
+                                                            //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                            onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                                        }
+                                                    } else {
+                                                        ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                    }
+
+                                                    chanColor(viewHolderArray[0], position);
+                                                    holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                    holder.playStatusTv.setText("Playing");
+                                                    holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                    viewHolderArray[0] = holder;
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).hideDescriptionLayout();
+                                                ((DetailsActivity) ctx).showSeriesLayout();
+                                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                                if (!castSession) {
+                                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
+                                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                    } else {
+                                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
+                                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                    }
+                                                } else {
+                                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                                }
+
+                                                chanColor(viewHolderArray[0], position);
+                                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                                holder.playStatusTv.setText("Playing");
+                                                holder.playStatusTv.setVisibility(View.VISIBLE);
+
+
+                                                viewHolderArray[0] = holder;
+                                            }
+                                        } else {
+                                            ((DetailsActivity) ctx).hideDescriptionLayout();
+                                            ((DetailsActivity) ctx).showSeriesLayout();
+                                            ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                            boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                            //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                            if (!castSession) {
+                                                if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
+                                                } else {
+                                                    //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                }
+                                                    onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
+                                                }
+                                            } else {
+                                                ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                            }
+
+                                            chanColor(viewHolderArray[0], position);
+                                            holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                            holder.playStatusTv.setText("Playing");
+                                            holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                            viewHolderArray[0] = holder;
+                                        }
+
+                                    } else {
+                                        PreferenceUtils.updateSubscriptionStatus(DetailsActivity.this);
+                                    }
+                                } else {
+                                    new MaterialAlertDialogBuilder(DetailsActivity.this)
+                                            .setMessage(getString(R.string.paid_content))
+                                            .setPositiveButton(getString(R.string.subscribe_text), (dialog, which) -> getUserProfileData(userId))
+                                            .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel()).create().show();
+                                }
+                            }
+                        } else {
+                            startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
+                        }
+
+                    } else {
+                        if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                            if (deviceNoDynamic != null) {
+                                if (!deviceNoDynamic.equals("")) {
+                                    if (!deviceNo.equals(deviceNoDynamic)) {
+                                        Toast.makeText(ctx, "Logged in other device", Toast.LENGTH_SHORT).show();
+                                        logoutUser(PreferenceUtils.getUserId(ctx));
+                                    } else {
+                                        //change
+//                                DetailsActivity.castImageUrl=obj.getImageUrl();
+
+                                        ((DetailsActivity) ctx).hideDescriptionLayout();
+                                        ((DetailsActivity) ctx).showSeriesLayout();
+                                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
+                                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
+                                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
+                                        if (!castSession) {
+                                            if (obj.getServerType().equalsIgnoreCase("embed")) {
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                        }
+
+                                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+                                            } else {
+                                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
+//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                        }
+                                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+                                            }
+                                        } else {
+                                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
+
+                                        }
+
+
+                                        chanColor(viewHolderArray[0], position);
+                                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                                        holder.playStatusTv.setText("Playing");
+                                        holder.playStatusTv.setVisibility(View.VISIBLE);
+
+                                        viewHolderArray[0] = holder;
+                                    }
+                                } else {
                                     ((DetailsActivity) ctx).hideDescriptionLayout();
                                     ((DetailsActivity) ctx).showSeriesLayout();
                                     ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
@@ -6652,17 +7050,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                     //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
                                     if (!castSession) {
                                         if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                        }
-
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+//                                    }
                                             onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
+
                                         } else {
                                             //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                        if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                            mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                        }
+//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
+//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+//                                    }
+
                                             onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
+
                                         }
                                     } else {
                                         ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
@@ -6674,82 +7074,18 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                                     holder.playStatusTv.setText("Playing");
                                     holder.playStatusTv.setVisibility(View.VISIBLE);
 
-
                                     viewHolderArray[0] = holder;
                                 }
-                            } else {
-                                ((DetailsActivity) ctx).hideDescriptionLayout();
-                                ((DetailsActivity) ctx).showSeriesLayout();
-                                ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-                                boolean castSession = ((DetailsActivity) ctx).getCastSession();
-                                //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-                                if (!castSession) {
-                                    if (obj.getServerType().equalsIgnoreCase("embed")) {
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//                                    }
-                                        onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-
-                                    } else {
-                                        //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-//                                    if (mOnTVSeriesEpisodeItemClickListener != null) {
-//                                        mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//                                    }
-
-                                        onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-
-                                    }
-
-                                } else {
-                                    ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-
-                                }
-
-                                chanColor(viewHolderArray[0], position);
-                                holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-                                holder.playStatusTv.setText("Playing");
-                                holder.playStatusTv.setVisibility(View.VISIBLE);
-
-                                viewHolderArray[0] = holder;
                             }
+                        } else {
+                            showAgeConfirmDialog(items.get(position), holder, "play", position);
                         }
-                    } else {
-                        showAgeConfirmDialog(items.get(position), holder, "play", position);
-//                        ((DetailsActivity) ctx).hideDescriptionLayout();
-//                        ((DetailsActivity) ctx).showSeriesLayout();
-//                        ((DetailsActivity) ctx).setMediaUrlForTvSeries(obj.getStreamURL(), obj.getSeson(), obj.getEpi());
-//                        boolean castSession = ((DetailsActivity) ctx).getCastSession();
-//                        //Toast.makeText(ctx, "cast:"+castSession, Toast.LENGTH_SHORT).show();
-//                        if (!castSession) {
-//                            if (obj.getServerType().equalsIgnoreCase("embed")) {
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("embed", v, obj, position, viewHolder);
-//
-//                            } else {
-//                                //new DetailsActivity().initMoviePlayer(obj.getStreamURL(), obj.getServerType(), ctx);
-////                                if (mOnTVSeriesEpisodeItemClickListener != null) {
-////                                    mOnTVSeriesEpisodeItemClickListener.onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-////                                }
-//                                onEpisodeItemClickTvSeries("normal", v, obj, position, viewHolder);
-//
-//                            }
-//                        } else {
-//                            ((DetailsActivity) ctx).showQueuePopup(ctx, holder.cardView, ((DetailsActivity) ctx).getMediaInfo());
-//
-//                        }
-//
-//                        chanColor(viewHolderArray[0], position);
-//                        holder.name.setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
-//                        holder.playStatusTv.setText("Playing");
-//                        holder.playStatusTv.setVisibility(View.VISIBLE);
-//
-//
-//                        viewHolderArray[0] = holder;
+
                     }
+
+
                 }
-*/
+
             });
 
         }
@@ -6930,11 +7266,18 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             setAnimation(holder.itemView, position);
 
             if (selectedIndex == position) {
-                holder.castNameTv.setTextColor(context.getResources().getColor(R.color.white));
-                holder.card_view_home.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+                holder.castNameTv.setTextColor(context.getResources().getColor(R.color.black));
+                holder.card_view_home.setBackgroundColor(context.getResources().getColor(R.color.yellow));
 
-                rec_episod.setLayoutManager(new LinearLayoutManager(context,
-                        RecyclerView.HORIZONTAL, false));
+               /* rec_episod.setLayoutManager(new LinearLayoutManager(context,
+                        RecyclerView.HORIZONTAL, false));*/
+
+
+                //for 2*2 grid
+                rec_episod.setLayoutManager(new GridLayoutManager(context,
+                        2));
+
+
                 EpisodeAdapter episodeAdapter = new EpisodeAdapter(castCrew, context, listServer.get(position).getListEpi());
 //            EpisodeAdapterKo episodeAdapter = new EpisodeAdapterKo(castCrew, context, listServer.get(position).getListEpi());
                 rec_episod.setAdapter(episodeAdapter);
@@ -6944,7 +7287,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
 
             } else {
-                holder.castNameTv.setTextColor(context.getResources().getColor(R.color.white));
+                holder.castNameTv.setTextColor(context.getResources().getColor(R.color.black));
 //                holder.castNameTv.setTextColor(context.getResources().getColor(R.color.white));
                 holder.card_view_home.setBackgroundColor(context.getResources().getColor(R.color.grey_20));
             }
@@ -7203,23 +7546,28 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 });
             }
         }
-
     }
-
-
     public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
+
+        private Activity context;
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
             View v = LayoutInflater.from(DetailsActivity.this).inflate(R.layout.content_item_layout, parent,
                     false);
             return new ViewHolder(v);
         }
 
+
+        public ContentAdapter(Activity context) {
+            this.context = context;
+        }
+
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String contentListStr = contentList.get(position);
-
+            String contentListStr = contentList.get(position).getDescriptionContent();
             holder.textContent.setText(contentListStr);
         }
 
@@ -7231,11 +7579,46 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         public class ViewHolder extends RecyclerView.ViewHolder {
             TextView textContent;
 
+
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 textContent = itemView.findViewById(R.id.textContent);
+
             }
         }
     }
+
+//    public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHolder> {
+//        @NonNull
+//        @Override
+//        public ContentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//            View v = LayoutInflater.from(DetailsActivity.this).inflate(R.layout.content_item_layout, parent,
+//                    false);
+//            return new ContentAdapter.ViewHolder(v);
+//        }
+//
+//        @Override
+//        public void onBindViewHolder(@NonNull ContentAdapter.ViewHolder holder, int position) {
+//            String contentListStr = contentList.get(position);
+//
+//            holder.textContent.setText(contentListStr);
+//        }
+//
+//        @Override
+//        public int getItemCount() {
+//            return contentList.size();
+//        }
+//
+//        public class ViewHolder extends RecyclerView.ViewHolder {
+//            TextView textContent;
+//
+//            public ViewHolder(@NonNull View itemView) {
+//                super(itemView);
+//                textContent = itemView.findViewById(R.id.textContent);
+//            }
+//        }
+//    }
+
+
 
 }

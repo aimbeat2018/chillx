@@ -1,14 +1,14 @@
 {
   "project_info": {
-    "project_number": "404413671842",
-    "firebase_url": "https://spice69-13720-default-rtdb.firebaseio.com",
-    "project_id": "spice69-13720",
-    "storage_bucket": "spice69-13720.appspot.com"
+    "project_number": "551557125612",
+    "firebase_url": "https://chillx-aea60-default-rtdb.firebaseio.com",
+    "project_id": "chillx-aea60",
+    "storage_bucket": "chillx-aea60.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404413671842:android:83b7b4f32cd48671f6aafb",
+        "mobilesdk_app_id": "1:551557125612:android:09f05800f20b1a9de5dcc9",
         "android_client_info": {
           "package_name": "ott.chillx"
         }
@@ -16,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD5A04TU2aMTvMSR1v0I5AOK2OcaHXVK8s"
+          "current_key": "AIzaSyCS_RKVi0ZjYUHd9NrS2RH2741pLkTp3QY"
         }
       ],
       "services": {

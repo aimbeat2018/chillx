@@ -15,6 +15,30 @@
         android:text=""
         android:visibility="gone"
         android:textColor="@color/white"/>
+    <LinearLayout
+        android:id="@+id/linWarning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="35dp"
+        android:layout_marginTop="45dp"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <View
+            android:layout_width="2dp"
+            android:layout_height="14dp"
+            android:layout_gravity="center"
+            android:layout_marginVertical="4dp"
+            android:background="@color/red"/>
+        <TextView
+            android:id="@+id/txt_warningDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="15sp"
+            android:layout_marginHorizontal="2dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/img_quality"

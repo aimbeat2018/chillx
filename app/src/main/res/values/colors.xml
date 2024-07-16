@@ -64,6 +64,7 @@
 
 
     <color name="red_600">#E50914</color>
+    <color name="yellow">#ffcc00</color>
 
     <color name="green_500">#4CAF50</color>
     <color name="black_light">#0E0F13</color>
