@@ -315,6 +315,8 @@ public class StripePaymentActivity extends AppCompatActivity {
                     db.insertActiveStatusData(activeStatus);
 
                     progressBar.setVisibility(View.GONE);
+
+
                     new ToastMsg(StripePaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     Intent intent = new Intent(StripePaymentActivity.this, MainActivity.class);
                     startActivity(intent);

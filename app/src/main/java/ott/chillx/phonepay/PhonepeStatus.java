@@ -343,7 +343,6 @@ public class PhonepeStatus {
                     // new ToastMsg(OneUPIPaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     new ToastMsg(phonepayKotline.getApplicationContext()).toastIconSuccess("Payment Success.");
                     //    progressBar.setVisibility(View.GONE);
-
                     Intent intent = new Intent(phonepayKotline.getApplicationContext(), MainActivity.class);
                     phonepayKotline.startActivity(intent);
                     phonepayKotline.finish();

@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.gpfreetech.IndiUpi.IndiUpi;
 import com.gpfreetech.IndiUpi.listener.PaymentStatusListener;
@@ -745,6 +746,18 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(RazorPayActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(RazorPayActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+
                     Intent intent = new Intent(RazorPayActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

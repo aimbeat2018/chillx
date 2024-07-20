@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 //import com.clevertap.android.sdk.CleverTapAPI;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -340,6 +342,18 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(OneUPIPaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(OneUPIPaymentActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+
                     Intent intent = new Intent(OneUPIPaymentActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

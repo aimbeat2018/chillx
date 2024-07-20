@@ -179,6 +179,8 @@ payment_method*/
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(GoldRazorPayActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     progressBar.setVisibility(View.GONE);
+
+
                     Intent intent = new Intent(GoldRazorPayActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 //import com.clevertap.android.sdk.CleverTapAPI;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.stripe.android.PaymentConfiguration;
@@ -880,7 +881,19 @@ public class FinalPaymentActivity extends AppCompatActivity {
                     db.deleteAllActiveStatusData();
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(FinalPaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
+
                     // progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(FinalPaymentActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
                     Intent intent = new Intent(FinalPaymentActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

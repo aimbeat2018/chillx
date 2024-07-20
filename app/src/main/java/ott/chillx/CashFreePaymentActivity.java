@@ -30,6 +30,7 @@ import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 //import com.clevertap.android.sdk.CleverTapAPI;
 
 import org.json.JSONException;
@@ -485,6 +486,18 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(CashFreePaymentActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(CashFreePaymentActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+
                     Intent intent = new Intent(CashFreePaymentActivity.this, MainActivity.class);
                     intent.putExtra("login_status", "user_login");
                     startActivity(intent);

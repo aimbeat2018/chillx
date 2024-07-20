@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -278,6 +279,17 @@ ProgressBar progressBar;
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(PaymentResultActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                      progressBar.setVisibility(View.GONE);
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(PaymentResultActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+
                     Intent intent = new Intent(PaymentResultActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

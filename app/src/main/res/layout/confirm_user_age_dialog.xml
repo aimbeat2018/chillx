@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:padding="5dp"
-            android:text="18+"
+            android:text="A"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
             android:textColor="@color/red"
             android:textStyle="bold" />
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Amount of violence, sex, adult language, nudity, or substance use that may be present."
+        android:text="This content is suitable only for adults i.e for the age category of 18 and above. If you click on okay you confirm and submit that you are an adult."
         android:textColor="@color/white"
         android:textSize="14sp" />
 

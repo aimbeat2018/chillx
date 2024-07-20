@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import com.clevertap.android.sdk.CleverTapAPI;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.test.pg.secure.pgsdkv4.PGConstants;
 import com.test.pg.secure.pgsdkv4.PaymentGatewayPaymentInitializer;
 import com.test.pg.secure.pgsdkv4.PaymentParams;
@@ -239,6 +240,17 @@ public class AgrrepayActivity extends AppCompatActivity {
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(AgrrepayActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     // progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(AgrrepayActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
                     Intent intent = new Intent(AgrrepayActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

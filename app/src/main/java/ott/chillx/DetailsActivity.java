@@ -5736,6 +5736,25 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             holder.cardView.setOnClickListener(v -> {
 
                 if (safe.equals("0")) {
+
+                    final Dialog dialog = new Dialog(ctx);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+                    dialog.setContentView(R.layout.confirm_user_age_dialog);
+                    dialog.setCancelable(false);
+
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.copyFrom(dialog.getWindow().getAttributes());
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
+                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
+
+                    btConfirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+
                             if (obj.getEpisodeStatus().equals("0")) {
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                                     if (is_gold.equals("1")) {
@@ -6061,7 +6080,21 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                             }
 
 
+                            dialog.dismiss();
+                        }
+                    });
 
+
+                    txtCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+//                finish();
+                        }
+                    });
+
+                    dialog.show();
+                    dialog.getWindow().setAttributes(lp);
                 } else {
 
                     if (obj.getEpisodeStatus().equals("0")) {
@@ -6398,6 +6431,25 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
 
                 if (safe.equals("0")) {
+
+                    final Dialog dialog = new Dialog(ctx);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
+                    dialog.setContentView(R.layout.confirm_user_age_dialog);
+                    dialog.setCancelable(false);
+
+                    WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+                    lp.copyFrom(dialog.getWindow().getAttributes());
+                    lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+                    Button btConfirm = dialog.findViewById(R.id.btConfirm);
+                    TextView txtCancel = dialog.findViewById(R.id.txtCancel);
+
+                    btConfirm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+
                             if (obj.getEpisodeStatus().equals("0")) {
                                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                                     if (is_gold.equals("1")) {
@@ -6755,9 +6807,21 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                             }
 
 
+                            dialog.dismiss();
+                        }
+                    });
 
 
+                    txtCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+//                finish();
+                        }
+                    });
 
+                    dialog.show();
+                    dialog.getWindow().setAttributes(lp);
                 } else {
 
                     if (obj.getEpisodeStatus().equals("0")) {

@@ -17,6 +17,8 @@ import ott.chillx.network.apis.PaymentApi;
 import ott.chillx.network.apis.SubscriptionApi;
 import ott.chillx.network.model.ActiveStatus;
 import ott.chillx.network.model.User;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.sabpaisa.gateway.android.sdk.SabPaisaGateway;
 import com.sabpaisa.gateway.android.sdk.interfaces.IPaymentSuccessCallBack;
 import com.sabpaisa.gateway.android.sdk.models.TransactionResponsesModel;
@@ -214,6 +216,17 @@ public class SubpaisaActivity extends AppCompatActivity implements IPaymentSucce
                     db.insertActiveStatusData(activeStatus);
                     new ToastMsg(SubpaisaActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
                     // progressBar.setVisibility(View.GONE);
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(SubpaisaActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
                     Intent intent = new Intent(SubpaisaActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

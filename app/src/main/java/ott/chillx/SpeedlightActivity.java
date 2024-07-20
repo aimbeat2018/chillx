@@ -24,6 +24,8 @@ import ott.chillx.database.DatabaseHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -326,6 +328,17 @@ public class SpeedlightActivity extends AppCompatActivity {
                     new ToastMsg(SpeedlightActivity.this).toastIconSuccess("Payment successfully done.");
                     progressBar.setVisibility(View.GONE);
                     // currenturl="paid";
+
+                    /*firebase purchase event*/
+                    FirebaseAnalytics mFirebaseAnalytics;
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(SpeedlightActivity.this);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, aPackage.getPlanId());
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, aPackage.getName());
+                    bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                    bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
                     Intent intent = new Intent(SpeedlightActivity.this, MainActivity.class);
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
