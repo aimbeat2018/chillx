@@ -54,7 +54,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="10dp"
         android:drawableTint="@color/red"
-        android:text="I'M Over 18"
+        android:text="OKAY"
 
         android:textAllCaps="true"
         android:textColor="@android:color/white"
