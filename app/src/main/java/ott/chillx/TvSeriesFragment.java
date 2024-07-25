@@ -240,7 +240,7 @@ public class TvSeriesFragment extends Fragment {
     private void getTvSeriesData(int pageNum){
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
-        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(activity));
+        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(activity),"");
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {

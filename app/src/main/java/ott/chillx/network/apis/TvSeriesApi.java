@@ -14,7 +14,7 @@ public interface TvSeriesApi {
 
     @GET("tvseries")
     Call<List<Video>> getTvSeries(@Header("API-KEY") String apiKey,
-                                  @Query("page") int page, @Query("user_id") String user_id);
+                                  @Query("page") int page, @Query("user_id") String user_id,@Query("flag") String flag);
 
     @GET("gold_tvseries")
     Call<List<GoldVideo>> gold_tvseries(@Header("API-KEY") String apiKey,

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,6 +70,7 @@ public class ItemMovieActivity extends AppCompatActivity {
         //check vpn connection
         helperUtils = new HelperUtils(ItemMovieActivity.this);
         vpnStatus = helperUtils.isVpnConnectionAvailable();
+      //  Toast.makeText(this, "Genre ", Toast.LENGTH_SHORT).show();
         if (vpnStatus) {
             helperUtils.showWarningDialog(ItemMovieActivity.this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
 

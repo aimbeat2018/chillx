@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -56,6 +57,7 @@ public class ItemPopularActivity extends AppCompatActivity {
         //check vpn connection
         helperUtils = new HelperUtils(this);
         vpnStatus = helperUtils.isVpnConnectionAvailable();
+      //  Toast.makeText(this, "Trending ", Toast.LENGTH_SHORT).show();
         if (vpnStatus) {
             helperUtils.showWarningDialog(this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
 
@@ -204,7 +206,7 @@ public class ItemPopularActivity extends AppCompatActivity {
     private void getTvSeriesData(int pageNum) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
-        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(ItemPopularActivity.this));
+        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(ItemPopularActivity.this),"1");
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {

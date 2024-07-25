@@ -161,6 +161,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 //          printHashKey(this);
 
+
+
     }
 
     public static void printHashKey(Context pContext) {
@@ -186,6 +188,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
+       // createKeyHash(this, "ott.chillx");
 
 /*
         // ATTENTION: This was auto-generated to handle app links.

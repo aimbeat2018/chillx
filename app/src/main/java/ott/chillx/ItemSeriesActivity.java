@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,6 +59,7 @@ public class ItemSeriesActivity extends AppCompatActivity {
         //check vpn connection
         helperUtils = new HelperUtils(this);
         vpnStatus = helperUtils.isVpnConnectionAvailable();
+       // Toast.makeText(this, "Tv Series, New released ", Toast.LENGTH_SHORT).show();
         if (vpnStatus) {
             helperUtils.showWarningDialog(this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
 
@@ -207,7 +209,7 @@ public class ItemSeriesActivity extends AppCompatActivity {
     private void getTvSeriesData(int pageNum) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
-        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(ItemSeriesActivity.this));
+        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, PreferenceUtils.getUserId(ItemSeriesActivity.this),"0");
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {
