@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 //import com.clevertap.android.sdk.CleverTapAPI;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
@@ -353,6 +355,15 @@ public class OneUPIPaymentActivity extends AppCompatActivity implements PaymentS
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
+                    AppEventsLogger logger = AppEventsLogger.newLogger(OneUPIPaymentActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                     Intent intent = new Intent(OneUPIPaymentActivity.this, MainActivity.class);
                     startActivity(intent);

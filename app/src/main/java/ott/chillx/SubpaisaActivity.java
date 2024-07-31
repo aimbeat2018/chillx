@@ -18,6 +18,8 @@ import ott.chillx.network.apis.SubscriptionApi;
 import ott.chillx.network.model.ActiveStatus;
 import ott.chillx.network.model.User;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.sabpaisa.gateway.android.sdk.SabPaisaGateway;
 import com.sabpaisa.gateway.android.sdk.interfaces.IPaymentSuccessCallBack;
@@ -227,6 +229,15 @@ public class SubpaisaActivity extends AppCompatActivity implements IPaymentSucce
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
+                    AppEventsLogger logger = AppEventsLogger.newLogger(SubpaisaActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
                     Intent intent = new Intent(SubpaisaActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

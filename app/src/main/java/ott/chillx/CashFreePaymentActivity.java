@@ -30,6 +30,8 @@ import com.cashfree.pg.core.api.exception.CFException;
 import com.cashfree.pg.core.api.utils.CFErrorResponse;
 import com.cashfree.pg.ui.api.CFDropCheckoutPayment;
 import com.cashfree.pg.ui.api.CFPaymentComponent;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 //import com.clevertap.android.sdk.CleverTapAPI;
 
@@ -497,6 +499,15 @@ public class CashFreePaymentActivity extends AppCompatActivity implements CFChec
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
+                    AppEventsLogger logger = AppEventsLogger.newLogger(CashFreePaymentActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                     Intent intent = new Intent(CashFreePaymentActivity.this, MainActivity.class);
                     intent.putExtra("login_status", "user_login");

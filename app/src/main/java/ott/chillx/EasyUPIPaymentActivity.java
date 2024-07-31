@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 //import com.clevertap.android.sdk.CleverTapAPI;
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.shreyaspatil.EasyUpiPayment.EasyUpiPayment;
 import com.shreyaspatil.EasyUpiPayment.listener.PaymentStatusListener;
@@ -307,6 +309,16 @@ public class EasyUPIPaymentActivity extends AppCompatActivity implements Payment
                     bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+                    AppEventsLogger logger = AppEventsLogger.newLogger(EasyUPIPaymentActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                     Intent intent = new Intent(EasyUPIPaymentActivity.this, MainActivity.class);
                     startActivity(intent);

@@ -22,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.gpfreetech.IndiUpi.IndiUpi;
@@ -757,7 +759,15 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
+                    AppEventsLogger logger = AppEventsLogger.newLogger(RazorPayActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
 
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
                     Intent intent = new Intent(RazorPayActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

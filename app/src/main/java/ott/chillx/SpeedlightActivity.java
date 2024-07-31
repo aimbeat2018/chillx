@@ -24,6 +24,8 @@ import ott.chillx.database.DatabaseHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
@@ -338,6 +340,16 @@ public class SpeedlightActivity extends AppCompatActivity {
                     bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+                    AppEventsLogger logger = AppEventsLogger.newLogger(SpeedlightActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                     Intent intent = new Intent(SpeedlightActivity.this, MainActivity.class);
 

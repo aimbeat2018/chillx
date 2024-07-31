@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +35,7 @@ import java.util.concurrent.CompletableFuture;
 
 import okhttp3.ResponseBody;
 import ott.chillx.AppConfig;
+import ott.chillx.FinalPaymentActivity;
 import ott.chillx.MainActivity;
 import ott.chillx.R;
 import ott.chillx.network.RetrofitClient;
@@ -289,6 +292,15 @@ ProgressBar progressBar;
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
 
+                    AppEventsLogger logger = AppEventsLogger.newLogger(PaymentResultActivity.this);
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                     Intent intent = new Intent(PaymentResultActivity.this, MainActivity.class);
                     startActivity(intent);

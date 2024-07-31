@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
@@ -16,6 +18,7 @@ import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import ott.chillx.AppConfig;
+import ott.chillx.FinalPaymentActivity;
 import ott.chillx.MainActivity;
 import ott.chillx.PhonepayKotline;
 import ott.chillx.database.DatabaseHelper;
@@ -261,6 +264,16 @@ public class PhonepeStatus {
                     bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
                     bundle.putString(FirebaseAnalytics.Param.VALUE, aPackage.getPrice());
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE, bundle);
+
+                    AppEventsLogger logger = AppEventsLogger.newLogger(phonepayKotline.getApplicationContext());
+                    Bundle params = new Bundle();
+                    params.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "Entertainment");
+                    params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
+
+                    logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+                            54.23,
+                            params);
 
                 } else {
                     new ToastMsg(phonepayKotline.getApplicationContext()).toastIconError("\"Something went wrong.\"");
