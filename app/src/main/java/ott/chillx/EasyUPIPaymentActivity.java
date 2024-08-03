@@ -317,7 +317,7 @@ public class EasyUPIPaymentActivity extends AppCompatActivity implements Payment
                     params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, aPackage.getPrice());
 
                     logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
-                            54.23,
+                            Double.parseDouble(aPackage.getPrice()),
                             params);
 
                     Intent intent = new Intent(EasyUPIPaymentActivity.this, MainActivity.class);
